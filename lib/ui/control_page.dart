@@ -52,6 +52,7 @@ class _ControlPageState extends State<ControlPage> {
                 topLeft: Radius.circular(30),
             ),
             child: BottomNavigationBar(
+//                backgroundColor: strokeStd,
                 onTap: changeTab,
                 currentIndex: currentTab,
                 showSelectedLabels: false,
