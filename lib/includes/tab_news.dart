@@ -18,15 +18,9 @@ class _NewsTabState extends State<NewsTab> {
 
     var url = 'http://newsapi.org/v2/everything?q=coronavirus&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447';
 
-    int newsLenght = 0;
-    dynamic newsContent;
-
-    newsData(index) async {
-        setState(() async {
-            var response = await http.get(url);
-            newsContent = convert.jsonDecode(response.body);
-            newsLenght = newsContent["articles"].length;
-        });
+    Future newsData() async {
+        var response = await http.get(url);
+        return convert.jsonDecode(response.body);
     }
 
     @override
@@ -61,9 +55,32 @@ class _NewsTabState extends State<NewsTab> {
                         ],
                     ),
                     Expanded(
-                        child: ListView.builder(
-                            itemCount: newsLenght,
-                            itemBuilder: _buildNews,
+                        child: FutureBuilder(
+                            future: newsData(),
+                            builder: (context, snapshot){
+                                switch(snapshot.connectionState){
+                                    case ConnectionState.waiting:
+                                    case ConnectionState.none:
+                                        return Container(
+                                            width: 200.0,
+                                            height: 200.0,
+                                            alignment: Alignment.center,
+                                            child: CircularProgressIndicator(
+                                                valueColor: AlwaysStoppedAnimation<Color>(azulStd),
+                                                strokeWidth: 5.0,
+                                            ),
+                                        );
+                                    case ConnectionState.done:
+                                        return _buildNews(context, snapshot);
+                                        break;
+                                    default:
+                                        if(snapshot.hasError){
+                                            return Container();
+                                        } else {
+                                            return _buildNews(context, snapshot);
+                                        }
+                                }
+                            }
                         ),
                     ),
                 ],
@@ -71,81 +88,47 @@ class _NewsTabState extends State<NewsTab> {
         );
     }
 
-    Widget _buildNews(BuildContext context, int index){
-        if(index == newsLenght-1){
-            return Column(
-                children: <Widget>[
-                    GestureDetector(
-                        onTap: (){},
-                        child: SizedBox(
-                            height: 100,
-                            child: Card(
-                                margin: EdgeInsets.only(top: 10.0),
-                                child: Row(
-                                    children: <Widget>[
-                                        ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(4.0),
-                                                bottomLeft: Radius.circular(4.0),
-                                            ),
-                                            child: Image.network(
-                                                newsContent["articles"]["urlToImage"],
-                                                width: 150.0,
-                                                height: 100.0,
-                                                fit: BoxFit.fill,
-                                            ),
+    Widget _buildNews(BuildContext context, AsyncSnapshot snapshot){
+        return ListView.builder(
+            itemCount: snapshot.data["articles"].length,
+            itemBuilder: (context, index){
+                if(snapshot.data["articles"][index]["description"].length > 110){
+                    snapshot.data["articles"][index]["description"] = snapshot.data["articles"][index]["description"].substring(0, 110) + "...";
+                }
+                return GestureDetector(
+                    onTap: (){},
+                    child: SizedBox(
+                        height: 100,
+                        child: Card(
+                            margin: EdgeInsets.only(top: 15.0),
+                            child: Row(
+                                children: <Widget>[
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(4),
+                                            bottomLeft: Radius.circular(4),
                                         ),
-                                        Expanded(
-                                            child: Container(
-                                                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                                child: Text(newsContent["articles"]["description"],
-                                                    textAlign: TextAlign.justify,),
-                                            ),
-                                        )
-                                    ],
-                                ),
+                                        child: Image.network(
+                                            snapshot.data["articles"][index]["urlToImage"],
+                                            width: 150.0,
+                                            height: 100.0,
+                                            fit: BoxFit.fill,
+                                        ),
+                                    ),
+                                    Expanded(
+                                        child: Container(
+                                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                            child: Text(snapshot.data["articles"][index]["description"],
+                                                textAlign: TextAlign.justify,),
+                                        ),
+                                    )
+                                ],
                             ),
                         ),
                     ),
-                    SizedBox(
-                        height: 52.0,
-                    )
-                ],
-            );
-        } else {
-            return GestureDetector(
-                onTap: (){},
-                child: SizedBox(
-                    height: 100,
-                    child: Card(
-                        margin: EdgeInsets.only(top: 10.0),
-                        child: Row(
-                            children: <Widget>[
-                                ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(4),
-                                        bottomLeft: Radius.circular(4),
-                                    ),
-                                    child: Image.network(
-                                        "https://s2.glbimg.com/9Z8xUSj_yUjNB2aKad08hB8-iUg=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_e84042ef78cb4708aeebdf1c68c6cbd6/internal_photos/bs/2020/k/f/ZQZAh6Sueplvam3fMcDw/bbb20-050420-232523.jpg",
-                                        width: 150.0,
-                                        height: 100.0,
-                                        fit: BoxFit.fill,
-                                    ),
-                                ),
-                                Expanded(
-                                    child: Container(
-                                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                        child: Text("Gabi Martins foi eliminada do BBB (Big Brother Brasil) 20. Ela perdeu no paredão que disputava contra Thelma e Babu …",
-                                            textAlign: TextAlign.justify,),
-                                    ),
-                                )
-                            ],
-                        ),
-                    ),
-                ),
-            );
-        }
+                );
+            },
+        );
     }
 }
 
