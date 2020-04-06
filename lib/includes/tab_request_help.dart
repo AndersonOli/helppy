@@ -5,20 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:helppyapp/globals.dart';
 
-class requestHelp extends StatefulWidget {
+class RequestHelp extends StatefulWidget {
   @override
-  _requestHelpState createState() => _requestHelpState();
+  _RequestHelpState createState() => _RequestHelpState();
 }
 
-class _requestHelpState extends State<requestHelp> {
-
-  Color whiteStd = Color(0xFFE5E5E5);
-  Color greyStd = Color(0xFFC4C4C4);
-  Color blueStd = Color(0xFF0049FF);
-
-
-
+class _RequestHelpState extends State<RequestHelp> {
   final shoppingListController = TextEditingController();
   final titleListController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -31,11 +25,11 @@ class _requestHelpState extends State<requestHelp> {
   int _lastRemovedPos;
 
   List _addShopping() {
-    setState(() {
-      _list.add(shoppingListController.text);
-      shoppingListController.text = '';
-      return _list;
-    });
+      setState(() {
+          _list.add(shoppingListController.text);
+          shoppingListController.text = '';
+          return _list; // setState é do tipo void, não tem return
+      });
   }
 
   void _addData() {
@@ -86,16 +80,16 @@ class _requestHelpState extends State<requestHelp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: blueStd,
+        backgroundColor: azulStd,
       ),
 
       floatingActionButton: FloatingActionButton(
       onPressed: _addData,
-      child: Icon(Icons.check,color: whiteStd,),
-      backgroundColor: blueStd,
+      child: Icon(Icons.check,color: brancoStd,),
+      backgroundColor: azulStd,
       ),
 
-      backgroundColor: whiteStd,
+      backgroundColor: brancoStd,
       body: Column(
         children: <Widget>[
           Divider(),
@@ -136,7 +130,7 @@ class _requestHelpState extends State<requestHelp> {
                   height: 45,
                   child: RaisedButton(
                     child: Text('ADD'),
-                    color: greyStd,
+                    color: cinzaStd,
                     onPressed: _addShopping,
                   ),
                 ),
@@ -167,7 +161,7 @@ class _requestHelpState extends State<requestHelp> {
             alignment: Alignment(-0.9, 0),
             child: Icon(
               Icons.delete,
-              color: blueStd,
+              color: azulStd,
             )),
       ),
       direction: DismissDirection.startToEnd,
@@ -178,7 +172,6 @@ class _requestHelpState extends State<requestHelp> {
           _lastRemoved = Map.from(_list[index]);
           _lastRemovedPos = index;
           _list.removeAt(index);
-
           _saveData();
         });
       },
