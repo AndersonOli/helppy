@@ -12,17 +12,13 @@ class requestHelp extends StatefulWidget {
 }
 
 class _requestHelpState extends State<requestHelp> {
-
   Color whiteStd = Color(0xFFE5E5E5);
   Color greyStd = Color(0xFFC4C4C4);
   Color blueStd = Color(0xFF0049FF);
 
-
-
   final shoppingListController = TextEditingController();
   final titleListController = TextEditingController();
   final descriptionController = TextEditingController();
-
 
   List _shoppingList = [];
   List _list = [];
@@ -71,6 +67,7 @@ class _requestHelpState extends State<requestHelp> {
       return null;
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -88,13 +85,14 @@ class _requestHelpState extends State<requestHelp> {
       appBar: AppBar(
         backgroundColor: blueStd,
       ),
-
       floatingActionButton: FloatingActionButton(
-      onPressed: _addData,
-      child: Icon(Icons.check,color: whiteStd,),
-      backgroundColor: blueStd,
+        onPressed: _addData,
+        child: Icon(
+          Icons.check,
+          color: whiteStd,
+        ),
+        backgroundColor: blueStd,
       ),
-
       backgroundColor: whiteStd,
       body: Column(
         children: <Widget>[
@@ -103,8 +101,9 @@ class _requestHelpState extends State<requestHelp> {
             height: 45,
             child: TextField(
               controller: titleListController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   labelText: 'Título',
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                   border: OutlineInputBorder(),
                   hintText: 'Digite aqui'),
             ),
@@ -112,26 +111,29 @@ class _requestHelpState extends State<requestHelp> {
           Divider(),
           TextField(
             controller: descriptionController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Descrição',
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20 ),
                 border: OutlineInputBorder(),
                 hintText: 'Digite aqui'),
           ),
           Divider(),
           Row(
             children: <Widget>[
-              Container(
-                height: 45,
-                width: 310,
-                child: TextField(
-                    controller: shoppingListController,
-                    decoration: InputDecoration(
-                        labelText: 'Adicione seu produto',
-                        border: OutlineInputBorder(),
-                        hintText: 'Digite aqui')),
+              Expanded(
+                child: Container(
+                  height: 45,
+                  child: TextField(
+                      controller: shoppingListController,
+                      decoration: const InputDecoration(
+                          labelText: 'Adicione seu produto',
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10  ),
+                          border: OutlineInputBorder(),
+                          hintText: 'Digite aqui')),
+                ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 10) ,
+                padding: EdgeInsets.only(left: 10),
                 child: Container(
                   height: 45,
                   child: RaisedButton(
