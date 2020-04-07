@@ -5,13 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:helppyapp/globals.dart';
 
-class requestHelp extends StatefulWidget {
+class RequestHelp extends StatefulWidget {
   @override
-  _requestHelpState createState() => _requestHelpState();
+  _RequestHelpState createState() => _RequestHelpState();
 }
 
-class _requestHelpState extends State<requestHelp> {
+class _RequestHelpState extends State<RequestHelp> {
   Color whiteStd = Color(0xFFE5E5E5);
   Color greyStd = Color(0xFFC4C4C4);
   Color blueStd = Color(0xFF0049FF);
@@ -27,11 +28,11 @@ class _requestHelpState extends State<requestHelp> {
   int _lastRemovedPos;
 
   List _addShopping() {
-    setState(() {
-      _list.add(shoppingListController.text);
-      shoppingListController.text = '';
-      return _list;
-    });
+      setState(() {
+          _list.add(shoppingListController.text);
+          shoppingListController.text = '';
+          return _list; // setState é do tipo void, não tem return
+      });
   }
 
   void _addData() {
@@ -83,7 +84,7 @@ class _requestHelpState extends State<requestHelp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: blueStd,
+        backgroundColor: azulStd,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addData,
@@ -113,7 +114,8 @@ class _requestHelpState extends State<requestHelp> {
             controller: descriptionController,
             decoration: const InputDecoration(
                 labelText: 'Descrição',
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20 ),
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 20),
                 border: OutlineInputBorder(),
                 hintText: 'Digite aqui'),
           ),
@@ -127,7 +129,8 @@ class _requestHelpState extends State<requestHelp> {
                       controller: shoppingListController,
                       decoration: const InputDecoration(
                           labelText: 'Adicione seu produto',
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10  ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10),
                           border: OutlineInputBorder(),
                           hintText: 'Digite aqui')),
                 ),
@@ -138,7 +141,7 @@ class _requestHelpState extends State<requestHelp> {
                   height: 45,
                   child: RaisedButton(
                     child: Text('ADD'),
-                    color: greyStd,
+                    color: cinzaStd,
                     onPressed: _addShopping,
                   ),
                 ),
@@ -160,30 +163,32 @@ class _requestHelpState extends State<requestHelp> {
     );
   }
 
-  Widget builditem(context, index) {
-    return Dismissible(
-      key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
-      background: Container(
-        color: Colors.white12,
-        child: Align(
-            alignment: Alignment(-0.9, 0),
-            child: Icon(
-              Icons.delete,
-              color: blueStd,
-            )),
-      ),
-      direction: DismissDirection.startToEnd,
-      child: Text(_list[index],
-          style: TextStyle(fontSize: 20), textAlign: TextAlign.left),
-      onDismissed: (direction) {
-        setState(() {
-          _lastRemoved = Map.from(_list[index]);
-          _lastRemovedPos = index;
-          _list.removeAt(index);
-
-          _saveData();
-        });
-      },
-    );
+    Widget builditem(context, index) {
+      return Dismissible(
+        key: Key(DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString()),
+        background: Container(
+          color: Colors.white12,
+          child: Align(
+              alignment: Alignment(-0.9, 0),
+              child: Icon(
+                Icons.delete,
+                color: azulStd,
+              )),
+        ),
+        direction: DismissDirection.startToEnd,
+        child: Text(_list[index],
+            style: TextStyle(fontSize: 20), textAlign: TextAlign.left),
+        onDismissed: (direction) {
+          setState(() {
+            _lastRemoved = Map.from(_list[index]);
+            _lastRemovedPos = index;
+            _list.removeAt(index);
+            _saveData();
+          });
+        },
+      );
+    }
   }
-}

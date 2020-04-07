@@ -39,7 +39,9 @@ class _ControlPageState extends State<ControlPage> {
                 child: FloatingActionButton(
                     child: Icon(Icons.add, color: brancoStd,),
                     backgroundColor: azulStd,
-                    onPressed: (){},
+                    onPressed: (){
+                        requestHelp();
+                    },
                 ),
             ),
         );
