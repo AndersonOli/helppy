@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helppyapp/includes/tab_request_help.dart';
 import 'package:helppyapp/pages.dart';
 
 class ControlPage extends StatefulWidget {
@@ -40,7 +41,11 @@ class _ControlPageState extends State<ControlPage> {
                     child: Icon(Icons.add, color: brancoStd,),
                     backgroundColor: azulStd,
                     onPressed: (){
-                        requestHelp();
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context){
+                                return RequestHelp();
+                            },
+                        ));
                     },
                 ),
             ),
