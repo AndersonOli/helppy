@@ -38,8 +38,8 @@ class _ControlPageState extends State<ControlPage> {
             floatingActionButton: Padding(
                 padding: EdgeInsets.only(right: 5.0, bottom: 65.0),
                 child: FloatingActionButton(
-                    child: Icon(Icons.add, color: brancoStd,),
-                    backgroundColor: azulStd,
+                    child: Icon(Icons.add, color: COR_BRANCO,),
+                    backgroundColor: COR_AZUL,
                     onPressed: (){
                         Navigator.push(context, MaterialPageRoute(
                             builder: (context){
@@ -67,15 +67,15 @@ class _ControlPageState extends State<ControlPage> {
                 items: [
                     BottomNavigationBarItem(
                         title: Text("Início"),
-                        icon: Icon(HellpyIcons.help, color: currentTab == 0 ? azulStd : cinzaStd)
+                        icon: Icon(HellpyIcons.help, color: currentTab == 0 ? COR_AZUL : COR_CINZA)
                     ),
                     BottomNavigationBarItem(
                         title: Text("Notícias"),
-                        icon: Icon(HellpyIcons.newspaper, color: currentTab == 1 ? azulStd : cinzaStd)
+                        icon: Icon(HellpyIcons.newspaper, color: currentTab == 1 ? COR_AZUL : COR_CINZA)
                     ),
                     BottomNavigationBarItem(
                         title: Text("Dicas"),
-                        icon: Icon(HellpyIcons.soap, color: currentTab == 2 ? azulStd : cinzaStd)
+                        icon: Icon(HellpyIcons.soap, color: currentTab == 2 ? COR_AZUL : COR_CINZA)
                     ),
                 ]
             ),

@@ -84,7 +84,7 @@ class _RequestHelpState extends State<RequestHelp> {
     Widget build(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
-                backgroundColor: azulStd,
+                backgroundColor: COR_AZUL,
             ),
             floatingActionButton: FloatingActionButton(
                 onPressed: _addData,
@@ -141,7 +141,7 @@ class _RequestHelpState extends State<RequestHelp> {
                                     height: 45,
                                     child: RaisedButton(
                                         child: Text('ADD'),
-                                        color: cinzaStd,
+                                        color: COR_CINZA,
                                         onPressed: _addShopping,
                                     ),
                                 ),
@@ -175,7 +175,7 @@ class _RequestHelpState extends State<RequestHelp> {
                     alignment: Alignment(-0.9, 0),
                     child: Icon(
                         Icons.delete,
-                        color: azulStd,
+                        color: COR_AZUL,
                     )),
             ),
             direction: DismissDirection.startToEnd,

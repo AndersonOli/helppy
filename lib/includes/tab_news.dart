@@ -3,7 +3,6 @@ import 'package:helppyapp/pages.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:async';
 
 class NewsTab extends StatefulWidget {
     @override
@@ -40,7 +39,7 @@ class _NewsTabState extends State<NewsTab> {
                                     case ConnectionState.none:
                                         return Center(
                                             child: CircularProgressIndicator(
-                                                valueColor: AlwaysStoppedAnimation<Color>(azulStd),
+                                                valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
                                                 strokeWidth: 5.0,
                                             ),
                                         );
@@ -74,7 +73,7 @@ class _NewsTabState extends State<NewsTab> {
                         maxHeight: 270,
                         child: Card(
                             margin: EdgeInsets.only(top: 20.0, bottom: 10.0),
-                            color: azulStd,
+                            color: COR_AZUL,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
@@ -91,7 +90,7 @@ class _NewsTabState extends State<NewsTab> {
                                                 snapshot.data[1]["updated_at"].substring(16),
                                                 "000", "000"
                                             ),
-                                            style: TextStyle(color: brancoStd, fontSize: 16.0),
+                                            style: TextStyle(color: COR_BRANCO, fontSize: 16.0),
                                         ),
                                     ),
                                 ],
