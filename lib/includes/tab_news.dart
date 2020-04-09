@@ -89,7 +89,7 @@ class _NewsTabState extends State<NewsTab> {
                                             textCard(
                                                 snapshot.data[1]["updated_at"].substring(0, 10) + " às " +
                                                 snapshot.data[1]["updated_at"].substring(16),
-                                                snapshot.data[1]["updated_at"], snapshot.data[1]["updated_at"]
+                                                "000", "000"
                                             ),
                                             style: TextStyle(color: brancoStd, fontSize: 16.0),
                                         ),
