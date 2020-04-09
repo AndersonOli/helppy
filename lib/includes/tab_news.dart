@@ -19,7 +19,7 @@ class _NewsTabState extends State<NewsTab> {
     }
 
     apiData() async {
-        var response = await http.get('http://newsapi.org/v2/everything?q=coronavirus&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
+        var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
         var responseCorona = await http.get('https://especiais.g1.globo.com/bemestar/coronavirus/mapa-coronavirus/data/brazil-cases.json');
         return [convert.jsonDecode(response.body), convert.jsonDecode(responseCorona.body)];
     }
@@ -67,12 +67,14 @@ class _NewsTabState extends State<NewsTab> {
             itemBuilder: (context, index){
                 if(snapshot.data[0]["articles"][index]["description"].length > 110){
                     snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]["articles"][index]["description"].substring(0, 110) + "...";
+                } else if(snapshot.data[0]["articles"][index]["description"] == "" || snapshot.data[0]["articles"][index]["description"] == null){
+                    snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]["articles"][index]["title"];
                 }
                 if(index == 0){
                     return LimitedBox(
-                        maxHeight: 270,
+                        maxHeight: 230,
                         child: Card(
-                            margin: EdgeInsets.only(top: 20.0, bottom: 10.0),
+                            margin: EdgeInsets.only(top: 20.0),
                             color: COR_AZUL,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -116,7 +118,7 @@ class _NewsTabState extends State<NewsTab> {
                                                         bottomLeft: Radius.circular(4),
                                                     ),
                                                     child: Image.network(
-                                                        snapshot.data[0]["articles"][index]["urlToImage"],
+                                                        snapshot.data[0]["articles"][index]["urlToImage"] ?? "https://www.coronavirus.ms.gov.br/wp-content/uploads/2020/04/coronavirus-1.jpg",
                                                         width: 150.0,
                                                         height: 100.0,
                                                         fit: BoxFit.fill,
@@ -145,9 +147,9 @@ class _NewsTabState extends State<NewsTab> {
                             await launch(snapshot.data[0]["articles"][index]["url"]);
                         },
                         child: SizedBox(
-                            height: 100,
+                            height: 110,
                             child: Card(
-                                margin: EdgeInsets.only(top: 15.0),
+                                margin: EdgeInsets.only(top: 20.0),
                                 child: Row(
                                     children: <Widget>[
                                         ClipRRect(
@@ -156,7 +158,7 @@ class _NewsTabState extends State<NewsTab> {
                                                 bottomLeft: Radius.circular(4),
                                             ),
                                             child: Image.network(
-                                                snapshot.data[0]["articles"][index]["urlToImage"],
+                                                snapshot.data[0]["articles"][index]["urlToImage"] ?? "https://www.coronavirus.ms.gov.br/wp-content/uploads/2020/04/coronavirus-1.jpg",
                                                 width: 150.0,
                                                 height: 100.0,
                                                 fit: BoxFit.fill,
