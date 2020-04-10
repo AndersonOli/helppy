@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:helppyapp/globals.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class RequestHelp extends StatefulWidget {
     @override
@@ -13,13 +10,10 @@ class RequestHelp extends StatefulWidget {
 }
 
 class _RequestHelpState extends State<RequestHelp> {
-    Color whiteStd = Color(0xFFE5E5E5);
-    Color greyStd = Color(0xFFC4C4C4);
-    Color blueStd = Color(0xFF0049FF);
-
     final shoppingListController = TextEditingController();
     final titleListController = TextEditingController();
     final descriptionController = TextEditingController();
+    bool keyboardStatus;
 
     List _shoppingList = [];
     List _list = [];
@@ -29,10 +23,12 @@ class _RequestHelpState extends State<RequestHelp> {
 
     List _addShopping() {
         setState(() {
-            _list.add(shoppingListController.text);
-            shoppingListController.text = '';
-            return _list; // setState é do tipo void, não tem return
+            if(shoppingListController != ''){
+                _list.add(shoppingListController.text);
+                shoppingListController.text = '';
+            }
         });
+        return _list;
     }
 
     void _addData() {
@@ -82,6 +78,7 @@ class _RequestHelpState extends State<RequestHelp> {
 
     @override
     Widget build(BuildContext context) {
+        final _width = MediaQuery.of(context).size.width;
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
@@ -90,75 +87,84 @@ class _RequestHelpState extends State<RequestHelp> {
                 onPressed: _addData,
                 child: Icon(
                     Icons.check,
-                    color: whiteStd,
+                    color: COR_BRANCO,
                 ),
-                backgroundColor: blueStd,
+                backgroundColor: COR_AZUL,
             ),
-            backgroundColor: whiteStd,
-            body: Column(
-                children: <Widget>[
-                    Divider(),
-                    Container(
-                        height: 45,
-                        child: TextField(
-                            controller: titleListController,
-                            decoration: const InputDecoration(
-                                labelText: 'Título',
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                                border: OutlineInputBorder(),
-                                hintText: 'Digite aqui'),
+            backgroundColor: COR_BRANCO,
+            body: SingleChildScrollView(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                    children: <Widget>[
+                        Container(
+                            width: _width,
+                            margin: EdgeInsets.only(top: 10.0),
+                            child: TextField(
+                                controller: titleListController,
+                                decoration: InputDecoration(
+                                    labelText: "Título",
+                                    hintText: "Título do pedido",
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(color: COR_AZUL, width: 1.0),
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                ),
+                            ),
                         ),
-                    ),
-                    Divider(),
-                    TextField(
-                        controller: descriptionController,
-                        decoration: const InputDecoration(
-                            labelText: 'Descrição',
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            border: OutlineInputBorder(),
-                            hintText: 'Digite aqui'),
-                    ),
-                    Divider(),
-                    Row(
-                        children: <Widget>[
-                            Expanded(
-                                child: Container(
-                                    height: 45,
+                        Container(
+                            width: _width,
+                            margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                            child: TextField(
+                                controller: descriptionController,
+                                maxLines: 3,
+                                decoration: InputDecoration(
+                                    alignLabelWithHint: true,
+                                    labelText: "Descrição",
+                                    hintText:  "Descrição do pedido (opcional)",
+                                    border: OutlineInputBorder(),
+                                ),
+                            ),
+                        ),
+                        Row(
+                            children: <Widget>[
+                                Expanded(
                                     child: TextField(
                                         controller: shoppingListController,
-                                        decoration: const InputDecoration(
-                                            labelText: 'Adicione seu produto',
-                                            contentPadding: const EdgeInsets.symmetric(
-                                                horizontal: 10),
+                                        decoration: InputDecoration(
+                                            labelText: "Qual produto deseja?",
+                                            hintText: "Nome do produto :)",
                                             border: OutlineInputBorder(),
-                                            hintText: 'Digite aqui')),
-                                ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Container(
-                                    height: 45,
-                                    child: RaisedButton(
-                                        child: Text('ADD'),
-                                        color: COR_CINZA,
-                                        onPressed: _addShopping,
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                        ),
                                     ),
                                 ),
+                                Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: RaisedButton(
+                                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                        onPressed: _addShopping,
+                                        color: COR_AZUL,
+                                        child: Icon(Icons.add, color: COR_BRANCO,),
+                                    ),
+                                )
+                            ],
+                        ),
+                        SizedBox(
+                            height: 50.0,
+                            width: _width - 50.0,
+                            child: Divider(
+                                color: COR_STROKE
                             ),
-                        ],
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Divider(color: Colors.black)),
-                    Expanded(
-                        child: ListView.builder(
+                        ),
+                        ListView.builder(
+                            shrinkWrap: true,
                             itemCount: _list.length,
                             itemBuilder: (context, index) {
                                 return builditem(context, index);
-                            }),
-                    )
-                ],
+                            },
+                        )
+                    ],
+                ),
             ),
         );
     }
@@ -168,7 +174,8 @@ class _RequestHelpState extends State<RequestHelp> {
             key: Key(DateTime
                 .now()
                 .millisecondsSinceEpoch
-                .toString()),
+                .toString()
+            ),
             background: Container(
                 color: Colors.white12,
                 child: Align(
