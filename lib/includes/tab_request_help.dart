@@ -23,7 +23,7 @@ class _RequestHelpState extends State<RequestHelp> {
 
     List _addShopping() {
         setState(() {
-            if(shoppingListController != ''){
+            if(shoppingListController.text != ''){
                 _list.add(shoppingListController.text);
                 shoppingListController.text = '';
             }
