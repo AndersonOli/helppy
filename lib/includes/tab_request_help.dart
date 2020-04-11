@@ -95,7 +95,6 @@ class _RequestHelpState extends State<RequestHelp> {
                 ),
                 backgroundColor: COR_AZUL,
             ),
-            backgroundColor: COR_BRANCO,
             body: SingleChildScrollView(
                 padding: EdgeInsets.all(10.0),
                 child: Column(
