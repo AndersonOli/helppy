@@ -65,6 +65,10 @@ class _RequestHelpState extends State<RequestHelp> {
         }
     }
 
+    String capitalize(String s) {
+        return s[0].toUpperCase() + s.substring(1);
+    }
+
     @override
     void initState() {
         super.initState();
@@ -160,7 +164,7 @@ class _RequestHelpState extends State<RequestHelp> {
                             shrinkWrap: true,
                             itemCount: _list.length,
                             itemBuilder: (context, index) {
-                                return builditem(context, index);
+                                return buildItem(context, index);
                             },
                         )
                     ],
@@ -169,26 +173,42 @@ class _RequestHelpState extends State<RequestHelp> {
         );
     }
 
-    Widget builditem(context, index) {
+    Widget buildItem(context, index) {
         return Dismissible(
-            key: Key(DateTime
-                .now()
-                .millisecondsSinceEpoch
-                .toString()
-            ),
+            key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+            direction: DismissDirection.startToEnd,
             background: Container(
-                color: Colors.white12,
+                decoration: BoxDecoration(
+                    color: Colors.red,
+                    border: Border.all(
+                        color: COR_STROKE,
+                        width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                ),
                 child: Align(
                     alignment: Alignment(-0.9, 0),
-                    child: Icon(
-                        Icons.delete,
-                        color: COR_AZUL,
-                    )),
+                    child: Icon(Icons.delete, color: COR_BRANCO,),
+                ),
             ),
-            direction: DismissDirection.startToEnd,
-            child: Text(_list[index],
-                style: TextStyle(fontSize: 20), textAlign: TextAlign.left),
-            onDismissed: (direction) {
+            child: Container(
+                height: 45.0,
+                decoration: BoxDecoration(
+                    color: COR_AZUL,
+                    border: Border.all(
+                        color: COR_STROKE,
+                        width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                ),
+                padding: EdgeInsets.only(left: 10.0),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                    capitalize(_list[index]),
+                    style: TextStyle(fontSize: 20, color: COR_BRANCO),
+                ),
+            ),
+            onDismissed: (direction){
                 setState(() {
                     _lastRemoved = Map.from(_list[index]);
                     _lastRemovedPos = index;
