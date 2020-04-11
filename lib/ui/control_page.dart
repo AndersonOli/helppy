@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/tab_request_help.dart';
 import 'package:helppyapp/pages.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'welcome.dart';
 
 class ControlPage extends StatefulWidget {
     @override
@@ -21,6 +23,21 @@ class _ControlPageState extends State<ControlPage> {
         setState(() {
             currentTab = index;
         });
+    }
+
+    @override
+    void initState() {
+        super.initState();
+        setValue();
+    }
+
+    void setValue() async {
+        final prefs = await SharedPreferences.getInstance();
+        int launchCount = prefs.getInt('counter') ?? 0;
+        prefs.setInt('counter', launchCount + 1);
+        if (launchCount == 0) {
+            WelcomeScreen();
+        }
     }
 
     @override

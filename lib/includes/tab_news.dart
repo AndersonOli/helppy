@@ -19,7 +19,7 @@ class _NewsTabState extends State<NewsTab> {
     }
 
     apiData() async {
-        var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
+        var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus%20brasil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
         var responseCorona = await http.get('https://especiais.g1.globo.com/bemestar/coronavirus/mapa-coronavirus/data/brazil-cases.json');
         return [convert.jsonDecode(response.body), convert.jsonDecode(responseCorona.body)];
     }
