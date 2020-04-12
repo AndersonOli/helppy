@@ -16,15 +16,14 @@ class _NewsTabState extends State<NewsTab> {
         return 'Última atualização: $dataUpdate\n\n' +
             'Teresina - Piauí\n' +
             '\t\t\t\tCasos confirmados: $casesLocal\n' +
-            'Brazil\n' +
+            'Brasil\n' +
             '\t\t\t\tCasos confirmados: $casesBr';
     }
 
     apiData() async {
-        var response = await http.get(
-            'http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
-        var responseCorona = await http.get(
-            'https://especiais.g1.globo.com/bemestar/coronavirus/mapa-coronavirus/data/brazil-cases.json');
+        var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
+        var responseCorona = await http.get('https://api.especiaisg1.globo/api/eventos/brasil/?format=json');
+
         return [
             convert.jsonDecode(response.body),
             convert.jsonDecode(responseCorona.body)
@@ -42,11 +41,12 @@ class _NewsTabState extends State<NewsTab> {
     }
 
     countCasesBrasil(List api) {
-        int cases = 0;
-        for (var item in api) {
-            cases += item['cases'];
-        }
-        return cases.toString();
+//        int cases = 0;
+//        for (var item in api) {
+//            cases += item['cases'];
+//        }
+//        return cases.toString();
+        return "000";
     }
 
     @override
@@ -90,14 +90,10 @@ class _NewsTabState extends State<NewsTab> {
             itemCount: snapshot.data[0]["articles"].length,
             itemBuilder: (context, index) {
                 if (snapshot.data[0]["articles"][index]["description"].length > 110) {
-                    snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]
-                    ["articles"][index]["description"]
-                        .substring(0, 110) +
-                        "...";
+                    snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]["articles"][index]["description"].substring(0, 110) + "...";
                 } else if (snapshot.data[0]["articles"][index]["description"] == "" ||
                     snapshot.data[0]["articles"][index]["description"] == null) {
-                    snapshot.data[0]["articles"][index]["description"] =
-                    snapshot.data[0]["articles"][index]["title"];
+                    snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]["articles"][index]["title"];
                 }
                 if (index == 0) {
                     return LimitedBox(
@@ -119,10 +115,11 @@ class _NewsTabState extends State<NewsTab> {
                                         child: Text(
                                             textCard(
                                                 snapshot.data[1]["updated_at"].substring(0, 10) +
-                                                    " às " +
-                                                    snapshot.data[1]["updated_at"].substring(16),
+                                                " às " +
+                                                snapshot.data[1]["updated_at"].substring(16),
                                                 countCasesBrasil(snapshot.data[1]['docs']),
-                                                countCasesTeresina(snapshot.data[1]['docs'])),
+                                                countCasesTeresina(snapshot.data[1]['docs'])
+                                            ),
                                             style: TextStyle(color: COR_BRANCO, fontSize: 16.0),
                                         ),
                                     ),
