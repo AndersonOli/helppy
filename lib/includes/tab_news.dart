@@ -12,12 +12,12 @@ class NewsTab extends StatefulWidget {
 class _NewsTabState extends State<NewsTab> {
     int _casesTeresina;
 
-    String textCard(String dataUpdate, String casesBr, String casesLocal) {
-        return 'Última atualização: $dataUpdate\n\n' +
-            'Teresina - Piauí\n' +
-            '\t\t\t\tCasos confirmados: $casesLocal\n' +
-            'Brasil\n' +
-            '\t\t\t\tCasos confirmados: $casesBr';
+    List<String> textCard(String dataUpdate, String casesBr, String casesLocal) {
+        return [
+            'Última atualização: $dataUpdate\n',
+            '\t\t\t\tCasos confirmados: $casesLocal\n',
+            '\t\t\t\tCasos confirmados: $casesBr'
+        ];
     }
 
     apiData() async {
@@ -100,14 +100,14 @@ class _NewsTabState extends State<NewsTab> {
                 }
                 if (index == 0) {
                     return LimitedBox(
-                        maxHeight: 230,
+                        maxHeight: 190,
                         child: Card(
                             margin: EdgeInsets.only(top: 20.0),
                             color: COR_AZUL,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
-                                    Divider(),
+                                    SizedBox(height: 15.0,),
                                     Text(
                                         "Dados do coronavírus",
                                         style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -115,15 +115,57 @@ class _NewsTabState extends State<NewsTab> {
                                     ),
                                     Padding(
                                         padding: EdgeInsets.all(10),
-                                        child: Text(
-                                            textCard(
-                                                snapshot.data[1]["updated_at"].substring(0, 10) +
-                                                " às " +
-                                                snapshot.data[1]["updated_at"].substring(16),
-                                                countCasesBrasil(snapshot.data[1]['docs']),
-                                                countCasesTeresina(snapshot.data[1]['docs'])
-                                            ),
-                                            style: TextStyle(color: COR_BRANCO, fontSize: 16.0),
+                                        child: Column(
+                                            children: <Widget>[
+                                                Container(
+                                                    child: Text(
+                                                        "Última atualização: " +
+                                                        snapshot.data[1]["updated_at"].substring(0, 10) + " às " +
+                                                        snapshot.data[1]["updated_at"].substring(16) + "\n",
+                                                        textAlign: TextAlign.left,
+                                                        style: TextStyle(color: COR_BRANCO, fontSize: 18.0),
+                                                    ),
+                                                ),
+                                                Row(
+                                                    children: <Widget>[
+                                                        Expanded(
+                                                            child: RichText(
+                                                                textAlign: TextAlign.center,
+                                                                text: TextSpan(
+                                                                    text: "Teresina - Piauí",
+                                                                    style: TextStyle(
+                                                                        color: COR_BRANCO,
+                                                                        fontSize: 16.0,
+                                                                        fontFamily: 'Nunito'
+                                                                    ),
+                                                                    children: [
+                                                                        TextSpan(
+                                                                            text: "\n\n" + countCasesTeresina(snapshot.data[1]['docs'])
+                                                                        ),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ),
+                                                        Expanded(
+                                                            child: RichText(
+                                                                textAlign: TextAlign.center,
+                                                                text: TextSpan(
+                                                                    text: "Brasil",
+                                                                    style: TextStyle(
+                                                                        color: COR_BRANCO,
+                                                                        fontSize: 16.0,
+                                                                    ),
+                                                                    children: [
+                                                                        TextSpan(
+                                                                            text: "\n\n" + countCasesBrasil(snapshot.data[1]['docs'])
+                                                                        ),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ],
+                                                )
+                                            ],
                                         ),
                                     ),
                                 ],
