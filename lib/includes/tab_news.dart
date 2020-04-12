@@ -10,7 +10,9 @@ class NewsTab extends StatefulWidget {
 }
 
 class _NewsTabState extends State<NewsTab> {
-    String textCard(String dataUpdate, String casesBr, String casesLocal){
+    int _casesTeresina;
+
+    String textCard(String dataUpdate, String casesBr, String casesLocal) {
         return 'Última atualização: $dataUpdate\n\n' +
             'Teresina - Piauí\n' +
             '\t\t\t\tCasos confirmados: $casesLocal\n' +
@@ -19,9 +21,32 @@ class _NewsTabState extends State<NewsTab> {
     }
 
     apiData() async {
-        var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus%20brasil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
-        var responseCorona = await http.get('https://especiais.g1.globo.com/bemestar/coronavirus/mapa-coronavirus/data/brazil-cases.json');
-        return [convert.jsonDecode(response.body), convert.jsonDecode(responseCorona.body)];
+        var response = await http.get(
+            'http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
+        var responseCorona = await http.get(
+            'https://especiais.g1.globo.com/bemestar/coronavirus/mapa-coronavirus/data/brazil-cases.json');
+        return [
+            convert.jsonDecode(response.body),
+            convert.jsonDecode(responseCorona.body)
+        ];
+    }
+
+    countCasesTeresina(List api) {
+        int cases = 0;
+        for (var item in api) {
+            if (item['city_cod'] == 2211001) {
+                cases += item['cases'];
+            }
+        }
+        return cases.toString();
+    }
+
+    countCasesBrasil(List api) {
+        int cases = 0;
+        for (var item in api) {
+            cases += item['cases'];
+        }
+        return cases.toString();
     }
 
     @override
@@ -33,8 +58,8 @@ class _NewsTabState extends State<NewsTab> {
                     Expanded(
                         child: FutureBuilder(
                             future: apiData(),
-                            builder: (context, snapshot){
-                                switch(snapshot.connectionState){
+                            builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
                                     case ConnectionState.waiting:
                                     case ConnectionState.none:
                                         return Center(
@@ -47,30 +72,34 @@ class _NewsTabState extends State<NewsTab> {
                                         return _buildNews(context, snapshot);
                                         break;
                                     default:
-                                        if(snapshot.hasError){
+                                        if (snapshot.hasError) {
                                             return Container();
                                         } else {
                                             return _buildNews(context, snapshot);
                                         }
                                 }
-                            }
-                        ),
+                            }),
                     ),
                 ],
             ),
         );
     }
 
-    Widget _buildNews(BuildContext context, AsyncSnapshot snapshot){
+    Widget _buildNews(BuildContext context, AsyncSnapshot snapshot) {
         return ListView.builder(
             itemCount: snapshot.data[0]["articles"].length,
-            itemBuilder: (context, index){
-                if(snapshot.data[0]["articles"][index]["description"].length > 110){
-                    snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]["articles"][index]["description"].substring(0, 110) + "...";
-                } else if(snapshot.data[0]["articles"][index]["description"] == "" || snapshot.data[0]["articles"][index]["description"] == null){
-                    snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]["articles"][index]["title"];
+            itemBuilder: (context, index) {
+                if (snapshot.data[0]["articles"][index]["description"].length > 110) {
+                    snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]
+                    ["articles"][index]["description"]
+                        .substring(0, 110) +
+                        "...";
+                } else if (snapshot.data[0]["articles"][index]["description"] == "" ||
+                    snapshot.data[0]["articles"][index]["description"] == null) {
+                    snapshot.data[0]["articles"][index]["description"] =
+                    snapshot.data[0]["articles"][index]["title"];
                 }
-                if(index == 0){
+                if (index == 0) {
                     return LimitedBox(
                         maxHeight: 230,
                         child: Card(
@@ -80,7 +109,8 @@ class _NewsTabState extends State<NewsTab> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
                                     Divider(),
-                                    Text("Dados do coronavírus",
+                                    Text(
+                                        "Dados do coronavírus",
                                         style: TextStyle(color: Colors.white, fontSize: 20.0),
                                         textAlign: TextAlign.center,
                                     ),
@@ -88,10 +118,11 @@ class _NewsTabState extends State<NewsTab> {
                                         padding: EdgeInsets.all(10),
                                         child: Text(
                                             textCard(
-                                                snapshot.data[1]["updated_at"].substring(0, 10) + " às " +
-                                                snapshot.data[1]["updated_at"].substring(16),
-                                                "000", "000"
-                                            ),
+                                                snapshot.data[1]["updated_at"].substring(0, 10) +
+                                                    " às " +
+                                                    snapshot.data[1]["updated_at"].substring(16),
+                                                countCasesBrasil(snapshot.data[1]['docs']),
+                                                countCasesTeresina(snapshot.data[1]['docs'])),
                                             style: TextStyle(color: COR_BRANCO, fontSize: 16.0),
                                         ),
                                     ),
@@ -99,7 +130,7 @@ class _NewsTabState extends State<NewsTab> {
                             ),
                         ),
                     );
-                } else if(index == snapshot.data[0]["articles"].length-1){
+                } else if (index == snapshot.data[0]["articles"].length - 1) {
                     return Column(
                         children: <Widget>[
                             GestureDetector(
@@ -118,7 +149,8 @@ class _NewsTabState extends State<NewsTab> {
                                                         bottomLeft: Radius.circular(4),
                                                     ),
                                                     child: Image.network(
-                                                        snapshot.data[0]["articles"][index]["urlToImage"] ?? "https://www.coronavirus.ms.gov.br/wp-content/uploads/2020/04/coronavirus-1.jpg",
+                                                        snapshot.data[0]["articles"][index]["urlToImage"] ??
+                                                            "https://www.coronavirus.ms.gov.br/wp-content/uploads/2020/04/coronavirus-1.jpg",
                                                         width: 150.0,
                                                         height: 100.0,
                                                         fit: BoxFit.fill,
@@ -127,8 +159,11 @@ class _NewsTabState extends State<NewsTab> {
                                                 Expanded(
                                                     child: Container(
                                                         padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                                        child: Text(snapshot.data[0]["articles"][index]["description"],
-                                                            textAlign: TextAlign.justify,),
+                                                        child: Text(
+                                                            snapshot.data[0]["articles"][index]
+                                                            ["description"],
+                                                            textAlign: TextAlign.justify,
+                                                        ),
                                                     ),
                                                 )
                                             ],
@@ -158,7 +193,8 @@ class _NewsTabState extends State<NewsTab> {
                                                 bottomLeft: Radius.circular(4),
                                             ),
                                             child: Image.network(
-                                                snapshot.data[0]["articles"][index]["urlToImage"] ?? "https://www.coronavirus.ms.gov.br/wp-content/uploads/2020/04/coronavirus-1.jpg",
+                                                snapshot.data[0]["articles"][index]["urlToImage"] ??
+                                                    "https://www.coronavirus.ms.gov.br/wp-content/uploads/2020/04/coronavirus-1.jpg",
                                                 width: 150.0,
                                                 height: 100.0,
                                                 fit: BoxFit.fill,
@@ -167,8 +203,10 @@ class _NewsTabState extends State<NewsTab> {
                                         Expanded(
                                             child: Container(
                                                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                                child: Text(snapshot.data[0]["articles"][index]["description"],
-                                                    textAlign: TextAlign.justify,),
+                                                child: Text(
+                                                    snapshot.data[0]["articles"][index]["description"],
+                                                    textAlign: TextAlign.justify,
+                                                ),
                                             ),
                                         )
                                     ],
@@ -181,4 +219,3 @@ class _NewsTabState extends State<NewsTab> {
         );
     }
 }
-

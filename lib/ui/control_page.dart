@@ -13,6 +13,7 @@ class ControlPage extends StatefulWidget {
 
 class _ControlPageState extends State<ControlPage> {
     int currentTab = 0;
+    int launchCount;
     List<Widget> tabs = [
         HomeTab(),
         NewsTab(),
@@ -35,15 +36,13 @@ class _ControlPageState extends State<ControlPage> {
         final prefs = await SharedPreferences.getInstance();
         int launchCount = prefs.getInt('counter') ?? 0;
         prefs.setInt('counter', launchCount + 1);
-        if (launchCount == 0) {
-            WelcomeScreen();
-        }
+//        launchCount=0;
     }
 
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-            body: Stack(
+            body: launchCount == 0 ? WelcomeScreen() : Stack(
                 children: <Widget>[
                     tabs[currentTab],
                     Positioned(
@@ -54,7 +53,7 @@ class _ControlPageState extends State<ControlPage> {
                     ),
                 ],
             ),
-            floatingActionButton: Padding(
+            floatingActionButton: launchCount == 0 ? Container(width: 0.0,height: 0.0,) : Padding(
                 padding: EdgeInsets.only(right: 5.0, bottom: 65.0),
                 child: FloatingActionButton(
                     child: Icon(Icons.add, color: COR_BRANCO,),
