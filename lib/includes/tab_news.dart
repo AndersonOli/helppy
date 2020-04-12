@@ -34,19 +34,22 @@ class _NewsTabState extends State<NewsTab> {
         int cases = 0;
         for (var item in api) {
             if (item['city_cod'] == 2211001) {
-                cases += item['cases'];
+                if(item["cases"] is int){
+                    cases += item['cases'];
+                }
             }
         }
         return cases.toString();
     }
 
     countCasesBrasil(List api) {
-//        int cases = 0;
-//        for (var item in api) {
-//            cases += item['cases'];
-//        }
-//        return cases.toString();
-        return "000";
+        int cases = 0;
+        for (var item in api) {
+            if(item["cases"] is int){
+                cases += item['cases'];
+            }
+        }
+        return cases.toString();
     }
 
     @override
