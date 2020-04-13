@@ -178,7 +178,7 @@ class _NewsTabState extends State<NewsTab> {
                         children: <Widget>[
                             GestureDetector(
                                 onTap: () async {
-                                    await launch(snapshot.data[0]["articles"][index]["url"]);
+                                    await launch(snapshot.data[0]["articles"][index]["url"], forceWebView: true, enableJavaScript: true);
                                 },
                                 child: SizedBox(
                                     height: 100,
@@ -222,7 +222,7 @@ class _NewsTabState extends State<NewsTab> {
                 } else {
                     return GestureDetector(
                         onTap: () async {
-                            await launch(snapshot.data[0]["articles"][index]["url"]);
+                            await launch(snapshot.data[0]["articles"][index]["url"], forceWebView: true, enableJavaScript: true);
                         },
                         child: SizedBox(
                             height: 110,
