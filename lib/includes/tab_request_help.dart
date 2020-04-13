@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'popup_pedido.dart';
 
 class RequestHelp extends StatefulWidget {
     @override
@@ -13,7 +14,7 @@ class _RequestHelpState extends State<RequestHelp> {
     final shoppingListController = TextEditingController();
     final titleListController = TextEditingController();
     final descriptionController = TextEditingController();
-    bool keyboardStatus;
+    bool resultAPI = true;
 
     List _shoppingList = [];
     List _list = [];
@@ -88,7 +89,13 @@ class _RequestHelpState extends State<RequestHelp> {
                 backgroundColor: COR_AZUL,
             ),
             floatingActionButton: FloatingActionButton(
-                onPressed: _addData,
+                onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context){
+                            return PopUpPedidos(false);
+                        },
+                    ));
+                }, //_addData
                 child: Icon(
                     Icons.check,
                     color: COR_BRANCO,
