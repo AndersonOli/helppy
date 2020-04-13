@@ -178,12 +178,16 @@ class _NewsTabState extends State<NewsTab> {
                         children: <Widget>[
                             GestureDetector(
                                 onTap: () async {
-                                    await launch(snapshot.data[0]["articles"][index]["url"], forceWebView: true, enableJavaScript: true);
+                                    await launch(
+                                        snapshot.data[0]["articles"][index]["url"],
+                                        forceWebView: true,
+                                        enableJavaScript: true
+                                    );
                                 },
                                 child: SizedBox(
                                     height: 100,
                                     child: Card(
-                                        margin: EdgeInsets.only(top: 15.0),
+                                        margin: EdgeInsets.only(top: 10.0),
                                         child: Row(
                                             children: <Widget>[
                                                 ClipRRect(
@@ -222,12 +226,16 @@ class _NewsTabState extends State<NewsTab> {
                 } else {
                     return GestureDetector(
                         onTap: () async {
-                            await launch(snapshot.data[0]["articles"][index]["url"], forceWebView: true, enableJavaScript: true);
+                            await launch(
+                                snapshot.data[0]["articles"][index]["url"],
+                                forceWebView: true,
+                                enableJavaScript: true
+                            );
                         },
                         child: SizedBox(
-                            height: 110,
+                            height: 100,
                             child: Card(
-                                margin: EdgeInsets.only(top: 20.0),
+                                margin: EdgeInsets.only(top: 12.0),
                                 child: Row(
                                     children: <Widget>[
                                         ClipRRect(
