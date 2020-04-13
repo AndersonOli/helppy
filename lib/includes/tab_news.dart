@@ -100,7 +100,7 @@ class _NewsTabState extends State<NewsTab> {
                 }
                 if (index == 0) {
                     return LimitedBox(
-                        maxHeight: 190,
+                        maxHeight: 175,
                         child: Card(
                             margin: EdgeInsets.only(top: 20.0),
                             color: COR_AZUL,
@@ -109,7 +109,7 @@ class _NewsTabState extends State<NewsTab> {
                                 children: <Widget>[
                                     SizedBox(height: 15.0,),
                                     Text(
-                                        "Dados do coronavírus",
+                                        "Número de casos confirmados",
                                         style: TextStyle(color: Colors.white, fontSize: 20.0),
                                         textAlign: TextAlign.center,
                                     ),
@@ -117,15 +117,6 @@ class _NewsTabState extends State<NewsTab> {
                                         padding: EdgeInsets.all(10),
                                         child: Column(
                                             children: <Widget>[
-                                                Container(
-                                                    child: Text(
-                                                        "Última atualização: " +
-                                                        snapshot.data[1]["updated_at"].substring(0, 10) + " às " +
-                                                        snapshot.data[1]["updated_at"].substring(16) + "\n",
-                                                        textAlign: TextAlign.left,
-                                                        style: TextStyle(color: COR_BRANCO, fontSize: 18.0),
-                                                    ),
-                                                ),
                                                 Row(
                                                     children: <Widget>[
                                                         Expanded(
@@ -140,7 +131,7 @@ class _NewsTabState extends State<NewsTab> {
                                                                     ),
                                                                     children: [
                                                                         TextSpan(
-                                                                            text: "\n\n" + countCasesTeresina(snapshot.data[1]['docs'])
+                                                                            text: "\n\n" + countCasesTeresina(snapshot.data[1]['docs']) + "\n"
                                                                         ),
                                                                     ]
                                                                 ),
@@ -157,14 +148,24 @@ class _NewsTabState extends State<NewsTab> {
                                                                     ),
                                                                     children: [
                                                                         TextSpan(
-                                                                            text: "\n\n" + countCasesBrasil(snapshot.data[1]['docs'])
+                                                                            text: "\n\n" + countCasesBrasil(snapshot.data[1]['docs']) + "\n"
                                                                         ),
                                                                     ]
                                                                 ),
                                                             ),
                                                         ),
                                                     ],
-                                                )
+                                                ),
+                                                Container(
+                                                    height: 20,
+                                                    alignment: Alignment.bottomRight,
+                                                    child: Text(
+                                                        "Última atualização: " +
+                                                            snapshot.data[1]["updated_at"].substring(0, 10) + " às " +
+                                                            snapshot.data[1]["updated_at"].substring(16) + "\n",
+                                                        style: TextStyle(color: COR_BRANCO, fontSize: 18.0,),
+                                                    ),
+                                                ),
                                             ],
                                         ),
                                     ),
