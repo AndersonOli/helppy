@@ -144,7 +144,7 @@ class _NewsTabState extends State<NewsTab> {
                                 child: SizedBox(
                                     height: 100,
                                     child: Card(
-                                        margin: EdgeInsets.only(top: 15.0),
+                                        margin: EdgeInsets.only(top: 10.0),
                                         child: Row(
                                             children: <Widget>[
                                                 ClipRRect(
@@ -190,9 +190,9 @@ class _NewsTabState extends State<NewsTab> {
                             );
                         },
                         child: SizedBox(
-                            height: 110,
+                            height: 100,
                             child: Card(
-                                margin: EdgeInsets.only(top: 20.0),
+                                margin: EdgeInsets.only(top: 12.0),
                                 child: Row(
                                     children: <Widget>[
                                         ClipRRect(
