@@ -100,7 +100,7 @@ class _NewsTabState extends State<NewsTab> {
                 }
                 if (index == 0) {
                     return LimitedBox(
-                        maxHeight: 175,
+                        maxHeight: 190,
                         child: Card(
                             margin: EdgeInsets.only(top: 20.0),
                             color: COR_AZUL,
@@ -109,7 +109,7 @@ class _NewsTabState extends State<NewsTab> {
                                 children: <Widget>[
                                     SizedBox(height: 15.0,),
                                     Text(
-                                        "Número de casos confirmados",
+                                        "Dados do coronavírus",
                                         style: TextStyle(color: Colors.white, fontSize: 20.0),
                                         textAlign: TextAlign.center,
                                     ),
@@ -117,6 +117,15 @@ class _NewsTabState extends State<NewsTab> {
                                         padding: EdgeInsets.all(10),
                                         child: Column(
                                             children: <Widget>[
+                                                Container(
+                                                    child: Text(
+                                                        "Última atualização: " +
+                                                            snapshot.data[1]["updated_at"].substring(0, 10) + " às " +
+                                                            snapshot.data[1]["updated_at"].substring(16) + "\n",
+                                                        textAlign: TextAlign.left,
+                                                        style: TextStyle(color: COR_BRANCO, fontSize: 18.0),
+                                                    ),
+                                                ),
                                                 Row(
                                                     children: <Widget>[
                                                         Expanded(
@@ -131,7 +140,7 @@ class _NewsTabState extends State<NewsTab> {
                                                                     ),
                                                                     children: [
                                                                         TextSpan(
-                                                                            text: "\n\n" + countCasesTeresina(snapshot.data[1]['docs']) + "\n"
+                                                                            text: "\n\n" + countCasesTeresina(snapshot.data[1]['docs'])
                                                                         ),
                                                                     ]
                                                                 ),
@@ -148,24 +157,14 @@ class _NewsTabState extends State<NewsTab> {
                                                                     ),
                                                                     children: [
                                                                         TextSpan(
-                                                                            text: "\n\n" + countCasesBrasil(snapshot.data[1]['docs']) + "\n"
+                                                                            text: "\n\n" + countCasesBrasil(snapshot.data[1]['docs'])
                                                                         ),
                                                                     ]
                                                                 ),
                                                             ),
                                                         ),
                                                     ],
-                                                ),
-                                                Container(
-                                                    height: 20,
-                                                    alignment: Alignment.bottomRight,
-                                                    child: Text(
-                                                        "Última atualização: " +
-                                                            snapshot.data[1]["updated_at"].substring(0, 10) + " às " +
-                                                            snapshot.data[1]["updated_at"].substring(16) + "\n",
-                                                        style: TextStyle(color: COR_BRANCO, fontSize: 18.0,),
-                                                    ),
-                                                ),
+                                                )
                                             ],
                                         ),
                                     ),
@@ -178,16 +177,12 @@ class _NewsTabState extends State<NewsTab> {
                         children: <Widget>[
                             GestureDetector(
                                 onTap: () async {
-                                    await launch(
-                                        snapshot.data[0]["articles"][index]["url"],
-                                        forceWebView: true,
-                                        enableJavaScript: true
-                                    );
+                                    await launch(snapshot.data[0]["articles"][index]["url"], forceWebView: true, enableJavaScript: true);
                                 },
                                 child: SizedBox(
                                     height: 100,
                                     child: Card(
-                                        margin: EdgeInsets.only(top: 10.0),
+                                        margin: EdgeInsets.only(top: 15.0),
                                         child: Row(
                                             children: <Widget>[
                                                 ClipRRect(
@@ -226,14 +221,10 @@ class _NewsTabState extends State<NewsTab> {
                 } else {
                     return GestureDetector(
                         onTap: () async {
-                            await launch(
-                                snapshot.data[0]["articles"][index]["url"],
-                                forceWebView: true,
-                                enableJavaScript: true
-                            );
+                            await launch(snapshot.data[0]["articles"][index]["url"], forceWebView: true, enableJavaScript: true);
                         },
                         child: SizedBox(
-                            height: 100,
+                            height: 110,
                             child: Card(
                                 margin: EdgeInsets.only(top: 12.0),
                                 child: Row(
