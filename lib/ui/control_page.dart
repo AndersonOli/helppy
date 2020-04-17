@@ -13,7 +13,7 @@ class ControlPage extends StatefulWidget {
 
 class _ControlPageState extends State<ControlPage> {
     int currentTab = 0;
-    int launchCount;
+    int launchCount = 0;
     List<Widget> tabs = [
         HomeTab(),
         NewsTab(),
@@ -36,7 +36,7 @@ class _ControlPageState extends State<ControlPage> {
         final prefs = await SharedPreferences.getInstance();
         int launchCount = prefs.getInt('counter') ?? 0;
         prefs.setInt('counter', launchCount + 1);
-//        launchCount=0;
+        launchCount=0;
     }
 
     @override

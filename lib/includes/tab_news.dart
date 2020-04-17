@@ -109,7 +109,7 @@ class _NewsTabState extends State<NewsTab> {
                                 children: <Widget>[
                                     SizedBox(height: 15.0,),
                                     Text(
-                                        "Dados do coronavírus",
+                                        "Número de casos do coronavírus",
                                         style: TextStyle(color: Colors.white, fontSize: 20.0),
                                         textAlign: TextAlign.center,
                                     ),
