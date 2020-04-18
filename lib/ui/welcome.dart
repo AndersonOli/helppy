@@ -64,7 +64,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                     ),
                                 ),
                                 Container(
-                                    margin: EdgeInsets.only(top: 50.0),
+                                    margin: EdgeInsets.only(top: 50.0, bottom: 30.0),
                                     width: 300.0,
                                     height: 70.0,
                                     child: Animator (
@@ -91,7 +91,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                             ),
                                         ),
                                     ),
-                                )
+                                ),
+                                Text(
+                                    "Passe para o lado",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: COR_AZUL,
+                                        fontFamily: 'Nunito',
+                                        fontSize: 16.0,
+                                    ),
+                                ),
                             ],
                         ),
                     ),
