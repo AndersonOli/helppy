@@ -10,37 +10,6 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
-    AnimationController animationController;
-    Animation<double> animation;
-
-    @override
-    void initState() {
-        super.initState();
-        animationController = AnimationController(
-            vsync: this,
-            duration: Duration(seconds: 1),
-        )..addListener(() => setState(() {}));
-        animation = Tween<double>(
-            begin: 0,
-            end: 1,
-        ).animate(animationController);
-
-        animationController.forward();
-
-        animation.addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-                animationController.repeat();
-                print(animationController.repeat());
-            }
-        });
-    }
-
-    @override
-    void dispose() {
-        animationController.repeat();
-        super.dispose();
-    }
-
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
@@ -99,17 +68,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                     width: 300.0,
                                     height: 70.0,
                                     child: Animator (
-                                        duration: Duration(seconds: 1),
+                                        tweenMap: {
+                                            "translation": Tween<Offset>(
+                                                begin: Offset(0.4, 0),
+                                                end: Offset(-0.4, 0),
+                                            ),
+                                            "opacity": Tween<double>(
+                                                begin: 1,
+                                                end: 0,
+                                            ),
+                                        },
+                                        duration: Duration(milliseconds: 1800),
                                         curve: Curves.ease,
                                         repeats: 0,
-                                        tween: Tween<Offset>(
-                                            begin: Offset(0.4, 0),
-                                            end: Offset(-0.4, 0),
-                                        ),
-                                        builder: (anim) => FractionalTranslation(
-                                            translation: anim.value,
-                                            child: Image(
-                                                image: AssetImage("assets/images/hand.png"),
+                                        builderMap: (Map<String, Animation> anim) => FadeTransition(
+                                            opacity: anim["opacity"],
+                                            child: FractionalTranslation(
+                                                translation: anim["translation"].value,
+                                                child: Image(
+                                                    image: AssetImage("assets/images/hand.png"),
+                                                ),
                                             ),
                                         ),
                                     ),
