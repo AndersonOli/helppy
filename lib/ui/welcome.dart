@@ -8,6 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'package:helppyapp/globals.dart';
 import 'package:helppyapp/includes/tab_cadastro.dart';
 import 'package:http/http.dart' as http;
+import 'control_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatefulWidget {
     @override
@@ -17,7 +19,17 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
     final TextEditingController _emailLoginController = TextEditingController();
     final TextEditingController _senhaLoginController = TextEditingController();
+    var prefs;
 
+    @override
+    void initState() {
+        super.initState();
+        setValue();
+    }
+
+    void setValue() async {
+        prefs = await SharedPreferences.getInstance();
+    }
 
     @override
     Widget build(BuildContext context) {
@@ -221,7 +233,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                         Expanded(
                                             child: RaisedButton(
                                                 onPressed: () {
-                                                    _doLogin();
+                                                    _doLogin(context);
                                                 },
                                                 color: COR_AZUL,
                                                 child: Text(
@@ -244,7 +256,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
         );
     }
 
-    _doLogin() async {
+    _doLogin(BuildContext context) async {
         if(_emailLoginController.text != "" && _senhaLoginController.text != ""){
             http.Response data = await http.post(
                 'https://helppy-19.herokuapp.com/authenticate',
@@ -260,11 +272,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
             try{
                 if(dados[0]["field"] != null){
-                    print(dados[0]["message"]);
+                    showAlertDialog(context);
                 }
             } catch(e) {
-                print("Login feito");
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context){
+                        prefs.setInt('logged', 1);
+                        prefs.set('token', dados["token"]);
+                        return ControlPage();
+                    },
+                ));
             }
         }
+    }
+
+    showAlertDialog(BuildContext context)
+    {
+        // configura o button
+        Widget okButton = FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+                Navigator.of(context).pop();
+            },
+        );
+        // configura o  AlertDialog
+        AlertDialog alerta = AlertDialog(
+            title: Text("Email ou senha inválidos"),
+            content: Text("Por favor, verifique se seu email e senha estão corretos."),
+            actions: [
+                okButton,
+            ],
+        );
+        // exibe o dialog
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+                return alerta;
+            },
+        );
     }
 }

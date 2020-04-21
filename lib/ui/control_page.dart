@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/tab_request_help.dart';
 import 'package:helppyapp/pages.dart';
@@ -14,6 +13,7 @@ class ControlPage extends StatefulWidget {
 class _ControlPageState extends State<ControlPage> {
     int currentTab = 0;
     int launchCount = 0;
+    int isLogged;
     List<Widget> tabs = [
         HomeTab(),
         NewsTab(),
@@ -36,13 +36,13 @@ class _ControlPageState extends State<ControlPage> {
         final prefs = await SharedPreferences.getInstance();
         launchCount = prefs.getInt('counter') ?? 0;
         prefs.setInt('counter', launchCount + 1);
-        launchCount=0;
-        print(prefs);
+        isLogged = prefs.getInt('logged');
     }
 
     @override
     Widget build(BuildContext context) {
-        if(launchCount == 0){
+//        launchCount == 0 && isLogged != 1
+        if(true){
              return WelcomeScreen();
         } else {
             return Scaffold(

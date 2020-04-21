@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
+import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 
 class CadastroPage extends StatefulWidget {
@@ -24,7 +28,6 @@ class _CadastroPageState extends State<CadastroPage> {
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
-        final _height = MediaQuery.of(context).size.height;
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
@@ -65,6 +68,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
                                     controller: _senhaCadController,
+                                    obscureText: true,
                                     decoration: InputDecoration(
                                         labelText: "Senha",
                                         hintText: "Insira uma senha",
@@ -78,6 +82,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
                                     controller: _telCadController,
+                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         labelText: "Telefone",
                                         hintText: "Insira o número do seu telefone",
@@ -91,6 +96,12 @@ class _CadastroPageState extends State<CadastroPage> {
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
                                     controller: _cepCadController,
+                                    onChanged: (value){
+                                        if(value.length == 8){
+                                            _completeCEP();
+                                        }
+                                    },
+                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         labelText: "CEP",
                                         hintText: "Insira seu CEP",
@@ -117,6 +128,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
                                     controller: _numeroCadController,
+                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         labelText: "Número da casa",
                                         hintText: "Insira o número da sua casa",
@@ -221,19 +233,49 @@ class _CadastroPageState extends State<CadastroPage> {
         );
     }
 
-    doCadastro(){
+    doCadastro() async {
         typeAcc = typeOne == true ? 0 : 1;
-        if(
-            _nomeCadController   != null &&
-            _emailCadController  != null &&
-            _senhaCadController  != null &&
-            _telCadController    != null &&
-            _cepCadController    != null &&
-            _endCadController    != null &&
-            _numeroCadController != null &&
-            _refCadController    != null
-        ){
+        http.Response data = await http.post(
+            'https://helppy-19.herokuapp.com/register',
+            headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(
+                {
+                    "nome_completo":"Anderson",
+                    "email": "felipe2@gmail.com",
+                    "senha": "1234",
+                    "telefone": "8699999999",
+                    "cep": "00000000",
+                    "endereco": "Rua x - Bairro y",
+                    "numero": "000",
+                    "referencia": "Skina Burguer",
+                    "tipo_conta": "0"
+                }
+            ),
+//            body: jsonEncode({
+//                "nome_completo": _nomeCadController.text,
+//                "email": _nomeCadController.text,
+//                "senha": _senhaCadController.text,
+//                "telefone": _telCadController.text,
+//                "cep": _cepCadController.text,
+//                "endereco": _endCadController.text,
+//                "numero": _numeroCadController.text,
+//                "referencia": _refCadController.text,
+//                "tipo_conta": typeOne.toString()
+//            }),
+        );
+        var dados = json.decode(data.body);
+    }
 
+    _completeCEP() async {
+        if(_cepCadController.text != null){
+            var endereco = await http.get("https://viacep.com.br/ws/"+ _cepCadController.text +"/json");
+            var data = jsonDecode(endereco.body);
+            setState(() {
+                _endCadController.text = data["logradouro"] + " - " + data["bairro"] + " - " + data["localidade"] + "-" + data["uf"];
+                _refCadController.text = data["complemento"];
+            });
         }
     }
 }
