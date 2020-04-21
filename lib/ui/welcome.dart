@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:animator/animator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/widgets.dart';
 import 'package:helppyapp/globals.dart';
+import 'package:helppyapp/includes/tab_cadastro.dart';
+import 'package:http/http.dart' as http;
 
 class WelcomeScreen extends StatefulWidget {
     @override
@@ -10,6 +15,10 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
+    final TextEditingController _emailLoginController = TextEditingController();
+    final TextEditingController _senhaLoginController = TextEditingController();
+
+
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
@@ -108,12 +117,154 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                         width: _width,
                         color: Colors.red,
                     ),
-                    Container(
-                        width: _width,
-                        color: Colors.green,
+                    SingleChildScrollView(
+//                        width: _width,
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                            children: <Widget>[
+                                Container(
+                                    margin: EdgeInsets.only(top: 70.0, bottom: 10.0),
+                                    width: _width,
+                                    height: 150.0,
+                                    child: Image(
+                                        image: AssetImage("assets/images/logo.png"),
+                                    ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                    child: Divider(
+                                        color: COR_STROKE,
+                                    ),
+                                ),
+                                Container(
+                                    width: _width,
+                                    child: RaisedButton(
+                                        onPressed: (){
+                                            Navigator.push(context, MaterialPageRoute(
+                                                builder: (context){
+                                                    return CadastroPage();
+                                                },
+                                            ));
+                                        },
+                                        color: COR_AZUL,
+                                        child: Text(
+                                            "Não tem uma conta? Cadastre-se",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: COR_BRANCO,
+                                                fontSize: 16.0,
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                    child: Divider(
+                                        color: COR_STROKE,
+                                    ),
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(top: 10.0),
+                                    child: TextFormField(
+                                        validator: (value){
+                                            if(value.isEmpty){
+                                                return "Insira um email";
+                                            } else {
+                                                return null;
+                                            }
+                                        },
+                                        controller: _emailLoginController,
+                                        decoration: InputDecoration(
+                                            labelText: "Email",
+                                            hintText: "Insira seu email",
+                                            border: OutlineInputBorder(),
+                                            contentPadding:
+                                            const EdgeInsets.symmetric(horizontal: 10),
+                                        ),
+                                    ),
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(top: 15.0, bottom: 10.0),
+                                    child: TextFormField(
+                                        obscureText: true,
+                                        // ignore: missing_return
+                                        validator: (value){
+                                            if(value.isEmpty){
+                                                return "Insira uma senha";
+                                            } else {
+                                                return null;
+                                            }
+                                        },
+                                        controller: _senhaLoginController,
+                                        decoration: InputDecoration(
+                                            labelText: "Senha",
+                                            hintText: "Insira sua senha",
+                                            border: OutlineInputBorder(),
+                                            contentPadding:
+                                            const EdgeInsets.symmetric(horizontal: 10),
+                                        ),
+                                    ),
+                                ),
+                                Row(
+                                    children: <Widget>[
+                                        Expanded(
+                                            child: Text(
+                                                "Esqueci minha senha",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    color: COR_AZUL,
+                                                    fontSize: 18.0,
+                                                    decoration: TextDecoration.underline,
+                                                ),
+                                            ),
+                                        ),
+                                        Expanded(
+                                            child: RaisedButton(
+                                                onPressed: () {
+                                                    _doLogin();
+                                                },
+                                                color: COR_AZUL,
+                                                child: Text(
+                                                    "Entrar",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color: COR_BRANCO,
+                                                        fontSize: 18.0,
+                                                    ),
+                                                ),
+                                            ),
+                                        )
+                                    ],
+                                )
+                            ],
+                        ),
                     ),
                 ],
             ),
         );
+    }
+
+    _doLogin() async {
+        if(_emailLoginController.text != "" && _senhaLoginController.text != ""){
+            http.Response data = await http.post(
+                'https://helppy-19.herokuapp.com/authenticate',
+                headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode({
+                    "email": _emailLoginController.text.trim(),
+                    "password": _senhaLoginController.text
+                }),
+            );
+            var dados = json.decode(data.body);
+
+            try{
+                if(dados[0]["field"] != null){
+                    print(dados[0]["message"]);
+                }
+            } catch(e) {
+                print("Login feito");
+            }
+        }
     }
 }
