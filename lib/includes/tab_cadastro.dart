@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
+import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 
@@ -15,6 +16,7 @@ class _CadastroPageState extends State<CadastroPage> {
     bool typeOne = false;
     bool typeTwo = false;
     int typeAcc;
+    var prefs;
 
     final TextEditingController _nomeCadController = TextEditingController();
     final TextEditingController _emailCadController = TextEditingController();
@@ -235,42 +237,62 @@ class _CadastroPageState extends State<CadastroPage> {
 
     doCadastro() async {
         typeAcc = typeOne == true ? 0 : 1;
+
         http.Response data = await http.post(
             'https://helppy-19.herokuapp.com/register',
             headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
             },
-            body: jsonEncode(
-                {
-                    "nome_completo":"Anderson",
-                    "email": "felipe2@gmail.com",
-                    "senha": "1234",
-                    "telefone": "8699999999",
-                    "cep": "00000000",
-                    "endereco": "Rua x - Bairro y",
-                    "numero": "000",
-                    "referencia": "Skina Burguer",
-                    "tipo_conta": "0"
-                }
-            ),
-//            body: jsonEncode({
-//                "nome_completo": _nomeCadController.text,
-//                "email": _nomeCadController.text,
-//                "senha": _senhaCadController.text,
-//                "telefone": _telCadController.text,
-//                "cep": _cepCadController.text,
-//                "endereco": _endCadController.text,
-//                "numero": _numeroCadController.text,
-//                "referencia": _refCadController.text,
-//                "tipo_conta": typeOne.toString()
-//            }),
+            body: jsonEncode({
+                "nome_completo": _nomeCadController.text,
+                "email": _emailCadController.text.toLowerCase().trim(),
+                "senha": _senhaCadController.text,
+                "telefone": _telCadController.text.trim(),
+                "cep": _cepCadController.text.trim(),
+                "endereco": _endCadController.text,
+                "numero": _numeroCadController.text.trim(),
+                "referencia": _refCadController.text,
+                "tipo_conta": typeAcc.toString()
+            }),
         );
-        var dados = json.decode(data.body);
+
+        if(data.body.contains('duplicate key value violates unique constraint')){
+            showAlertDialog(
+                context,
+                "Este email já está em uso!",
+                "Por favor, escolha um outro email, esse já está sendo usado."
+            );
+        } else if(data.body.contains('null value in column')){
+            showAlertDialog(
+                context,
+                "Preencha todos os campos!",
+                "Por favor, preencha todos os campos, verifique se você não esqueceu de algum."
+            );
+        } else if(data.body.contains(_emailCadController.text.toLowerCase().trim())){
+            http.Response data = await http.post(
+                'https://helppy-19.herokuapp.com/authenticate',
+                headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode({
+                    "email": _emailCadController.text.toLowerCase().trim(),
+                    "senha": _senhaCadController.text
+                }),
+            );
+            var dados = json.decode(data.body);
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context){
+                    prefs.setInt('logged', 1);
+                    prefs.set('token', dados["token"]);
+                    return ControlPage();
+                },
+            ));
+        }
     }
 
     _completeCEP() async {
         if(_cepCadController.text != null){
-            var endereco = await http.get("https://viacep.com.br/ws/"+ _cepCadController.text +"/json");
+            var endereco = await http.get("https://viacep.com.br/ws/"+ _cepCadController.text.trim() +"/json");
             var data = jsonDecode(endereco.body);
             setState(() {
                 _endCadController.text = data["logradouro"] + " - " + data["bairro"] + " - " + data["localidade"] + "-" + data["uf"];

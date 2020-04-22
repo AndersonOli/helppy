@@ -272,7 +272,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
             try{
                 if(dados[0]["field"] != null){
-                    showAlertDialog(context);
+                    showAlertDialog(
+                        context,
+                        "Email ou senha inválidos",
+                        "Por favor, verifique se seu email e senha estão corretos."
+                    );
                 }
             } catch(e) {
                 Navigator.push(context, MaterialPageRoute(
@@ -284,31 +288,5 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                 ));
             }
         }
-    }
-
-    showAlertDialog(BuildContext context)
-    {
-        // configura o button
-        Widget okButton = FlatButton(
-            child: Text("OK"),
-            onPressed: () {
-                Navigator.of(context).pop();
-            },
-        );
-        // configura o  AlertDialog
-        AlertDialog alerta = AlertDialog(
-            title: Text("Email ou senha inválidos"),
-            content: Text("Por favor, verifique se seu email e senha estão corretos."),
-            actions: [
-                okButton,
-            ],
-        );
-        // exibe o dialog
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-                return alerta;
-            },
-        );
     }
 }
