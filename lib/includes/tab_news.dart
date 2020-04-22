@@ -10,8 +10,6 @@ class NewsTab extends StatefulWidget {
 }
 
 class _NewsTabState extends State<NewsTab> {
-    int _casesTeresina;
-
     List<String> textCard(String dataUpdate, String casesBr, String casesLocal) {
         return [
             'Última atualização: $dataUpdate\n',

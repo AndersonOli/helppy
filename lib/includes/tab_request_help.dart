@@ -71,11 +71,13 @@ class _RequestHelpState extends State<RequestHelp> {
 
   Future<http.Response> postRequest() {
     final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU4NzQxMTU0NX0.e6DxphrjGGVvtU5_s3hSJlcR3UHXsO_xcV5dg9BEJ3U';
-
-    var url = 'http://10.0.2.2:3333/list';
-    var body = jsonEncode(_shoppingList);
-    return http.post(url,
-        headers: {"Content-Type": "aplication/json",HttpHeaders.authorizationHeader: "Bearer $token"}, body: body);
+      var url = 'http://10.0.2.2:3333/list';
+      var body = jsonEncode(_shoppingList);
+      return http.post(
+          url,
+          headers: {"Content-Type": "aplication/json",HttpHeaders.authorizationHeader: "Bearer $token"},
+          body: body
+      );
   }
 
   String capitalize(String s) {
