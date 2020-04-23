@@ -244,15 +244,15 @@ class _CadastroPageState extends State<CadastroPage> {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
             body: jsonEncode({
-                "nome_completo": _nomeCadController.text,
+                "full_name": _nomeCadController.text,
                 "email": _emailCadController.text.toLowerCase().trim(),
-                "senha": _senhaCadController.text,
-                "telefone": _telCadController.text.trim(),
+                "password": _senhaCadController.text,
+                "telephone": _telCadController.text.trim(),
                 "cep": _cepCadController.text.trim(),
-                "endereco": _endCadController.text,
-                "numero": _numeroCadController.text.trim(),
-                "referencia": _refCadController.text,
-                "tipo_conta": typeAcc.toString()
+                "address": _endCadController.text,
+                "house_number": _numeroCadController.text.trim(),
+                "reference": _refCadController.text,
+                "type_account": typeAcc.toString()
             }),
         );
 
@@ -276,7 +276,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 },
                 body: jsonEncode({
                     "email": _emailCadController.text.toLowerCase().trim(),
-                    "senha": _senhaCadController.text
+                    "password": _senhaCadController.text
                 }),
             );
             var dados = json.decode(data.body);
