@@ -7,15 +7,14 @@ import 'package:helppyapp/globals.dart';
 
 class HomeTab extends StatelessWidget {
      getResponseList() async {
-        final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU4NzU5MjMzNSwiZXhwIjozMTg3MTMxOTA0MDd9.i_7rWLf1n5Ju8mGSIcI1yojrkdgWFyaLCawVHro413k';
+        final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU4NzY4NzAwOSwiZXhwIjozMTg3MTMyODUwODF9.0dlRl3iNa0VAM7bqEbBBdi8tQtT_VVCWOljkyDJeG6o';
         final idUser = 1;
         final response = await http.get(
-            'http://10.0.2.2:3333/list/$idUser',
+            'https://helppy-19.herokuapp.com/list/$idUser',
             headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
         );
         return json.decode(response.body);
     }
-
 
     @override
     Widget build(BuildContext context) {
@@ -57,20 +56,20 @@ class HomeTab extends StatelessWidget {
     Widget _listCard(BuildContext context, AsyncSnapshot snapshot) {
         final _width = MediaQuery.of(context).size.width;
         final _height = MediaQuery.of(context).size.height;
-      return SingleChildScrollView(
-          child: Container(
-              width: _width,
-              height: _height,
-              padding: EdgeInsets.only(right: 10.0, left: 10.0),
-              child: ListView.builder(
-                  itemCount: 2,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index){
-                      return _cardPedido(context, snapshot);
-                  },
-              ),
-          ),
-      );
+        return SingleChildScrollView(
+            child: Container(
+                width: _width,
+                height: _height,
+                padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index){
+                        return _cardPedido(context, snapshot);
+                    },
+                ),
+            ),
+        );
     }
 
 
@@ -83,6 +82,11 @@ class HomeTab extends StatelessWidget {
             decoration: BoxDecoration(
                 color: COR_AZUL,
                 borderRadius: BorderRadius.circular(10.0)
+            ),
+            child: Column(
+                children: <Widget>[
+                    Text(transformStringInList(0).toString())
+                ],
             ),
         );
     }
@@ -105,6 +109,7 @@ class HomeTab extends StatelessWidget {
             }
         }
         print(list);
+        return list;
     }
 
 }

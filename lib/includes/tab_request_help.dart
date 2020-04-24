@@ -70,8 +70,8 @@ class _RequestHelpState extends State<RequestHelp> {
   }
 
   Future<http.Response> postRequest() {
-    final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU4NzQxMTU0NX0.e6DxphrjGGVvtU5_s3hSJlcR3UHXsO_xcV5dg9BEJ3U';
-      var url = 'http://10.0.2.2:3333/list';
+    final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU4NzY4NTc1MCwiZXhwIjozMTg3MTMyODM4MjJ9.oHCPHtfZTmcdt8KhqxWXs4ylh4w4XJPpJSyvuYwgBO0';
+      var url = 'https://helppy-19.herokuapp.com/list';
       var body = jsonEncode(_shoppingList);
       return http.post(
           url,
