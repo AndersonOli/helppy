@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
 
 class CadastroPage extends StatefulWidget {
     @override
@@ -283,7 +281,7 @@ class _CadastroPageState extends State<CadastroPage> {
             Navigator.push(context, MaterialPageRoute(
                 builder: (context){
                     prefs.setInt('logged', 1);
-                    prefs.set('token', dados["token"]);
+                    prefs.setString('token', dados["token"]);
                     return ControlPage();
                 },
             ));

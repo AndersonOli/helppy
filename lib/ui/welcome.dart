@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:animator/animator.dart';
 import 'package:flutter/cupertino.dart';
@@ -282,7 +281,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context){
                         prefs.setInt('logged', 1);
-                        prefs.set('token', dados["token"]);
+                        prefs.setString('token', dados["token"]);
                         return ControlPage();
                     },
                 ));
