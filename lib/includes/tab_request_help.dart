@@ -274,7 +274,7 @@ class _RequestHelpState extends State<RequestHelp> {
 
     Future<http.Response> postRequest() async {
         prefs = await SharedPreferences.getInstance();
-        final token = prefs.get('token');
+        final token = prefs.getString('token');
         var url = 'https://helppy-19.herokuapp.com/list';
         var body = jsonEncode(_shoppingList);
         return http.post(
