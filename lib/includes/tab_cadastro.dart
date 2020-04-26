@@ -282,6 +282,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 builder: (context){
                     prefs.setInt('logged', 1);
                     prefs.setString('token', dados["token"]);
+                    prefs.setInt('user_id', dados["user_id"]);
                     return ControlPage();
                 },
             ));

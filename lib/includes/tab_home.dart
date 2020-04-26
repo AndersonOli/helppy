@@ -3,11 +3,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:helppyapp/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeTab extends StatelessWidget {
-     getResponseList() async {
+    var prefs;
+    getResponseList() async {
+        prefs = await SharedPreferences.getInstance();
         final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU4NzY4NzAwOSwiZXhwIjozMTg3MTMyODUwODF9.0dlRl3iNa0VAM7bqEbBBdi8tQtT_VVCWOljkyDJeG6o';
-        final idUser = 1;
+        final idUser = prefs.getInt('user_id');
         final response = await http.get(
             'https://helppy-19.herokuapp.com/list/$idUser',
             headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
