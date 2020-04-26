@@ -283,6 +283,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                         prefs.setInt('logged', 1);
                         prefs.setString('token', dados["token"]);
                         prefs.setInt('user_id', dados["user_id"]);
+                        prefs.setString('type_acc', dados["type_account"]);
                         return ControlPage();
                     },
                 ));
