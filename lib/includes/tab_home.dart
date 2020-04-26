@@ -9,7 +9,7 @@ class HomeTab extends StatelessWidget {
     var prefs;
     getResponseList() async {
         prefs = await SharedPreferences.getInstance();
-        final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU4NzY4NzAwOSwiZXhwIjozMTg3MTMyODUwODF9.0dlRl3iNa0VAM7bqEbBBdi8tQtT_VVCWOljkyDJeG6o';
+        final token = prefs.getString('token');
         final idUser = prefs.getInt('user_id');
         final response = await http.get(
             'https://helppy-19.herokuapp.com/list/$idUser',
