@@ -198,7 +198,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                     margin: EdgeInsets.only(top: 15.0, bottom: 10.0),
                                     child: TextFormField(
                                         obscureText: true,
-                                        // ignore: missing_return
                                         validator: (value){
                                             if(value.isEmpty){
                                                 return "Insira uma senha";
