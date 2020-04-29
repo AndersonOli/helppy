@@ -14,6 +14,7 @@ class _ControlPageState extends State<ControlPage> {
     int currentTab = 0;
     int launchCount = 0;
     int isLogged;
+    String typeAcc;
     List<Widget> tabs = [
         HomeTab(),
         NewsTab(),
@@ -36,13 +37,16 @@ class _ControlPageState extends State<ControlPage> {
         final prefs = await SharedPreferences.getInstance();
         launchCount = prefs.getInt('counter') ?? 0;
         prefs.setInt('counter', launchCount + 1);
-        isLogged = prefs.getInt('logged');
+        isLogged = prefs.getInt('logged') ?? 0;
+        typeAcc = prefs.getString('type_acc');
+
+        print(isLogged);
     }
 
     @override
     Widget build(BuildContext context) {
-        //launchCount == 0 && isLogged != 1
-        if(true){
+//        launchCount == 0 && isLogged != 1
+        if(launchCount == 0 || isLogged != 1){
              return WelcomeScreen();
         } else {
             return Scaffold(
@@ -57,7 +61,7 @@ class _ControlPageState extends State<ControlPage> {
                         ),
                     ],
                 ),
-                floatingActionButton: launchCount == 0 ? Container(width: 0.0,height: 0.0,) : Padding(
+                floatingActionButton: launchCount == 0 || typeAcc == "0" ? Container(width: 0.0,height: 0.0,) : Padding(
                     padding: EdgeInsets.only(right: 5.0, bottom: 65.0),
                     child: FloatingActionButton(
                         child: Icon(Icons.add, color: COR_BRANCO,),
