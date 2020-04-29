@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CadastroPage extends StatefulWidget {
     @override
@@ -15,6 +16,16 @@ class _CadastroPageState extends State<CadastroPage> {
     bool typeTwo = false;
     int typeAcc;
     var prefs;
+
+    @override
+    void initState() {
+        super.initState();
+        setValue();
+    }
+
+    void setValue() async {
+        prefs = await SharedPreferences.getInstance();
+    }
 
     final TextEditingController _nomeCadController = TextEditingController();
     final TextEditingController _emailCadController = TextEditingController();

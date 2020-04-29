@@ -18,8 +18,9 @@ class _HomeTabState extends State<HomeTab> {
         prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
         final idUser = prefs.getInt('user_id');
+        final typeACC = prefs.getString('type_acc');
         final response = await http.get(
-            'https://helppy-19.herokuapp.com/list/$idUser',
+            typeACC == "1" ? 'https://helppy-19.herokuapp.com/list/$idUser' : 'https://helppy-19.herokuapp.com/list',
             headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
         );
         return json.decode(response.body);
@@ -64,16 +65,16 @@ class _HomeTabState extends State<HomeTab> {
     Widget _listCard(BuildContext context, AsyncSnapshot snapshot) {
         final _width = MediaQuery.of(context).size.width;
         final _height = MediaQuery.of(context).size.height;
-        return snapshot.data["list"].length > 0 ? SingleChildScrollView(
+        return snapshot.data.length > 0 || snapshot.data["list"].length > 0 ? SingleChildScrollView(
             child: Container(
                 width: _width,
                 height: _height,
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
                 child: ListView.builder(
-                    itemCount: snapshot.data["list"].length,
+                    itemCount: prefs.getString('type_acc') == "0" ? snapshot.data.length : snapshot.data["list"].length,
                     shrinkWrap: true,
                     itemBuilder: (context, index){
-                        return _cardPedido(context, snapshot, index);
+                        return prefs.getString('type_acc') == "0" ? _cardPedidoVoluntario(context, snapshot, index) : _cardPedidoIdoso(context, snapshot, index);
                     },
                 ),
             ),
@@ -88,8 +89,20 @@ class _HomeTabState extends State<HomeTab> {
         );
     }
 
+    Widget _cardPedidoIdoso(BuildContext context, AsyncSnapshot snapshot, int index){
+        final _width = MediaQuery.of(context).size.width;
+        return Container(
+            width: _width,
+            margin: EdgeInsets.only(top: 10.0),
+            decoration: BoxDecoration(
+                color: COR_AZUL,
+                borderRadius: BorderRadius.circular(10.0)
+            ),
+            child: Text(""),
+        );
+    }
 
-    Widget _cardPedido(BuildContext context, AsyncSnapshot snapshot, int index){
+    Widget _cardPedidoVoluntario(BuildContext context, AsyncSnapshot snapshot, int index){
         final _width = MediaQuery.of(context).size.width;
         return Container(
             width: _width,
@@ -104,7 +117,7 @@ class _HomeTabState extends State<HomeTab> {
                         margin: EdgeInsets.only(top: 10.0, left: 15.0),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            "Pedido de " + snapshot.data["name"],
+                            "Pedido de " + snapshot.data[index]["full_name"],
                             style: TextStyle(
                                 color: COR_BRANCO,
                                 fontSize: 18.0,
@@ -155,7 +168,7 @@ class _HomeTabState extends State<HomeTab> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                                 Text(
-                                    "Em " + snapshot.data["list"][index]["updated_at"].substring(0, 10).replaceAll("-", "/"),
+                                    "Em " + snapshot.data[index]["updated_at"].substring(0, 10).replaceAll("-", "/"),
                                     style: TextStyle(
                                         color: COR_BRANCO,
                                         fontSize: 14.0,

@@ -39,8 +39,6 @@ class _ControlPageState extends State<ControlPage> {
         prefs.setInt('counter', launchCount + 1);
         isLogged = prefs.getInt('logged') ?? 0;
         typeAcc = prefs.getString('type_acc');
-
-        print(launchCount);
     }
 
     @override
