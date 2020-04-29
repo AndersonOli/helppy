@@ -42,7 +42,7 @@ class _ControlPageState extends State<ControlPage> {
     @override
     Widget build(BuildContext context) {
         //launchCount == 0 && isLogged != 1
-        if(true){
+        if(launchCount == 0 && isLogged != 1){
              return WelcomeScreen();
         } else {
             return Scaffold(

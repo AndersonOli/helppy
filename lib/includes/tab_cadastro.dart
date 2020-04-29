@@ -5,6 +5,7 @@ import 'package:helppyapp/globals.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 
+
 class CadastroPage extends StatefulWidget {
     @override
     _CadastroPageState createState() => _CadastroPageState();
@@ -236,6 +237,7 @@ class _CadastroPageState extends State<CadastroPage> {
     doCadastro() async {
         typeAcc = typeOne == true ? 0 : 1;
 
+
         http.Response data = await http.post(
             'https://helppy-19.herokuapp.com/register',
             headers: <String, String>{
@@ -279,7 +281,7 @@ class _CadastroPageState extends State<CadastroPage> {
             );
             var dados = json.decode(data.body);
             Navigator.push(context, MaterialPageRoute(
-                builder: (context){
+                builder: (context) {
                     prefs.setInt('logged', 1);
                     prefs.setString('token', dados["token"]);
                     prefs.setInt('user_id', dados["user_id"]);

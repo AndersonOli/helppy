@@ -54,7 +54,6 @@ class HomeTab extends StatelessWidget {
         );
     }
 
-
     Widget _listCard(BuildContext context, AsyncSnapshot snapshot) {
         final _width = MediaQuery.of(context).size.width;
         final _height = MediaQuery.of(context).size.height;
@@ -64,7 +63,7 @@ class HomeTab extends StatelessWidget {
                 height: _height,
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
                 child: ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: 2,
                     shrinkWrap: true,
                     itemBuilder: (context, index){
                         return _cardPedido(context, snapshot);
@@ -87,17 +86,17 @@ class HomeTab extends StatelessWidget {
             ),
             child: Column(
                 children: <Widget>[
-                    Text(transformStringInList(0).toString())
+                    Text(transformStringInList(snapshot,0).toString())
                 ],
             ),
         );
     }
 
 
-    transformStringInList(int idList) async {
+    transformStringInList(AsyncSnapshot snapshot ,int idList) async {
         String buildText = '';
         List list = [];
-        var response = await getResponseList();
+        var response = await snapshot.data[idList];
         String replaceString = response[idList]['shoppings'].toString().replaceAll(
             ",", "").replaceAll("[", "").replaceAll("]", "");
         for (var i = 0; i < replaceString.length; i++) {
@@ -110,7 +109,6 @@ class HomeTab extends StatelessWidget {
                 buildText = '';
             }
         }
-        print(list);
         return list;
     }
 
