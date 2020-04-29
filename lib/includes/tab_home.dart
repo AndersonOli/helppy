@@ -71,11 +71,7 @@ class _HomeTabState extends State<HomeTab> {
                 height: _height,
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
                 child: ListView.builder(
-<<<<<<< HEAD
-                    itemCount: 2,
-=======
                     itemCount: prefs.getString('type_acc') == "0" ? snapshot.data.length : snapshot.data["list"].length,
->>>>>>> 7922baaffa2f101c20bce3e29ce3a5f609613e06
                     shrinkWrap: true,
                     itemBuilder: (context, index){
                         return prefs.getString('type_acc') == "0" ? _cardPedidoVoluntario(context, snapshot, index) : _cardPedidoIdoso(context, snapshot, index);
@@ -117,9 +113,6 @@ class _HomeTabState extends State<HomeTab> {
             ),
             child: Column(
                 children: <Widget>[
-<<<<<<< HEAD
-                    Text(transformStringInList(snapshot,0).toString())
-=======
                     Container(
                         margin: EdgeInsets.only(top: 10.0, left: 15.0),
                         alignment: Alignment.centerLeft,
@@ -196,7 +189,6 @@ class _HomeTabState extends State<HomeTab> {
                             ],
                         ),
                     )
->>>>>>> 7922baaffa2f101c20bce3e29ce3a5f609613e06
                 ],
             ),
         );
