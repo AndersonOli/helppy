@@ -246,7 +246,7 @@ class _CadastroPageState extends State<CadastroPage> {
     }
 
     doCadastro() async {
-        typeAcc = typeOne == true ? 0 : 1;
+        typeAcc = typeOne == true ? 1 : 0;
 
         http.Response data = await http.post(
             'https://helppy-19.herokuapp.com/register',
