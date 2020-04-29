@@ -13,6 +13,7 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
     var prefs;
+
     getResponseList() async {
         prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
@@ -63,7 +64,7 @@ class _HomeTabState extends State<HomeTab> {
     Widget _listCard(BuildContext context, AsyncSnapshot snapshot) {
         final _width = MediaQuery.of(context).size.width;
         final _height = MediaQuery.of(context).size.height;
-        return SingleChildScrollView(
+        return snapshot.data["list"].length > 0 ? SingleChildScrollView(
             child: Container(
                 width: _width,
                 height: _height,
@@ -74,6 +75,14 @@ class _HomeTabState extends State<HomeTab> {
                     itemBuilder: (context, index){
                         return _cardPedido(context, snapshot, index);
                     },
+                ),
+            ),
+        ) : Center(
+            child: Text(
+                prefs.getString('type_acc') == "0" ? "Não há pedidos para ajudar no momento." : "Você ainda não fez nenhum pedido. Se precisa de ajuda, clique no botão com o + abaixo..",
+                style: TextStyle(
+                    color: COR_AZUL,
+                    fontSize: 18.0,
                 ),
             ),
         );
