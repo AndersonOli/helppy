@@ -277,13 +277,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     );
                 }
             } catch(e) {
+                prefs.setInt('logged', 1);
+                prefs.setString('token', dados["token"]);
+                prefs.setInt('user_id', dados["user_id"]);
+                prefs.setString('type_acc', dados["type_account"]);
+
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context){
-                        prefs.setInt('logged', 1);
-                        prefs.setString('token', dados["token"]);
-                        prefs.setInt('user_id', dados["user_id"]);
-                        prefs.setString('type_acc', dados["type_account"]);
-                        return ControlPage();
+                        return ControlPage(true);
                     },
                 ));
             }

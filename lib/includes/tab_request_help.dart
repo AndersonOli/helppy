@@ -49,7 +49,8 @@ class _RequestHelpState extends State<RequestHelp> {
                 floatingActionButton: FloatingActionButton(
                     onPressed: () async {
                         _addData();
-                        int result = await _resultAPI.then((http.Response response) {
+                        await _resultAPI.then((http.Response response) {
+                            print(response.body);
                             return response.statusCode;
                         });
                     }, //_addData
@@ -241,11 +242,10 @@ class _RequestHelpState extends State<RequestHelp> {
     void _addData() {
         setState(() {
             Map<String, dynamic> newshoppingList = Map();
-            newshoppingList['id'] = _shoppingList.length + 1;
             newshoppingList['title'] = titleListController.text;
             newshoppingList['description'] = descriptionController.text;
             newshoppingList['shoppings'] = _list;
-            _shoppingList.add(newshoppingList);
+            _shoppingList.insert(0, newshoppingList);
             //_saveData();
 
             shoppingListController.text = '';
@@ -276,7 +276,8 @@ class _RequestHelpState extends State<RequestHelp> {
         prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
         var url = 'https://helppy-19.herokuapp.com/list';
-        var body = jsonEncode(_shoppingList);
+        var body = _shoppingList[0];
+        print(body);
         return http.post(
             url,
             headers: {"Content-Type": "aplication/json", HttpHeaders.authorizationHeader: "Bearer $token"},

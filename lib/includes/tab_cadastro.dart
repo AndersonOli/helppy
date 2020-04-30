@@ -296,7 +296,7 @@ class _CadastroPageState extends State<CadastroPage> {
                     prefs.setString('token', dados["token"]);
                     prefs.setInt('user_id', dados["user_id"]);
                     prefs.setString('type_acc', dados["type_account"]);
-                    return ControlPage();
+                    return ControlPage(true);
                 },
             ));
         }

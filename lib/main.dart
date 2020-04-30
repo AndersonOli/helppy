@@ -6,7 +6,7 @@ import 'package:helppyapp/ui/control_page.dart';
 void main(){
     runApp(
         MaterialApp(
-            home: ControlPage(),
+            home: ControlPage(false),
             theme: ThemeData(
                 fontFamily: 'NunitoSans',
                 inputDecorationTheme: InputDecorationTheme(
