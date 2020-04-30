@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
+import 'package:helppyapp/ui/control_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -18,24 +19,9 @@ class _RequestHelpState extends State<RequestHelp> {
     final descriptionController = TextEditingController();
     var prefs;
 
-    Future<http.Response> _resultAPI;
     bool _userEdited = false;
     List _shoppingList = [];
     List _list = [];
-    Map<String, dynamic> _lastRemoved;
-    int _lastRemovedPos;
-
-    @override
-    void initState() {
-        super.initState();
-        requestPermission();
-        _readData().then((data) {
-            setState(() {
-                _shoppingList = json.decode(data);
-                print(_shoppingList);
-            });
-        });
-    }
 
     @override
     Widget build(BuildContext context) {
@@ -48,11 +34,19 @@ class _RequestHelpState extends State<RequestHelp> {
                 ),
                 floatingActionButton: FloatingActionButton(
                     onPressed: () async {
-                        _addData();
-                        int result = await _resultAPI.then((http.Response response) {
+                        prefs = await SharedPreferences.getInstance();
+                         _postRequest();
+                         // Mudou esse trecho de código?
+                        await _postRequest().then((http.Response response) {
                             return response.statusCode;
                         });
-                    }, //_addData
+                        /*
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context){
+                                return ControlPage();
+                            },
+                        ));*/
+                    },
                     child: Icon(
                         Icons.check,
                         color: COR_BRANCO,
@@ -188,10 +182,8 @@ class _RequestHelpState extends State<RequestHelp> {
             ),
             onDismissed: (direction) {
                 setState(() {
-                    _lastRemoved = Map.from(_list[index]);
-                    _lastRemovedPos = index;
                     _list.removeAt(index);
-                    _saveData();
+                    print(_list);
                 });
             },
         );
@@ -238,49 +230,18 @@ class _RequestHelpState extends State<RequestHelp> {
         return _list;
     }
 
-    void _addData() {
-        setState(() {
-            Map<String, dynamic> newshoppingList = Map();
-            newshoppingList['id'] = _shoppingList.length + 1;
-            newshoppingList['title'] = titleListController.text;
-            newshoppingList['description'] = descriptionController.text;
-            newshoppingList['shoppings'] = _list;
-            _shoppingList.add(newshoppingList);
-            //_saveData();
-
-            shoppingListController.text = '';
-            _resultAPI = postRequest();
-        });
-    }
-    Future<File> _getFile() async {
-        final directory = await getApplicationDocumentsDirectory();
-        return File("${directory.path}/data.json");
-    }
-
-    Future<File> _saveData() async {
-        String data = json.encode(_shoppingList);
-        final file = await _getFile();
-        return file.writeAsString(data);
-    }
-
-    Future<String> _readData() async {
-        try {
-            final file = await _getFile();
-            return file.readAsString();
-        } catch (e) {
-            return null;
-        }
-    }
-
-    Future<http.Response> postRequest() async {
+    Future<http.Response> _postRequest() async {
         prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
         var url = 'https://helppy-19.herokuapp.com/list';
-        var body = jsonEncode(_shoppingList);
         return http.post(
             url,
-            headers: {"Content-Type": "aplication/json", HttpHeaders.authorizationHeader: "Bearer $token"},
-            body: body
+            headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer $token"},
+            body: jsonEncode(<String, String>{
+                "title": titleListController.text,
+                'description': descriptionController.text,
+                'shoppings': _list.toString(),
+            })
         );
     }
 

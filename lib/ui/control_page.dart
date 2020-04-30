@@ -6,15 +6,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'welcome.dart';
 
 class ControlPage extends StatefulWidget {
+    bool wasLogged;
+    ControlPage(this.wasLogged);
     @override
     _ControlPageState createState() => _ControlPageState();
 }
 
 class _ControlPageState extends State<ControlPage> {
     int currentTab = 0;
-    int launchCount = 0;
     int isLogged;
     String typeAcc;
+    var prefs;
+
     List<Widget> tabs = [
         HomeTab(),
         NewsTab(),
@@ -27,53 +30,67 @@ class _ControlPageState extends State<ControlPage> {
         });
     }
 
-    @override
-    void initState() {
-        super.initState();
-        setValue();
-    }
-
-    void setValue() async {
-        final prefs = await SharedPreferences.getInstance();
-        launchCount = prefs.getInt('counter') ?? 0;
-        prefs.setInt('counter', launchCount + 1);
-        isLogged = prefs.getInt('logged') ?? 0;
+    Future<dynamic> setValue() async {
+        prefs = await SharedPreferences.getInstance();
         typeAcc = prefs.getString('type_acc');
+        isLogged = prefs.getInt('logged');
+        return [typeAcc, isLogged];
     }
 
     @override
     Widget build(BuildContext context) {
-        if(launchCount == 0 || isLogged != 1){
-             return WelcomeScreen();
-        } else {
-            return Scaffold(
-                body: Stack(
-                    children: <Widget>[
-                        tabs[currentTab],
-                        Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: _buildBottomAppBar,
-                        ),
-                    ],
-                ),
-                floatingActionButton: launchCount == 0 || typeAcc == "0" ? Container(width: 0.0,height: 0.0,) : Padding(
-                    padding: EdgeInsets.only(right: 5.0, bottom: 65.0),
-                    child: FloatingActionButton(
-                        child: Icon(Icons.add, color: COR_BRANCO,),
-                        backgroundColor: COR_AZUL,
-                        onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context){
-                                    return RequestHelp();
-                                },
-                            ));
-                        },
-                    ),
-                ),
-            );
-        }
+        return FutureBuilder(
+            future: setValue(),
+            // ignore: missing_return
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                        return Center(
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
+                                strokeWidth: 5.0,
+                            ),
+                        );
+                    case ConnectionState.done:
+                        if(snapshot.data[1] != 1){
+                            return WelcomeScreen();
+                        } else {
+                            return Scaffold(
+                                body: Stack(
+                                    children: <Widget>[
+                                        tabs[currentTab],
+                                        Positioned(
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            child: _buildBottomAppBar,
+                                        ),
+                                    ],
+                                ),
+                                floatingActionButton: snapshot.data[0] == "0" ? Container(width: 0.0,height: 0.0,) : Padding(
+                                    padding: EdgeInsets.only(right: 5.0, bottom: 65.0),
+                                    child: FloatingActionButton(
+                                        child: Icon(Icons.add, color: COR_BRANCO,),
+                                        backgroundColor: COR_AZUL,
+                                        onPressed: (){
+                                            Navigator.push(context, MaterialPageRoute(
+                                                builder: (context){
+                                                    return RequestHelp();
+                                                },
+                                            ));
+                                        },
+                                    ),
+                                ),
+                            );
+                        }
+                        break;
+                  case ConnectionState.active:
+                    // TODO: Handle this case.
+                    break;
+                }
+            },
+        );
     }
 
     Widget get _buildBottomAppBar {
