@@ -8,6 +8,8 @@ import 'dart:io';
 import 'package:helppyapp/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'aceitar_pedido.dart';
+
 class HomeTab extends StatefulWidget {
     @override
     _HomeTabState createState() => _HomeTabState();
@@ -264,46 +266,30 @@ class _HomeTabState extends State<HomeTab> {
                             ),
                         ),
                     ),
-                    Padding(
-                        padding: EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
-                        child: Row(
-                            children: <Widget>[
-                                Expanded(
-                                    child: OutlineButton(
-                                        onPressed: (){},
-                                        borderSide: BorderSide(color: COR_BRANCO),
-                                        child: Text(
-                                            "Ver pedido".toUpperCase(),
-                                            style: TextStyle(
-                                                color: COR_BRANCO,
-                                                fontSize: 14.0,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                        ),
-                                    ),
+                    Container(
+                        width: _width,
+                        margin: EdgeInsets.all(10.0),
+                        child: OutlineButton(
+                            onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context){
+                                        return AcceptRequest();
+                                    },
+                                ));
+                            },
+                            borderSide: BorderSide(color: COR_BRANCO),
+                            child: Text(
+                                "Aceitar pedido".toUpperCase(),
+                                style: TextStyle(
+                                    color: COR_BRANCO,
+                                    fontSize: 14.0,
                                 ),
-                                SizedBox(
-                                    width: 10.0,
-                                ),
-                                Expanded(
-                                    child: OutlineButton(
-                                        onPressed: (){},
-                                        borderSide: BorderSide(color: COR_BRANCO),
-                                        child: Text(
-                                            "Aceitar pedido".toUpperCase(),
-                                            style: TextStyle(
-                                                color: COR_BRANCO,
-                                                fontSize: 14.0,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                        ),
-                                    ),
-                                )
-                            ],
+                                textAlign: TextAlign.center,
+                            ),
                         ),
                     ),
                     Padding(
-                        padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0, bottom: 10.0),
+                        padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
