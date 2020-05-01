@@ -35,6 +35,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
         );
 
         widget.info = json.decode(response.body);
+        widget.info[0]["shoppings"] = toList(widget.info[0]);
     }
 
     @override
@@ -158,7 +159,11 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                 FlatButton(
                                     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
                                     onPressed: (){
-                                        //
+                                        if(widget.newRequest == true){
+                                            // acao para finalizar
+                                        } else {
+                                            // acao para aceitar
+                                        }
                                     },
                                     color: COR_PRETA,
                                     child: Text(
@@ -206,9 +211,9 @@ class _AcceptRequestState extends State<AcceptRequest> {
 
         String replaceString = data['shoppings']
             .toString()
-            .replaceAll("{", "")
+            .replaceAll("[", "")
             .replaceAll("\"", "")
-            .replaceAll("}", "");
+            .replaceAll("]", "");
 
         for (var i = 0; i < replaceString.length; i++) {
             if(replaceString[i] != ',') {
