@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helppyapp/includes/aceitar_pedido.dart';
 import 'package:helppyapp/includes/tab_request_help.dart';
 import 'package:helppyapp/pages.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +17,8 @@ class _ControlPageState extends State<ControlPage> {
     int currentTab = 0;
     int isLogged;
     String typeAcc;
+    bool onRequest;
+    dynamic requestID;
     var prefs;
 
     List<Widget> tabs = [
@@ -34,7 +37,10 @@ class _ControlPageState extends State<ControlPage> {
         prefs = await SharedPreferences.getInstance();
         typeAcc = prefs.getString('type_acc');
         isLogged = prefs.getInt('logged');
-        return [typeAcc, isLogged];
+        onRequest = prefs.get('onRequest') ?? true;
+        requestID = prefs.getString('userID_request') ?? "1";
+
+        return [typeAcc, isLogged, onRequest];
     }
 
     @override
@@ -55,6 +61,8 @@ class _ControlPageState extends State<ControlPage> {
                     case ConnectionState.done:
                         if(snapshot.data[1] != 1){
                             return WelcomeScreen();
+                        } else if(snapshot.data[2] == true){
+                            return AcceptRequest(requestID, true);
                         } else {
                             return Scaffold(
                                 body: Stack(
