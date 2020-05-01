@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
 import 'package:helppyapp/ui/control_page.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
@@ -35,23 +34,21 @@ class _RequestHelpState extends State<RequestHelp> {
                 floatingActionButton: FloatingActionButton(
                     onPressed: () async {
                         prefs = await SharedPreferences.getInstance();
-                         _postRequest();
-                         // Mudou esse trecho de código?
-                        await _postRequest().then((http.Response response) {
+                        int resul = await _postRequest().then((http.Response response) {
                             return response.statusCode;
                         });
-                        /*
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context){
-                                return ControlPage();
-                            },
-                        ));*/
+
+                        if(resul == 200){
+                            alertCard(context, "Pedido realizado com sucesso!", "Seu pedido foi registrado, aguarde até que alguém aceite :)");
+                        } else {
+                            alertCard(context, "Há algo de errado!", "Há um problema a ser resolvido, aguarde e tente novamente mais tarde..");
+                        }
                     },
                     child: Icon(
                         Icons.check,
                         color: COR_BRANCO,
                     ),
-                    backgroundColor: COR_AZUL,
+                    backgroundColor: COR_PRETA,
                 ),
                 body: SingleChildScrollView(
                     padding: EdgeInsets.all(10.0),
@@ -85,7 +82,7 @@ class _RequestHelpState extends State<RequestHelp> {
                                     decoration: InputDecoration(
                                         alignLabelWithHint: true,
                                         labelText: "Descrição",
-                                        hintText: "Descrição do pedido (opcional)",
+                                        hintText: "Descrição do pedido",
                                         border: OutlineInputBorder(),
                                     ),
                                     onChanged: (change) {
@@ -115,7 +112,7 @@ class _RequestHelpState extends State<RequestHelp> {
                                         child: RaisedButton(
                                             padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                                             onPressed: _addShopping,
-                                            color: COR_AZUL,
+                                            color: COR_PRETA,
                                             child: Icon(
                                                 Icons.add,
                                                 color: COR_BRANCO,
@@ -213,7 +210,8 @@ class _RequestHelpState extends State<RequestHelp> {
                             ),
                         ],
                     );
-                });
+                }
+            );
             return Future.value(false);
         } else {
             return Future.value(true);
@@ -223,7 +221,7 @@ class _RequestHelpState extends State<RequestHelp> {
     List _addShopping() {
         setState(() {
             if (shoppingListController.text != '') {
-                _list.add(shoppingListController.text);
+                _list.add(shoppingListController.text.replaceAll(",", ""));
                 shoppingListController.text = '';
             }
         });
@@ -252,5 +250,32 @@ class _RequestHelpState extends State<RequestHelp> {
     Future<void> requestPermission() async {
         final PermissionHandler _permissionHandler = PermissionHandler();
         var result = await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
+    }
+
+    alertCard(BuildContext context, String title, String text)
+    {
+        Widget okButton = FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context){
+                        return ControlPage(true);
+                    },
+                ));
+            },
+        );
+        AlertDialog alerta = AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: [
+                okButton,
+            ],
+        );
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+                return alerta;
+            },
+        );
     }
 }

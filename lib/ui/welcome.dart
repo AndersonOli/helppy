@@ -196,16 +196,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                 ),
                                 Container(
                                     margin: EdgeInsets.only(top: 15.0, bottom: 10.0),
-                                    child: TextFormField(
+                                    child: TextField(
                                         obscureText: true,
-                                        validator: (value){
-                                            if(value.isEmpty){
-                                                return "Insira uma senha";
-                                            } else {
-                                                return null;
-                                            }
-                                        },
                                         controller: _senhaLoginController,
+                                        onSubmitted: (e){
+                                            _doLogin(context);
+                                        },
                                         decoration: InputDecoration(
                                             labelText: "Senha",
                                             hintText: "Insira sua senha",

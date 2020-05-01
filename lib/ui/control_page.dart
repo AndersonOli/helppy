@@ -72,7 +72,7 @@ class _ControlPageState extends State<ControlPage> {
                                     padding: EdgeInsets.only(right: 5.0, bottom: 65.0),
                                     child: FloatingActionButton(
                                         child: Icon(Icons.add, color: COR_BRANCO,),
-                                        backgroundColor: COR_AZUL,
+                                        backgroundColor: COR_PRETA,
                                         onPressed: (){
                                             Navigator.push(context, MaterialPageRoute(
                                                 builder: (context){
