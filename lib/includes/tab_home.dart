@@ -273,7 +273,7 @@ class _HomeTabState extends State<HomeTab> {
                             onPressed: (){
                                 Navigator.push(context, MaterialPageRoute(
                                     builder: (context){
-                                        return AcceptRequest(snapshot.data[index], false);
+                                        return AcceptRequest(snapshot.data[index]);
                                     },
                                 ));
                             },

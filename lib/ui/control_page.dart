@@ -17,8 +17,8 @@ class _ControlPageState extends State<ControlPage> {
     int currentTab = 0;
     int isLogged;
     String typeAcc;
-    bool onRequest;
-    dynamic requestID;
+    int onRequest;
+    dynamic infoRequest;
     var prefs;
 
     List<Widget> tabs = [
@@ -37,8 +37,8 @@ class _ControlPageState extends State<ControlPage> {
         prefs = await SharedPreferences.getInstance();
         typeAcc = prefs.getString('type_acc');
         isLogged = prefs.getInt('logged');
-        onRequest = prefs.get('onRequest') ?? true;
-        requestID = prefs.getString('userID_request') ?? "1";
+        onRequest = prefs.getInt('onRequest');
+        infoRequest = prefs.getString('infoRequest');
 
         return [typeAcc, isLogged, onRequest];
     }
@@ -61,8 +61,8 @@ class _ControlPageState extends State<ControlPage> {
                     case ConnectionState.done:
                         if(snapshot.data[1] != 1){
                             return WelcomeScreen();
-                        } else if(snapshot.data[2] == true){
-                            return AcceptRequest(requestID, true);
+                        } else if(snapshot.data[2] == 1){
+                            return AcceptRequest(infoRequest);
                         } else {
                             return Scaffold(
                                 body: Stack(

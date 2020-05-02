@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:helppyapp/pages.dart';
@@ -7,8 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AcceptRequest extends StatefulWidget {
     dynamic info;
-    bool newRequest;
-    AcceptRequest(this.info, this.newRequest);
+    AcceptRequest(this.info);
 
     @override
     _AcceptRequestState createState() => _AcceptRequestState();
@@ -16,32 +16,23 @@ class AcceptRequest extends StatefulWidget {
 
 class _AcceptRequestState extends State<AcceptRequest> {
     var prefs;
+    int onRequest;
 
-    @override
-    void initState() {
-        super.initState();
-
-        if(widget.newRequest == false){
+    setValue() async {
+        prefs = await SharedPreferences.getInstance();
+        onRequest = prefs.get('onRequest');
+        if(onRequest == 1){
+            widget.info = jsonDecode(prefs.getString('infoRequest'));
+            widget.info["shoppings"] = toList(widget.info);
+        } else {
             widget.info["shoppings"] = toList(widget.info);
         }
-    }
-
-    requestData() async {
-        prefs = await SharedPreferences.getInstance();
-        final token = prefs.getString('token');
-        final response = await http.get(
-            'https://helppy-19.herokuapp.com/list/' + widget.info,
-            headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-        );
-
-        widget.info = json.decode(response.body);
-        widget.info[0]["shoppings"] = toList(widget.info[0]);
     }
 
     @override
     Widget build(BuildContext context) {
         return FutureBuilder(
-            future: requestData(),
+            future: setValue(),
             // ignore: missing_return
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 switch (snapshot.connectionState) {
@@ -68,7 +59,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                 backgroundColor: COR_AZUL,
             ),
             body: ListView.builder(
-                itemCount: widget.info[0]["shoppings"].length,
+                itemCount: widget.info["shoppings"].length,
                 padding: EdgeInsets.all(10.0),
                 shrinkWrap: true,
                 itemBuilder: (context, index){
@@ -79,7 +70,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 10.0),
                                     alignment: Alignment.center,
                                     child: Text(
-                                        widget.info[0]["title"],
+                                        widget.info["title"],
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 18.0
@@ -101,7 +92,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Descrição: " + widget.info[0]["description"],
+                                        "Descrição: " + widget.info["description"],
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -112,7 +103,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Pedido feito em: " + widget.info[0]["created_at"].substring(0, 10).replaceAll("-", "/"),
+                                        "Pedido feito em: " + widget.info["created_at"].substring(0, 10).replaceAll("-", "/"),
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -123,7 +114,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Pedido feito por: " + widget.info[0]["full_name"],
+                                        "Pedido feito por: " + widget.info["full_name"],
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -145,13 +136,13 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
                                 ),
-                                _itemList(widget.info[0]["shoppings"][index]),
+                                _itemList(widget.info["shoppings"][index]),
                             ],
                         );
-                    } else if(index == (widget.info[0]["shoppings"].length - 1)){
+                    } else if(index == (widget.info["shoppings"].length - 1)){
                         return Column(
                             children: <Widget>[
-                                _itemList(widget.info[0]["shoppings"][index]),
+                                _itemList(widget.info["shoppings"][index]),
                                 Padding(
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
@@ -159,15 +150,22 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                 FlatButton(
                                     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
                                     onPressed: (){
-                                        if(widget.newRequest == true){
-                                            // acao para finalizar
+                                        if(onRequest != 1){
+                                            prefs.setInt("onRequest", 1);
+                                            prefs.setString("infoRequest", widget.info);
                                         } else {
-                                            // acao para aceitar
+                                            prefs.setInt("onRequest", 0);
                                         }
+
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context){
+                                                return ControlPage(true);
+                                            },
+                                        ));
                                     },
                                     color: COR_PRETA,
                                     child: Text(
-                                        widget.newRequest == true ? "Finalizar pedido".toUpperCase() : "Aceitar pedido".toUpperCase(),
+                                        onRequest == 1 ? "Finalizar pedido".toUpperCase() : "Aceitar pedido".toUpperCase(),
                                         style: TextStyle(
                                             color: COR_BRANCO,
                                             fontSize: 14.0,
@@ -178,7 +176,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                             ],
                         );
                     } else {
-                        return _itemList(widget.info[0]["shoppings"][index]);
+                        return _itemList(widget.info["shoppings"][index]);
                     }
                 },
             ),
