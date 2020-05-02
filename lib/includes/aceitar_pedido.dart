@@ -15,7 +15,7 @@ class AcceptRequest extends StatefulWidget {
 }
 
 class _AcceptRequestState extends State<AcceptRequest> {
-    var prefs;
+    var prefs, infoAccept;
     int onRequest;
 
     setValue() async {
@@ -57,6 +57,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
+                automaticallyImplyLeading: onRequest == 1 ? false : true,
             ),
             body: ListView.builder(
                 itemCount: widget.info["shoppings"].length,
@@ -125,7 +126,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Contato: ",
+                                        "Contato: " + widget.info["telephone"],
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -149,19 +150,37 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                 ),
                                 FlatButton(
                                     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
-                                    onPressed: (){
+                                    onPressed: () async {
                                         if(onRequest != 1){
+                                            var url = 'https://helppy-19.herokuapp.com/accept/' + prefs.getInt('user_id').toString() + "/" + widget.info["id"].toString();
+                                            var response = await http.post(
+                                                url,
+                                                headers: {"Content-Type": "application/json; charset=utf-8"},
+                                                body: jsonEncode(<String, String>{
+                                                    "accept_by": "Teste de Teste",
+                                                    "accept_by_id": "2",
+                                                    "status": "1"
+                                                })
+                                            );
+
+                                            print(response.statusCode);
+
                                             prefs.setInt("onRequest", 1);
-                                            prefs.setString("infoRequest", widget.info);
+                                            infoAccept = prefs.setString("infoRequest", jsonEncode(widget.info).toString());
+
+                                            Navigator.push(context, MaterialPageRoute(
+                                                builder: (context){
+                                                    return AcceptRequest(infoAccept);
+                                                },
+                                            ));
                                         } else {
                                             prefs.setInt("onRequest", 0);
+                                            Navigator.push(context, MaterialPageRoute(
+                                                builder: (context){
+                                                    return ControlPage(true);
+                                                },
+                                            ));
                                         }
-
-                                        Navigator.push(context, MaterialPageRoute(
-                                            builder: (context){
-                                                return ControlPage(true);
-                                            },
-                                        ));
                                     },
                                     color: COR_PRETA,
                                     child: Text(
@@ -211,7 +230,10 @@ class _AcceptRequestState extends State<AcceptRequest> {
             .toString()
             .replaceAll("[", "")
             .replaceAll("\"", "")
-            .replaceAll("]", "");
+            .replaceAll("]", "")
+            .replaceAll("{", "")
+            .replaceAll("}", "");
+
 
         for (var i = 0; i < replaceString.length; i++) {
             if(replaceString[i] != ',') {

@@ -239,6 +239,7 @@ class _RequestHelpState extends State<RequestHelp> {
                 "title": titleListController.text,
                 'description': descriptionController.text,
                 'shoppings': _list.toString(),
+                "status": "0"
             })
         );
     }

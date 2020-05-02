@@ -17,6 +17,7 @@ class _CadastroPageState extends State<CadastroPage> {
     bool typeTwo = false;
     int typeAcc;
     var prefs;
+    String latitude, longitude;
 
     @override
     void initState() {
@@ -262,7 +263,9 @@ class _CadastroPageState extends State<CadastroPage> {
                 "address": _endCadController.text,
                 "house_number": _numeroCadController.text.trim(),
                 "reference": _refCadController.text,
-                "type_account": typeAcc.toString()
+                "type_account": typeAcc.toString(),
+                "latitude": latitude,
+                "longitude": longitude
             }),
         );
 
@@ -304,10 +307,17 @@ class _CadastroPageState extends State<CadastroPage> {
 
     _completeCEP() async {
         if(_cepCadController.text != null){
-            var endereco = await http.get("https://viacep.com.br/ws/"+ _cepCadController.text.trim() +"/json");
+            var endereco = await http.get(
+                "http://www.cepaberto.com/api/v3/cep?cep=" + _cepCadController.text.trim(),
+                headers: {'Authorization': 'Token token=471dec71c96f8dbc684056839dc3411b'}
+            );
             var data = jsonDecode(endereco.body);
+
+            latitude = data["latitude"];
+            longitude = data["longitude"];
+
             setState(() {
-                _endCadController.text = data["logradouro"] + " - " + data["bairro"] + " - " + data["localidade"] + "-" + data["uf"];
+                _endCadController.text = data["logradouro"] + " - " + data["bairro"] + " - " + data["cidade"]["nome"] + "-" + data["estado"]["sigla"];
                 _refCadController.text = data["complemento"];
             });
         }

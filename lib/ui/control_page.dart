@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/aceitar_pedido.dart';
 import 'package:helppyapp/includes/tab_request_help.dart';
@@ -18,7 +20,7 @@ class _ControlPageState extends State<ControlPage> {
     int isLogged;
     String typeAcc;
     int onRequest;
-    dynamic infoRequest;
+    String infoRequest;
     var prefs;
 
     List<Widget> tabs = [
@@ -39,7 +41,6 @@ class _ControlPageState extends State<ControlPage> {
         isLogged = prefs.getInt('logged');
         onRequest = prefs.getInt('onRequest');
         infoRequest = prefs.getString('infoRequest');
-
         return [typeAcc, isLogged, onRequest];
     }
 
