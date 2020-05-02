@@ -29,3 +29,17 @@ showAlertDialog(BuildContext context, String title, String text)
         },
     );
 }
+
+isLoading(BuildContext context){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+            return Center(
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
+                    strokeWidth: 5.0,
+                ),
+            );
+        },
+    );
+}

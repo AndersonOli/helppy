@@ -17,6 +17,7 @@ class _CadastroPageState extends State<CadastroPage> {
     bool typeTwo = false;
     int typeAcc;
     var prefs;
+    bool onProgress;
     String latitude, longitude;
 
     @override
@@ -225,9 +226,12 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 width: _width,
                                 margin: EdgeInsets.only(top: 20.0),
-                                child: RaisedButton(
+                                child: FlatButton(
                                     onPressed: (){
-                                        doCadastro();
+                                        setState(() {
+                                            onProgress = true;
+                                        });
+                                        doCadastro(context);
                                     },
                                     color: COR_AZUL,
                                     child: Text(
@@ -246,7 +250,8 @@ class _CadastroPageState extends State<CadastroPage> {
         );
     }
 
-    doCadastro() async {
+    doCadastro(context) async {
+        isLoading(context);
         typeAcc = typeOne == true ? 1 : 0;
 
         http.Response data = await http.post(
@@ -268,6 +273,8 @@ class _CadastroPageState extends State<CadastroPage> {
                 "longitude": longitude
             }),
         );
+
+        Navigator.of(context).pop();
 
         if(data.body.contains('duplicate key value violates unique constraint')){
             showAlertDialog(
