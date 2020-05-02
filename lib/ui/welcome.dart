@@ -138,7 +138,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                     width: _width,
                                     height: 150.0,
                                     child: Image(
-                                        image: AssetImage("assets/images/logo.png"),
+                                        image: AssetImage("assets/images/logov2.png"),
                                     ),
                                 ),
                                 Padding(
