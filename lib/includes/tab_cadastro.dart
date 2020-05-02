@@ -251,7 +251,7 @@ class _CadastroPageState extends State<CadastroPage> {
     }
 
     doCadastro(context) async {
-        isLoading(context);
+        isLoading(context, true);
         typeAcc = typeOne == true ? 1 : 0;
 
         http.Response data = await http.post(
@@ -274,7 +274,7 @@ class _CadastroPageState extends State<CadastroPage> {
             }),
         );
 
-        Navigator.of(context).pop();
+        isLoading(context, false);
 
         if(data.body.contains('duplicate key value violates unique constraint')){
             showAlertDialog(

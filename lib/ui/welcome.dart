@@ -252,6 +252,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
     _doLogin(BuildContext context) async {
         if(_emailLoginController.text != "" && _senhaLoginController.text != ""){
+            isLoading(context, true);
             http.Response data = await http.post(
                 'https://helppy-19.herokuapp.com/authenticate',
                 headers: <String, String>{
@@ -263,7 +264,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                 }),
             );
             var dados = json.decode(data.body);
-
+            isLoading(context, false);
             try{
                 if(dados[0]["field"] != null){
                     showAlertDialog(
