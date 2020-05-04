@@ -55,13 +55,22 @@ requestPermission() async {
     var result = await _permissionHandler.checkPermissionStatus(PermissionGroup.locationWhenInUse);
     bool dontAskAgain = await _permissionHandler.shouldShowRequestPermissionRationale(PermissionGroup.locationWhenInUse);
 
+    print(dontAskAgain);
+
     switch (result) {
         case PermissionStatus.denied:
             await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
-            if(dontAskAgain == false){
-                SystemNavigator.pop();
+            var check = await _permissionHandler.checkPermissionStatus(PermissionGroup.locationWhenInUse);
+            dontAskAgain = await _permissionHandler.shouldShowRequestPermissionRationale(PermissionGroup.locationWhenInUse);
+
+            switch (check) {
+                case PermissionStatus.denied:
+                    if(dontAskAgain == false){
+                        SystemNavigator.pop();
+                    }
+                    break;
             }
-            requestPermission();
+
             break;
     }
 }
