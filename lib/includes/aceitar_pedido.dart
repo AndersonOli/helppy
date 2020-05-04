@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -82,17 +83,6 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Distância: ",
-                                        style: TextStyle(
-                                            color: COR_AZUL,
-                                            fontSize: 16.0
-                                        ),
-                                    ),
-                                ),
-                                Container(
-                                    margin: EdgeInsets.only(top: 15.0),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
                                         "Descrição: " + widget.info["description"],
                                         style: TextStyle(
                                             color: COR_AZUL,
@@ -104,7 +94,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Pedido feito em: " + widget.info["created_at"].substring(0, 10).replaceAll("-", "/"),
+                                        "Pedido feito em: " + replaceDate(widget.info["created_at"], index),
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -151,19 +141,23 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                 FlatButton(
                                     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
                                     onPressed: () async {
+                                        isLoading(context, true);
+                                        var response;
+                                        var url = 'https://helppy-19.herokuapp.com/update/' + widget.info["user_id"].toString() + "/" + widget.info["id"].toString();
                                         if(onRequest != 1){
-                                            var url = 'https://helppy-19.herokuapp.com/accept/' + prefs.getInt('user_id').toString() + "/" + widget.info["id"].toString();
-                                            var response = await http.post(
+                                            response = await http.post(
                                                 url,
-                                                headers: {"Content-Type": "application/json; charset=utf-8"},
+                                                headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
                                                 body: jsonEncode(<String, String>{
-                                                    "accept_by": "Teste de Teste",
-                                                    "accept_by_id": "2",
-                                                    "status": "1"
+                                                    "status": "1",
+                                                    "acceptName": prefs.getString("name"),
+                                                    "acceptId": prefs.getInt("user_id").toString(),
                                                 })
                                             );
 
-                                            print(response.statusCode);
+                                            print(response.body);
+
+                                            isLoading(context, false);
 
                                             prefs.setInt("onRequest", 1);
                                             infoAccept = prefs.setString("infoRequest", jsonEncode(widget.info).toString());
@@ -174,6 +168,19 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                                 },
                                             ));
                                         } else {
+                                            response = await http.post(
+                                                url,
+                                                headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
+                                                body: jsonEncode(<String, String>{
+                                                    "status": "2",
+                                                    "acceptName": prefs.getString("name"),
+                                                    "acceptId": prefs.getInt("user_id").toString(),
+                                                })
+                                            );
+
+                                            print(response.body);
+
+                                            isLoading(context, false);
                                             prefs.setInt("onRequest", 0);
                                             Navigator.push(context, MaterialPageRoute(
                                                 builder: (context){
@@ -246,5 +253,27 @@ class _AcceptRequestState extends State<AcceptRequest> {
             }
         }
         return list;
+    }
+
+    String replaceDate(data, int index) {
+        String buildText = '';
+        List list = [];
+
+        var responseString = data.substring(0, 10);
+
+        for (var i = 0; i < responseString.length; i++) {
+            if(responseString[i] != '-') {
+                buildText += responseString[i];
+            }
+
+            if((i == (responseString.length - 1)) || (responseString[i] == '-')) {
+                list.add(buildText);
+                buildText = '';
+            }
+        }
+
+        String replaceString =  list[2].toString() + '/' + list[1].toString() + '/' + list[0].toString();
+
+        return replaceString;
     }
 }

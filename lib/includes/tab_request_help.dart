@@ -4,7 +4,6 @@ import 'package:helppyapp/globals.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RequestHelp extends StatefulWidget {
@@ -246,11 +245,6 @@ class _RequestHelpState extends State<RequestHelp> {
 
     String capitalize(String s) {
         return s[0].toUpperCase() + s.substring(1);
-    }
-
-    Future<void> requestPermission() async {
-        final PermissionHandler _permissionHandler = PermissionHandler();
-        var result = await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
     }
 
     alertCard(BuildContext context, String title, String text)

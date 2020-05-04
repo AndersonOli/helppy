@@ -278,6 +278,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                 prefs.setString('token', dados["token"]);
                 prefs.setInt('user_id', dados["user_id"]);
                 prefs.setString('type_acc', dados["type_account"]);
+                prefs.setString('name', dados["full_name"]);
 
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context){

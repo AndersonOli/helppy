@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/view_list.dart';
@@ -6,8 +8,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:helppyapp/globals.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:geolocator/geolocator.dart';
 import 'aceitar_pedido.dart';
 
 class HomeTab extends StatefulWidget {
@@ -16,18 +19,79 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-    var prefs;
+    var prefs, lat, long, responseDistance;
+
+    @override
+    void initState() {
+        super.initState();
+        setValue();
+    }
+
+    setValue() async {
+        prefs = await SharedPreferences.getInstance();
+        print(prefs.getString("name"));
+    }
+
+    requestDistance() async {
+        final token = prefs.getString('token');
+        final response = await http.post(
+            'https://helppy-19.herokuapp.com/distance',
+            headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+            body: <String, String>{
+                "lat": lat.toString(),
+                "long": long.toString()
+            }
+        );
+        responseDistance = json.decode(response.body);
+    }
 
     getResponseList() async {
-        prefs = await SharedPreferences.getInstance();
+        await requestPermission();
         final token = prefs.getString('token');
         final idUser = prefs.getInt('user_id');
         final typeACC = prefs.getString('type_acc');
-        final response = await http.get(
-            typeACC == "1" ? 'https://helppy-19.herokuapp.com/list/$idUser' : 'https://helppy-19.herokuapp.com/list',
-            headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-        );
-        return json.decode(response.body);
+        var response;
+
+        if(typeACC == "1"){
+            response = await http.get(
+                'https://helppy-19.herokuapp.com/list/$idUser',
+                headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+            );
+            return json.decode(response.body);
+        } else {
+            response = await http.post(
+                'https://helppy-19.herokuapp.com/accept',
+                headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+                body: {
+                    "lat": lat.toString(),
+                    "long": long.toString()
+                },
+            );
+            await requestDistance();
+            return json.decode(response.body);
+        }
+    }
+
+    Future<void> requestPermission() async {
+        final PermissionHandler _permissionHandler = PermissionHandler();
+        var result = await _permissionHandler.checkPermissionStatus(PermissionGroup.locationWhenInUse);
+
+        switch (result) {
+            case PermissionStatus.granted:
+                var geolocator = Geolocator();
+                Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+
+                lat = position.latitude;
+                long = position.longitude;
+                break;
+            case PermissionStatus.denied:
+                await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
+                requestPermission();
+                break;
+            default:
+                await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
+                requestPermission();
+        }
     }
 
     @override
@@ -69,6 +133,7 @@ class _HomeTabState extends State<HomeTab> {
     Widget _listCard(BuildContext context, AsyncSnapshot snapshot) {
         final _width = MediaQuery.of(context).size.width;
         final _height = MediaQuery.of(context).size.height;
+
         return snapshot.data.length > 0 ? SingleChildScrollView(
             child: Container(
                 width: _width,
@@ -132,7 +197,7 @@ class _HomeTabState extends State<HomeTab> {
                         margin: EdgeInsets.only(top: 10.0, left: 15.0, bottom: 10.0),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            "Aceito por: " + "Seu pedido ainda não foi aceito..",
+                            snapshot.data[index]["status"] == "1" ? "Aceito por: " + snapshot.data[index]["accept_by"] : "Seu pedido ainda não foi aceito..",
                             style: TextStyle(
                                 color: COR_BRANCO,
                                 fontSize: 18.0,
@@ -143,7 +208,7 @@ class _HomeTabState extends State<HomeTab> {
                         margin: EdgeInsets.only(top: 10.0, left: 15.0),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            "Pedido feito em " + snapshot.data[index]["created_at"].substring(0, 10).replaceAll("-", "/"),
+                            "Pedido feito em " + replaceDate(snapshot, index),
                             style: TextStyle(
                                 color: COR_BRANCO,
                                 fontSize: 18.0,
@@ -294,7 +359,8 @@ class _HomeTabState extends State<HomeTab> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                                 Text(
-                                    "Em " + snapshot.data[index]["updated_at"].substring(0, 10).replaceAll("-", "/"),
+                                    "Em " + replaceDate(snapshot, index),
+
                                     style: TextStyle(
                                         color: COR_BRANCO,
                                         fontSize: 14.0,
@@ -304,7 +370,7 @@ class _HomeTabState extends State<HomeTab> {
                                     children: <Widget>[
                                         Icon(Icons.location_on, size: 14.0, color: COR_BRANCO,),
                                         Text(
-                                            "200m",
+                                            valueDistance(snapshot, index) + "m",
                                             style: TextStyle(
                                                 color: COR_BRANCO,
                                                 fontSize: 14.0,
@@ -342,6 +408,40 @@ class _HomeTabState extends State<HomeTab> {
             }
         }
         return list;
+    }
+
+    String valueDistance(AsyncSnapshot snapshot, int index) {
+        var id = snapshot.data[index]["user_id"];
+        var viewDistance;
+
+        for (var i in responseDistance){
+            if (id == i["id"]){
+                viewDistance = i['distance'];
+            }
+        }
+        return viewDistance.toString();
+    }
+
+    String replaceDate(AsyncSnapshot snapshot, int index) {
+        String buildText = '';
+        List list = [];
+
+        var responseString = snapshot.data[index]["created_at"].substring(0, 10);
+
+        for (var i = 0; i < responseString.length; i++) {
+            if(responseString[i] != '-') {
+                buildText += responseString[i];
+            }
+
+            if((i == (responseString.length - 1)) || (responseString[i] == '-')) {
+                list.add(buildText);
+                buildText = '';
+            }
+        }
+
+        String replaceString =  list[2].toString() + '/' + list[1].toString() + '/' + list[0].toString();
+
+        return replaceString;
     }
 }
 
