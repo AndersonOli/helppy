@@ -94,6 +94,9 @@ class _RequestHelpState extends State<RequestHelp> {
                                     Expanded(
                                         child: TextField(
                                             controller: shoppingListController,
+                                            onSubmitted: (e){
+                                                _addShopping();
+                                            },
                                             decoration: InputDecoration(
                                                 labelText: "Qual produto deseja?",
                                                 hintText: "Nome do produto :)",
@@ -191,8 +194,8 @@ class _RequestHelpState extends State<RequestHelp> {
                 context: context,
                 builder: (context) {
                     return AlertDialog(
-                        title: Text("Descartar Alterações?"),
-                        content: Text("As Alterações Serão Perdidas."),
+                        title: Text("Descartar alterações?"),
+                        content: Text("As alterações serão perdidas."),
                         actions: <Widget>[
                             FlatButton(
                                 child: Text("Cancelar"),

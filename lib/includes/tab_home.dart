@@ -29,7 +29,6 @@ class _HomeTabState extends State<HomeTab> {
 
     setValue() async {
         prefs = await SharedPreferences.getInstance();
-        print(prefs.getString("name"));
     }
 
     requestDistance() async {
@@ -165,7 +164,7 @@ class _HomeTabState extends State<HomeTab> {
             width: _width,
             margin: index == (snapshot.data.length - 1) ? EdgeInsets.only(top: 15.0, bottom: 75.0) : EdgeInsets.only(top: 15.0),
             decoration: BoxDecoration(
-                color: COR_AZUL,
+                color: snapshot.data[index]["status"] == "2" ? Color.fromRGBO(8, 77, 110, 1.0) : COR_AZUL,
                 borderRadius: BorderRadius.circular(10.0)
             ),
             child: Column(
@@ -175,7 +174,7 @@ class _HomeTabState extends State<HomeTab> {
                         alignment: Alignment.center,
                         margin: EdgeInsets.only(top: 10.0),
                         child: Text(
-                            snapshot.data[index]["title"],
+                            snapshot.data[index]["status"] == "2" ? snapshot.data[index]["title"] + "(Finalizado)" : snapshot.data[index]["title"]  + "(Em andamento)",
                             style: TextStyle(
                                 color: COR_BRANCO,
                                 fontSize: 18.0,
@@ -197,7 +196,7 @@ class _HomeTabState extends State<HomeTab> {
                         margin: EdgeInsets.only(top: 10.0, left: 15.0, bottom: 10.0),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            snapshot.data[index]["status"] == "1" ? "Aceito por: " + snapshot.data[index]["accept_by"] : "Seu pedido ainda não foi aceito..",
+                            statusRequest(snapshot, index),
                             style: TextStyle(
                                 color: COR_BRANCO,
                                 fontSize: 18.0,
@@ -276,7 +275,7 @@ class _HomeTabState extends State<HomeTab> {
                                                 },
                                             );
                                             AlertDialog alerta = AlertDialog(
-                                                title: Text("Você está prestes a cancelar este pedido!"),
+                                                title: Text(snapshot.data[index]["status"] == "2" ? "Você está prestes a apagar este pedido do seu histórico!" : "Você está prestes a cancelar este pedido!"),
                                                 content: Text("Essa ação não pode ser desfita, tem certeza?"),
                                                 actions: [
                                                     cancel,
@@ -292,7 +291,7 @@ class _HomeTabState extends State<HomeTab> {
                                         },
                                         borderSide: BorderSide(color: COR_BRANCO),
                                         child: Text(
-                                            "Cancelar".toUpperCase(),
+                                            snapshot.data[index]["status"] == "2" ? "Apagar".toUpperCase() : "Cancelar".toUpperCase(),
                                             style: TextStyle(
                                                 color: COR_BRANCO,
                                                 fontSize: 14.0,
@@ -442,6 +441,19 @@ class _HomeTabState extends State<HomeTab> {
         String replaceString =  list[2].toString() + '/' + list[1].toString() + '/' + list[0].toString();
 
         return replaceString;
+    }
+
+    String statusRequest(AsyncSnapshot snapshot, int index){
+        switch(snapshot.data[index]["status"]){
+            case "1":
+                return "Aceito por: " + snapshot.data[index]["accept_by"];
+                break;
+            case "2":
+                return "Seu pedido foi aceito e finalizado por: " + snapshot.data[index]["accept_by"];
+                break;
+            default:
+                return "Seu pedido ainda não foi aceito..";
+        }
     }
 }
 
