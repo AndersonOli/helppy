@@ -18,7 +18,6 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
     var prefs, lat, long, responseDistance;
-    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
     @override
     void initState() {
@@ -136,9 +135,7 @@ class _HomeTabState extends State<HomeTab> {
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
                 child: RefreshIndicator(
                     onRefresh: () async {
-                        setState(() {
-
-                        });
+                        setState(() {});
                     },
                     child: ListView.builder(
                         itemCount: snapshot.data.length,

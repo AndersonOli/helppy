@@ -18,7 +18,6 @@ class _RequestHelpState extends State<RequestHelp> {
     var prefs;
 
     bool _userEdited = false;
-    List _shoppingList = [];
     List _list = [];
 
     @override
