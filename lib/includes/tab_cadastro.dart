@@ -33,6 +33,7 @@ class _CadastroPageState extends State<CadastroPage> {
     final TextEditingController _nomeCadController = TextEditingController();
     final TextEditingController _emailCadController = TextEditingController();
     final TextEditingController _senhaCadController = TextEditingController();
+    final TextEditingController _confirmSenhaCadController = TextEditingController();
     final TextEditingController _telCadController = TextEditingController();
     final TextEditingController _cepCadController = TextEditingController();
     final TextEditingController _endCadController = TextEditingController();
@@ -86,6 +87,20 @@ class _CadastroPageState extends State<CadastroPage> {
                                     decoration: InputDecoration(
                                         labelText: "Senha",
                                         hintText: "Insira uma senha",
+                                        border: OutlineInputBorder(),
+                                        contentPadding:
+                                        const EdgeInsets.symmetric(horizontal: 10),
+                                    ),
+                                ),
+                            ),
+                            Container(
+                                margin: EdgeInsets.only(top: 10.0),
+                                child: TextField(
+                                    controller: _confirmSenhaCadController,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                        labelText: "Confirme sua senha",
+                                        hintText: "Insira a mesma senha digitada anteriormente",
                                         border: OutlineInputBorder(),
                                         contentPadding:
                                         const EdgeInsets.symmetric(horizontal: 10),
@@ -251,6 +266,15 @@ class _CadastroPageState extends State<CadastroPage> {
     }
 
     doCadastro(context) async {
+        if(_confirmSenhaCadController.text != _senhaCadController.text){
+            showAlertDialog(
+                context,
+                "As senhas não correspodem!",
+                "Por favor, preencha a senha corretamente nos dois campos"
+            );
+            return 0;
+        }
+
         isLoading(context, true);
         typeAcc = typeOne == true ? 1 : 0;
 

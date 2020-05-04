@@ -24,7 +24,6 @@ class _HomeTabState extends State<HomeTab> {
     void initState() {
         super.initState();
         setValue();
-        requestPermission();
     }
 
     setValue() async {
@@ -91,6 +90,7 @@ class _HomeTabState extends State<HomeTab> {
                             // ignore: missing_return
                             builder: (context, snapshot) {
                                 switch (snapshot.connectionState) {
+                                    case ConnectionState.active:
                                     case ConnectionState.waiting:
                                     case ConnectionState.none:
                                         return Center(
@@ -102,8 +102,7 @@ class _HomeTabState extends State<HomeTab> {
                                     case ConnectionState.done:
                                         return _listCard(context, snapshot);
                                         break;
-                                  case ConnectionState.active:
-                                    break;
+
                                 }
                             }),
                     ),
@@ -115,6 +114,20 @@ class _HomeTabState extends State<HomeTab> {
     Widget _listCard(BuildContext context, AsyncSnapshot snapshot) {
         final _width = MediaQuery.of(context).size.width;
         final _height = MediaQuery.of(context).size.height;
+
+        if(snapshot.data == null){
+            return Container(
+                child: Center(
+                    child: Text(
+                        prefs.getString('type_acc') == "0" ? "Não há pedidos para ajudar no momento." : "Você ainda não fez nenhum pedido. Se precisa de ajuda, clique no botão com o + abaixo..",
+                        style: TextStyle(
+                            color: COR_AZUL,
+                            fontSize: 18.0,
+                        ),
+                    ),
+                ),
+            );
+        }
 
         return snapshot.data.length > 0 ? SingleChildScrollView(
             child: Container(
