@@ -128,6 +128,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     child: Divider(),
                                 ),
                                 _itemList(widget.info["shoppings"][index]),
+                                _buttonAccept(context)
                             ],
                         );
                     } else if(index == (widget.info["shoppings"].length - 1)){
@@ -138,73 +139,77 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
                                 ),
-                                FlatButton(
-                                    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
-                                    onPressed: () async {
-                                        isLoading(context, true);
-                                        var response;
-                                        var url = 'https://helppy-19.herokuapp.com/update/' + widget.info["user_id"].toString() + "/" + widget.info["id"].toString();
-                                        if(onRequest != 1){
-                                            response = await http.post(
-                                                url,
-                                                headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
-                                                body: jsonEncode(<String, String>{
-                                                    "status": "1",
-                                                    "acceptName": prefs.getString("name"),
-                                                    "acceptId": prefs.getInt("user_id").toString(),
-                                                })
-                                            );
-
-                                            print(response.body);
-
-                                            isLoading(context, false);
-
-                                            prefs.setInt("onRequest", 1);
-                                            infoAccept = prefs.setString("infoRequest", jsonEncode(widget.info).toString());
-
-                                            Navigator.push(context, MaterialPageRoute(
-                                                builder: (context){
-                                                    return AcceptRequest(infoAccept);
-                                                },
-                                            ));
-                                        } else {
-                                            response = await http.post(
-                                                url,
-                                                headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
-                                                body: jsonEncode(<String, String>{
-                                                    "status": "2",
-                                                    "acceptName": prefs.getString("name"),
-                                                    "acceptId": prefs.getInt("user_id").toString(),
-                                                })
-                                            );
-
-                                            print(response.body);
-
-                                            isLoading(context, false);
-                                            prefs.setInt("onRequest", 0);
-                                            Navigator.push(context, MaterialPageRoute(
-                                                builder: (context){
-                                                    return ControlPage(true);
-                                                },
-                                            ));
-                                        }
-                                    },
-                                    color: COR_PRETA,
-                                    child: Text(
-                                        onRequest == 1 ? "Finalizar pedido".toUpperCase() : "Aceitar pedido".toUpperCase(),
-                                        style: TextStyle(
-                                            color: COR_BRANCO,
-                                            fontSize: 14.0,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                    ),
-                                )
+                                _buttonAccept(context)
                             ],
                         );
                     } else {
                         return _itemList(widget.info["shoppings"][index]);
                     }
                 },
+            ),
+        );
+    }
+
+    Widget _buttonAccept(context){
+        return FlatButton(
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
+            onPressed: () async {
+                isLoading(context, true);
+                var response;
+                var url = 'https://helppy-19.herokuapp.com/update/' + widget.info["user_id"].toString() + "/" + widget.info["id"].toString();
+                if(onRequest != 1){
+                    response = await http.post(
+                        url,
+                        headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
+                        body: jsonEncode(<String, String>{
+                            "status": "1",
+                            "acceptName": prefs.getString("name"),
+                            "acceptId": prefs.getInt("user_id").toString(),
+                        })
+                    );
+
+                    print(response.body);
+
+                    isLoading(context, false);
+
+                    prefs.setInt("onRequest", 1);
+                    infoAccept = prefs.setString("infoRequest", jsonEncode(widget.info).toString());
+
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context){
+                            return AcceptRequest(infoAccept);
+                        },
+                    ));
+                } else {
+                    response = await http.post(
+                        url,
+                        headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
+                        body: jsonEncode(<String, String>{
+                            "status": "2",
+                            "acceptName": prefs.getString("name"),
+                            "acceptId": prefs.getInt("user_id").toString(),
+                        })
+                    );
+
+                    print(response.body);
+
+                    isLoading(context, false);
+                    prefs.setInt("onRequest", 0);
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context){
+                            return ControlPage(true);
+                        },
+                    ));
+                }
+            },
+            color: COR_PRETA,
+            child: Text(
+                onRequest == 1 ? "Finalizar pedido".toUpperCase() : "Aceitar pedido".toUpperCase(),
+                style: TextStyle(
+                    color: COR_BRANCO,
+                    fontSize: 14.0,
+                ),
+                textAlign: TextAlign.center,
             ),
         );
     }

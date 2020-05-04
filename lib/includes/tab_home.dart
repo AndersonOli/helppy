@@ -20,6 +20,7 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
     var prefs, lat, long, responseDistance;
+    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
     @override
     void initState() {
@@ -138,12 +139,19 @@ class _HomeTabState extends State<HomeTab> {
                 width: _width,
                 height: _height,
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
-                child: ListView.builder(
-                    itemCount: snapshot.data.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index){
-                        return prefs.getString('type_acc') == "0" ? _cardPedidoVoluntario(context, snapshot, index) : _cardPedidoIdoso(context, snapshot, index);
+                child: RefreshIndicator(
+                    onRefresh: () async {
+                        setState(() {
+
+                        });
                     },
+                    child: ListView.builder(
+                        itemCount: snapshot.data.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index){
+                            return prefs.getString('type_acc') == "0" ? _cardPedidoVoluntario(context, snapshot, index) : _cardPedidoIdoso(context, snapshot, index);
+                        },
+                    ),
                 ),
             ),
         ) : Center(
@@ -238,10 +246,10 @@ class _HomeTabState extends State<HomeTab> {
                                         ),
                                     ),
                                 ),
-                                SizedBox(
+                                snapshot.data[index]["status"] == "0" || snapshot.data[index]["status"] == "2" ? SizedBox(
                                     width: 10.0,
-                                ),
-                                Expanded(
+                                ) : Container(),
+                                snapshot.data[index]["status"] == "0" || snapshot.data[index]["status"] == "2" ? Expanded(
                                     child: OutlineButton(
                                         onPressed: (){
                                             Widget cancel = FlatButton(
@@ -299,7 +307,7 @@ class _HomeTabState extends State<HomeTab> {
                                             textAlign: TextAlign.center,
                                         ),
                                     ),
-                                )
+                                ) : Container()
                             ],
                         ),
                     )
