@@ -1,16 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:helppyapp/includes/view_list.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:helppyapp/globals.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geolocator/geolocator.dart';
 import 'aceitar_pedido.dart';
 
 class HomeTab extends StatefulWidget {
@@ -26,6 +24,7 @@ class _HomeTabState extends State<HomeTab> {
     void initState() {
         super.initState();
         setValue();
+        requestPermission();
     }
 
     setValue() async {
@@ -45,8 +44,16 @@ class _HomeTabState extends State<HomeTab> {
         responseDistance = json.decode(response.body);
     }
 
+    Future<void> getCords() async {
+        var geolocator = Geolocator();
+        Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+
+        lat = position.latitude;
+        long = position.longitude;
+    }
+
     getResponseList() async {
-        await requestPermission();
+        await getCords();
         final token = prefs.getString('token');
         final idUser = prefs.getInt('user_id');
         final typeACC = prefs.getString('type_acc');
@@ -72,28 +79,6 @@ class _HomeTabState extends State<HomeTab> {
         }
     }
 
-    Future<void> requestPermission() async {
-        final PermissionHandler _permissionHandler = PermissionHandler();
-        var result = await _permissionHandler.checkPermissionStatus(PermissionGroup.locationWhenInUse);
-
-        switch (result) {
-            case PermissionStatus.granted:
-                var geolocator = Geolocator();
-                Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-
-                lat = position.latitude;
-                long = position.longitude;
-                break;
-            case PermissionStatus.denied:
-                await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
-                requestPermission();
-                break;
-            default:
-                await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
-                requestPermission();
-        }
-    }
-
     @override
     Widget build(BuildContext context) {
         return Padding(
@@ -103,6 +88,7 @@ class _HomeTabState extends State<HomeTab> {
                     Expanded(
                         child: FutureBuilder(
                             future: getResponseList(),
+                            // ignore: missing_return
                             builder: (context, snapshot) {
                                 switch (snapshot.connectionState) {
                                     case ConnectionState.waiting:
@@ -116,12 +102,8 @@ class _HomeTabState extends State<HomeTab> {
                                     case ConnectionState.done:
                                         return _listCard(context, snapshot);
                                         break;
-                                    default:
-                                        if (snapshot.hasError) {
-                                            return Container();
-                                        } else {
-                                            return _listCard(context, snapshot);
-                                        }
+                                  case ConnectionState.active:
+                                    break;
                                 }
                             }),
                     ),

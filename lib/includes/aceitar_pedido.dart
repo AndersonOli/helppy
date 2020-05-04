@@ -128,6 +128,10 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     child: Divider(),
                                 ),
                                 _itemList(widget.info["shoppings"][index]),
+                                Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Divider(),
+                                ),
                                 _buttonAccept(context)
                             ],
                         );

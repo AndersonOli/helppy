@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 //const Color COR_AZUL = Color.fromRGBO(0, 73, 255, 1);
 const Color COR_AZUL = Color.fromRGBO(0, 59, 131, 1);
@@ -45,5 +47,21 @@ isLoading(BuildContext context, bool isloading){
         );
     } else {
         Navigator.of(context).pop();
+    }
+}
+
+requestPermission() async {
+    final PermissionHandler _permissionHandler = PermissionHandler();
+    var result = await _permissionHandler.checkPermissionStatus(PermissionGroup.locationWhenInUse);
+    bool dontAskAgain = await _permissionHandler.shouldShowRequestPermissionRationale(PermissionGroup.locationWhenInUse);
+
+    switch (result) {
+        case PermissionStatus.denied:
+            await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
+            if(dontAskAgain == false){
+                SystemNavigator.pop();
+            }
+            requestPermission();
+            break;
     }
 }

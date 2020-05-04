@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:helppyapp/globals.dart';
 import 'package:helppyapp/includes/tab_cadastro.dart';
 import 'package:http/http.dart' as http;
 import 'control_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -24,6 +26,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     void initState() {
         super.initState();
         setValue();
+        requestPermission();
     }
 
     void setValue() async {
@@ -123,10 +126,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                 ),
                             ],
                         ),
-                    ),
-                    Container(
-                        width: _width,
-                        color: Colors.red,
                     ),
                     SingleChildScrollView(
 //                        width: _width,
