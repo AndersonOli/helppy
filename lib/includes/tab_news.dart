@@ -97,10 +97,9 @@ class _NewsTabState extends State<NewsTab> {
                     snapshot.data[0]["articles"][index]["description"] = snapshot.data[0]["articles"][index]["title"];
                 }
                 if (index == 0) {
-                    return LimitedBox(
-                        maxHeight: 190,
+                    return Container(
                         child: Card(
-                            margin: EdgeInsets.only(top: 20.0),
+                            margin: EdgeInsets.only(top: 20.0, bottom: 5.0),
                             color: COR_AZUL,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
