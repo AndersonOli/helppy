@@ -369,7 +369,7 @@ class _HomeTabState extends State<HomeTab> {
                                     children: <Widget>[
                                         Icon(Icons.location_on, size: 14.0, color: COR_BRANCO,),
                                         Text(
-                                            valueDistance(snapshot, index) + "m",
+                                            "≈" + valueDistance(snapshot, index) + "m",
                                             style: TextStyle(
                                                 color: COR_BRANCO,
                                                 fontSize: 14.0,

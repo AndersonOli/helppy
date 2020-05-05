@@ -132,7 +132,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
                                 ),
-                                _buttonAccept(context)
+                                widget.info["shoppings"].length == 1 ? _buttonAccept(context) : Container(width: 0, height: 0,)
                             ],
                         );
                     } else if(index == (widget.info["shoppings"].length - 1)){

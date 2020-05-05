@@ -75,7 +75,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                     width: _width-40.0,
                                     margin: EdgeInsets.only(top: 10.0),
                                     child: Text(
-                                        "\t\tLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                                        "\t\tO Helppy-19 é um aplicativo que surgiu em meio a uma pandemia para ajudar. O intuito do aplicativo é ajudar as pessoas do grupo de risco (idosos principalmente)  a fazer compras, se você é idoso nesse aplicativo existem pessoas que podem te ajudar, se você quer ajudar, também tem espaço.",
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
                                             color: Color.fromRGBO(4, 75, 155, 1.0),
