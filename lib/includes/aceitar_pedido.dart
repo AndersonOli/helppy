@@ -128,10 +128,10 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     child: Divider(),
                                 ),
                                 _itemList(widget.info["shoppings"][index]),
-                                Padding(
+                                widget.info["shoppings"].length == 1 ? Padding(
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
-                                ),
+                                ) : Container(width: 0, height: 0,),
                                 widget.info["shoppings"].length == 1 ? _buttonAccept(context) : Container(width: 0, height: 0,)
                             ],
                         );

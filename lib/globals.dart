@@ -35,6 +35,7 @@ showAlertDialog(BuildContext context, String title, String text)
 isLoading(BuildContext context, bool isloading){
     if(isloading){
         showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
                 return Center(

@@ -31,15 +31,22 @@ class _RequestHelpState extends State<RequestHelp> {
                 ),
                 floatingActionButton: FloatingActionButton(
                     onPressed: () async {
+                        isLoading(context, true);
                         prefs = await SharedPreferences.getInstance();
-                        int resul = await _postRequest().then((http.Response response) {
-                            return response.statusCode;
+                        var result = await _postRequest().then((http.Response response) {
+                            return response != null ? response.statusCode : null;
                         });
 
-                        if(resul == 200){
+                        print(result);
+
+                        isLoading(context, false);
+
+                        if(result != null && result == 200){
                             alertCard(context, "Pedido realizado com sucesso!", "Seu pedido foi registrado, aguarde até que alguém aceite :)");
-                        } else {
+                        } else if(result != null && result != 200) {
                             alertCard(context, "Há algo de errado!", "Há um problema a ser resolvido, aguarde e tente novamente mais tarde..");
+                        } else if(result == null) {
+                            showAlertDialog(context, "Existem informações faltando..", "Por favor, preencha todos os campos corretamente.");
                         }
                     },
                     child: Icon(
@@ -233,16 +240,20 @@ class _RequestHelpState extends State<RequestHelp> {
         prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
         var url = 'https://helppy-19.herokuapp.com/list';
-        return http.post(
-            url,
-            headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer $token"},
-            body: jsonEncode(<String, String>{
-                "title": titleListController.text,
-                'description': descriptionController.text,
-                'shoppings': _list.toString(),
-                "status": "0"
-            })
-        );
+        if(titleListController.text != "" && descriptionController.text != "" && _list.length > 0){
+            return http.post(
+                url,
+                headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer $token"},
+                body: jsonEncode(<String, String>{
+                    "title": titleListController.text,
+                    'description': descriptionController.text,
+                    'shoppings': _list.toString(),
+                    "status": "0"
+                })
+            );
+        } else {
+            return null;
+        }
     }
 
     String capitalize(String s) {
@@ -269,6 +280,7 @@ class _RequestHelpState extends State<RequestHelp> {
             ],
         );
         showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
                 return alerta;
