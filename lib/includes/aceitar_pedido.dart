@@ -116,7 +116,18 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Contato: " + widget.info["telephone"],
+                                        onRequest == 1 ? "Endereço: " + widget.info["address"] + " - número: " + widget.info["house_number"] + " - ponto de referência: " + widget.info["reference"] : "Endereço: Aceite o pedido para ver esta informação",
+                                        style: TextStyle(
+                                            color: COR_AZUL,
+                                            fontSize: 16.0
+                                        ),
+                                    ),
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(top: 15.0),
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                        onRequest == 1 ? "Contato: " + widget.info["telephone"] : "Contato: Aceite o pedido para ver esta informação",
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0

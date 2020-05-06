@@ -32,6 +32,7 @@ dependencies:
   animator: ^1.0.0+5
   permission_handler: ^3.0.0
   geolocator: ^5.3.1
+  youtube_player_flutter: ^6.0.2
 
 dev_dependencies:
   flutter_test:

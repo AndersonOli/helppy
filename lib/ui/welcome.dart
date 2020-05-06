@@ -48,9 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     enableInfiniteScroll: false,
                 ),
                 items: <Widget>[
-                    Container(
-                        width: _width,
-                        height: _height,
+                    SingleChildScrollView(
                         child: Column(
                             children: <Widget>[
                                 Container(
@@ -211,15 +209,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                 Row(
                                     children: <Widget>[
                                         Expanded(
-                                            child: Text(
-                                                "Esqueci minha senha",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    color: COR_AZUL,
-                                                    fontSize: 18.0,
-                                                    decoration: TextDecoration.underline,
-                                                ),
-                                            ),
+                                            child: Container(),
                                         ),
                                         Expanded(
                                             child: RaisedButton(
