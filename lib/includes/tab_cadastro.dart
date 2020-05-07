@@ -110,6 +110,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
+                                    maxLength: 11,
                                     controller: _telCadController,
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
@@ -124,6 +125,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
+                                    maxLength: 8,
                                     controller: _cepCadController,
                                     onChanged: (value){
                                         if(value.length == 8){
