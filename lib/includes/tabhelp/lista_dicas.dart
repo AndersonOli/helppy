@@ -38,5 +38,5 @@ List dicas = [
       imageUrl:
           "https://image.freepik.com/vetores-gratis/desinfetante-para-as-maos-estilo-simples_23-2148491719.jpg",
       title: 'Use sempre álcool em gel',
-      text: "The Colosseum"),
+      text: "Considerado um antisséptico, o álcool em gel ajuda evitar o contágio pelo covid-19. O recomendado pela Organização Mundial da Saúde (OMS) é usar soluções onde há  concentração de 70% de álcool etílico. Especialistas alertam que o uso do álcool em gel deve ser feito caso não tenha água e sabão por perto."),
 ];

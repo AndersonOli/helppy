@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:helppyapp/includes/view_list.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +9,7 @@ import 'dart:io';
 import 'package:helppyapp/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'aceitar_pedido.dart';
+import 'package:location/location.dart';
 
 class HomeTab extends StatefulWidget {
     @override
@@ -43,11 +43,15 @@ class _HomeTabState extends State<HomeTab> {
     }
 
     Future<void> getCords() async {
-        var geolocator = Geolocator();
-        Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-
-        lat = position.latitude;
-        long = position.longitude;
+//        var geolocator = Geolocator();
+//        Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+//
+//        lat = position.latitude;
+//        long = position.longitude;
+        var location = new Location();
+        var userLocation = await location.getLocation();
+        lat = userLocation.latitude;
+        long = userLocation.longitude;
     }
 
     getResponseList() async {
