@@ -17,16 +17,21 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-    var prefs, lat, long, responseDistance;
+    var token, idUser, typeACC;
+    var prefs, lat, long, responseDistance, _futureList;
 
     @override
     void initState() {
         super.initState();
         setValue();
+        _futureList = getResponseList();
     }
 
     setValue() async {
         prefs = await SharedPreferences.getInstance();
+        token = prefs.getString('token');
+        idUser = prefs.getInt('user_id');
+        typeACC = prefs.getString('type_acc');
     }
 
     requestDistance() async {
@@ -55,20 +60,15 @@ class _HomeTabState extends State<HomeTab> {
     }
 
     getResponseList() async {
-        await getCords();
-        final token = prefs.getString('token');
-        final idUser = prefs.getInt('user_id');
-        final typeACC = prefs.getString('type_acc');
         var response;
-
         if(typeACC == "1"){
-            print(idUser);
             response = await http.get(
                 'https://helppy-19.herokuapp.com/list/$idUser',
                 headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
             );
             return json.decode(response.body);
         } else {
+            await getCords();
             response = await http.post(
                 'https://helppy-19.herokuapp.com/accept',
                 headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
@@ -90,25 +90,12 @@ class _HomeTabState extends State<HomeTab> {
                 children: <Widget>[
                     Expanded(
                         child: FutureBuilder(
-                            future: getResponseList(),
-                            // ignore: missing_return
+                            future: _futureList,
                             builder: (context, snapshot) {
-                                switch (snapshot.connectionState) {
-                                    case ConnectionState.waiting:
-                                    case ConnectionState.none:
-                                        return Center(
-                                            child: CircularProgressIndicator(
-                                                valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
-                                                strokeWidth: 5.0,
-                                            ),
-                                        );
-                                    case ConnectionState.done:
-                                        return _listCard(context, snapshot);
-                                        break;
-
-                                  case ConnectionState.active:
-                                    // TODO: Handle this case.
-                                    break;
+                                if(snapshot.connectionState == ConnectionState.waiting){
+                                    return loadingCenter();
+                                } else {
+                                    return _listCard(context, snapshot);
                                 }
                             }),
                     ),

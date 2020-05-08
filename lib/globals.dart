@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //const Color COR_AZUL = Color.fromRGBO(0, 73, 255, 1);
 const Color COR_AZUL = Color.fromRGBO(0, 59, 131, 1);
@@ -68,4 +69,13 @@ requestPermission() async {
 
             break;
     }
+}
+
+Widget loadingCenter() {
+    return Center(
+        child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
+            strokeWidth: 5.0,
+        ),
+    );
 }

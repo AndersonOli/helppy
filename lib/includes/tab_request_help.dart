@@ -265,11 +265,8 @@ class _RequestHelpState extends State<RequestHelp> {
         Widget okButton = FlatButton(
             child: Text("OK"),
             onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context){
-                        return ControlPage(true);
-                    },
-                ));
+                Navigator.pop(context);
+                Navigator.pop(context);
             },
         );
         AlertDialog alerta = AlertDialog(
