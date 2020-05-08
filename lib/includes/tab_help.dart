@@ -8,31 +8,6 @@ class HelpTab extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-//            appBar: AppBar(
-//                centerTitle: true,
-//                backgroundColor: COR_AZUL,
-//                title: Text(
-//                    'Dicas de Higienização',
-//                    textAlign: TextAlign.center,
-//                    style: TextStyle(
-//                        fontSize: 18,
-//                        color: Colors.white,
-//                    ),
-//                ),
-//                elevation: 0.0,
-//                actions: <Widget>[
-//                    IconButton(
-//                        icon: Icon(Icons.movie),
-//                        color: Colors.white,
-//                        onPressed: () {
-//                            Navigator.push(
-//                                context,
-//                                MaterialPageRoute(builder: (context) => TelaVideo()),
-//                            );
-//                        } //Receber tela de vídeo
-//                    )
-//                ],
-//            ),
             body: new ListView.builder(
                 itemCount: dicas.length,
                 itemBuilder: (context, index) {
@@ -94,7 +69,7 @@ class HelpTab extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
                                             new ClipRRect(
-                                                child: new Image.network(dicas[index].imageUrl),
+                                                child: new Image.asset(dicas[index].imageUrl),
                                                 borderRadius: BorderRadius.only(
                                                     topLeft: new Radius.circular(16.0),
                                                     topRight: new Radius.circular(16.0),
