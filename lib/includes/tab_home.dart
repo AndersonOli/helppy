@@ -62,6 +62,7 @@ class _HomeTabState extends State<HomeTab> {
         var response;
 
         if(typeACC == "1"){
+            print(idUser);
             response = await http.get(
                 'https://helppy-19.herokuapp.com/list/$idUser',
                 headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
@@ -93,7 +94,6 @@ class _HomeTabState extends State<HomeTab> {
                             // ignore: missing_return
                             builder: (context, snapshot) {
                                 switch (snapshot.connectionState) {
-                                    case ConnectionState.active:
                                     case ConnectionState.waiting:
                                     case ConnectionState.none:
                                         return Center(
@@ -106,6 +106,9 @@ class _HomeTabState extends State<HomeTab> {
                                         return _listCard(context, snapshot);
                                         break;
 
+                                  case ConnectionState.active:
+                                    // TODO: Handle this case.
+                                    break;
                                 }
                             }),
                     ),
