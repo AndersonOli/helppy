@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:location/location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/globals.dart';
@@ -18,7 +19,7 @@ class _CadastroPageState extends State<CadastroPage> {
     int typeAcc;
     var prefs;
     bool onProgress;
-    String latitude, longitude;
+    var latitude, longitude;
 
     @override
     void initState() {
@@ -302,6 +303,8 @@ class _CadastroPageState extends State<CadastroPage> {
 
         isLoading(context, false);
 
+        print(data.body);
+
         if(data.body.contains('duplicate key value violates unique constraint')){
             showAlertDialog(
                 context,
@@ -347,8 +350,17 @@ class _CadastroPageState extends State<CadastroPage> {
             );
             var data = jsonDecode(endereco.body);
 
-            latitude = data["latitude"];
-            longitude = data["longitude"];
+
+
+            if(data["latitude"] != null && data["longitude"] != null){
+                latitude = data["latitude"];
+                longitude = data["longitude"];
+            } else {
+                var location = new Location();
+                var userLocation = await location.getLocation();
+                latitude = userLocation.latitude;
+                longitude = userLocation.longitude;
+            }
 
             setState(() {
                 _endCadController.text = data["logradouro"] + " - " + data["bairro"] + " - " + data["cidade"]["nome"] + "-" + data["estado"]["sigla"];

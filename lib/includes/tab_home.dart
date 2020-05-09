@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:helppyapp/includes/view_list.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:helppyapp/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../controllerTab.dart';
 import 'aceitar_pedido.dart';
 import 'package:location/location.dart';
 
@@ -48,11 +50,6 @@ class _HomeTabState extends State<HomeTab> {
     }
 
     Future<void> getCords() async {
-//        var geolocator = Geolocator();
-//        Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-//
-//        lat = position.latitude;
-//        long = position.longitude;
         var location = new Location();
         var userLocation = await location.getLocation();
         lat = userLocation.latitude;
@@ -97,7 +94,8 @@ class _HomeTabState extends State<HomeTab> {
                                 } else {
                                     return _listCard(context, snapshot);
                                 }
-                            }),
+                            }
+                        ),
                     ),
                 ],
             ),
@@ -152,9 +150,7 @@ class _HomeTabState extends State<HomeTab> {
     }
 
     Widget _cardPedidoIdoso(BuildContext context, AsyncSnapshot snapshot, int index){
-        final _width = MediaQuery.of(context).size.width;
-
-        return Container(
+        final _width = MediaQuery.of(context).size.width;        return Container(
             width: _width,
             margin: index == (snapshot.data.length - 1) ? EdgeInsets.only(top: 15.0, bottom: 75.0) : EdgeInsets.only(top: 15.0),
             decoration: BoxDecoration(
@@ -260,7 +256,7 @@ class _HomeTabState extends State<HomeTab> {
                                                         Navigator.push(context, MaterialPageRoute(
                                                             builder: (context){
                                                                 return ControlPage(true);
-                                                            },
+                                                            }
                                                         ));
                                                     } else {
                                                         Navigator.of(context).pop();

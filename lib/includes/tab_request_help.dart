@@ -16,9 +16,8 @@ class _RequestHelpState extends State<RequestHelp> {
     final titleListController = TextEditingController();
     final descriptionController = TextEditingController();
     var prefs;
-
-    bool _userEdited = false;
     List _list = [];
+    bool _userEdited = false;
 
     @override
     Widget build(BuildContext context) {
@@ -36,8 +35,6 @@ class _RequestHelpState extends State<RequestHelp> {
                         var result = await _postRequest().then((http.Response response) {
                             return response != null ? response.statusCode : null;
                         });
-
-                        print(result);
 
                         isLoading(context, false);
 
@@ -265,8 +262,11 @@ class _RequestHelpState extends State<RequestHelp> {
         Widget okButton = FlatButton(
             child: Text("OK"),
             onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                        return ControlPage(true);
+                    },
+                ));
             },
         );
         AlertDialog alerta = AlertDialog(

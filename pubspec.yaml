@@ -31,14 +31,17 @@ dependencies:
   carousel_slider: ^2.0.0
   animator: ^1.0.0+5
   permission_handler: ^3.0.0
-#  geolocator: ^5.3.1
   location: ^3.0.2
   youtube_player_flutter: ^6.0.2
+  mobx:
+  flutter_mobx:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.7.3"
+  build_runner:
+  mobx_codegen:
 
 flutter_icons:
   android: "launcher_icon"

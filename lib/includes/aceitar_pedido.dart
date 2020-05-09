@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:helppyapp/pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AcceptRequest extends StatefulWidget {
     dynamic info;
@@ -36,19 +37,10 @@ class _AcceptRequestState extends State<AcceptRequest> {
             future: setValue(),
             // ignore: missing_return
             builder: (BuildContext context, AsyncSnapshot snapshot){
-                switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                    case ConnectionState.none:
-                    case ConnectionState.active:
-                        return Center(
-                            child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
-                                strokeWidth: 5.0,
-                            ),
-                        );
-                    case ConnectionState.done:
-                        return _screenRequest();
-                        break;
+                if(snapshot.connectionState == ConnectionState.waiting){
+                    return loadingCenter();
+                } else {
+                    return _screenRequest();
                 }
             },
         );
@@ -126,11 +118,26 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                 Container(
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        onRequest == 1 ? "Contato: " + widget.info["telephone"] : "Contato: Aceite o pedido para ver esta informação",
-                                        style: TextStyle(
-                                            color: COR_AZUL,
-                                            fontSize: 16.0
+                                    child: GestureDetector(
+                                        onTap: () => onRequest == 1 ? launch("tel:" + widget.info["telephone"]) : null,
+                                        child: RichText(
+                                            text: TextSpan(
+                                                text: "Contato: ",
+                                                style: TextStyle(
+                                                    color: COR_AZUL,
+                                                    fontSize: 16.0
+                                                ),
+                                                children: <TextSpan>[
+                                                    TextSpan(
+                                                        text: onRequest == 1 ? widget.info["telephone"] : "Contato: Aceite o pedido para ver esta informação",
+                                                        style: TextStyle(
+                                                            color: COR_AZUL,
+                                                            fontSize: 16.0,
+                                                            decoration: onRequest == 1 ? TextDecoration.underline : TextDecoration.none
+                                                        ),
+                                                    )
+                                                ],
+                                            ),
                                         ),
                                     ),
                                 ),
