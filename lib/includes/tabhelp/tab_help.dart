@@ -107,7 +107,6 @@ class HelpTab extends StatelessWidget {
                                     ),
                                 ),
                             ),
-                            index == dicas.length-1 ? SizedBox(height: 55.0,) : Container(width: 0.0, height: 0.0,)
                         ],
                     );
                 }),

@@ -82,44 +82,47 @@ Widget buildNews(BuildContext context, AsyncSnapshot snapshot) {
                                                     style: TextStyle(color: COR_BRANCO, fontSize: 18.0),
                                                 ),
                                             ),
-                                            Row(
-                                                children: <Widget>[
-                                                    Expanded(
-                                                        child: RichText(
-                                                            textAlign: TextAlign.center,
-                                                            text: TextSpan(
-                                                                text: "Teresina - Piauí",
-                                                                style: TextStyle(
-                                                                    color: COR_BRANCO,
-                                                                    fontSize: 16.0,
-                                                                    fontFamily: 'Nunito'
-                                                                ),
-                                                                children: [
-                                                                    TextSpan(
-                                                                        text: "\n\n" + countCasesTeresina(snapshot.data[1]['docs'])
+                                            Container(
+                                                margin: EdgeInsets.only(bottom: 10.0),
+                                                child: Row(
+                                                    children: <Widget>[
+                                                        Expanded(
+                                                            child: RichText(
+                                                                textAlign: TextAlign.center,
+                                                                text: TextSpan(
+                                                                    text: "Teresina - Piauí",
+                                                                    style: TextStyle(
+                                                                        color: COR_BRANCO,
+                                                                        fontSize: 16.0,
+                                                                        fontFamily: 'Nunito'
                                                                     ),
-                                                                ]
+                                                                    children: [
+                                                                        TextSpan(
+                                                                            text: "\n\n" + countCasesTeresina(snapshot.data[1]['docs'])
+                                                                        ),
+                                                                    ]
+                                                                ),
                                                             ),
                                                         ),
-                                                    ),
-                                                    Expanded(
-                                                        child: RichText(
-                                                            textAlign: TextAlign.center,
-                                                            text: TextSpan(
-                                                                text: "Brasil",
-                                                                style: TextStyle(
-                                                                    color: COR_BRANCO,
-                                                                    fontSize: 16.0,
-                                                                ),
-                                                                children: [
-                                                                    TextSpan(
-                                                                        text: "\n\n" + countCasesBrasil(snapshot.data[1]['docs'])
+                                                        Expanded(
+                                                            child: RichText(
+                                                                textAlign: TextAlign.center,
+                                                                text: TextSpan(
+                                                                    text: "Brasil",
+                                                                    style: TextStyle(
+                                                                        color: COR_BRANCO,
+                                                                        fontSize: 16.0,
                                                                     ),
-                                                                ]
+                                                                    children: [
+                                                                        TextSpan(
+                                                                            text: "\n\n" + countCasesBrasil(snapshot.data[1]['docs'])
+                                                                        ),
+                                                                    ]
+                                                                ),
                                                             ),
                                                         ),
-                                                    ),
-                                                ],
+                                                    ],
+                                                ),
                                             )
                                         ],
                                     ),
@@ -127,52 +130,6 @@ Widget buildNews(BuildContext context, AsyncSnapshot snapshot) {
                             ],
                         ),
                     ),
-                );
-            } else if (index == snapshot.data[0]["articles"].length - 1) {
-                return Column(
-                    children: <Widget>[
-                        GestureDetector(
-                            onTap: () async {
-                                await launch(snapshot.data[0]["articles"][index]["url"], forceWebView: true, enableJavaScript: true);
-                            },
-                            child: SizedBox(
-                                height: 100,
-                                child: Card(
-                                    margin: EdgeInsets.only(top: 15.0),
-                                    child: Row(
-                                        children: <Widget>[
-                                            ClipRRect(
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(4),
-                                                    bottomLeft: Radius.circular(4),
-                                                ),
-                                                child: Image.network(
-                                                    snapshot.data[0]["articles"][index]["urlToImage"] ??
-                                                        "https://www.coronavirus.ms.gov.br/wp-content/uploads/2020/04/coronavirus-1.jpg",
-                                                    width: 150.0,
-                                                    height: 100.0,
-                                                    fit: BoxFit.fill,
-                                                ),
-                                            ),
-                                            Expanded(
-                                                child: Container(
-                                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                                    child: Text(
-                                                        snapshot.data[0]["articles"][index]
-                                                        ["description"],
-                                                        textAlign: TextAlign.justify,
-                                                    ),
-                                                ),
-                                            )
-                                        ],
-                                    ),
-                                ),
-                            ),
-                        ),
-                        SizedBox(
-                            height: 53,
-                        )
-                    ],
                 );
             } else {
                 return GestureDetector(
