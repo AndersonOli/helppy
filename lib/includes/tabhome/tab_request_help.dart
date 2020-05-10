@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:helppyapp/globals.dart';
+import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:helppyapp/widgets/suports_widgets.dart';
 
 class RequestHelp extends StatefulWidget {
     @override

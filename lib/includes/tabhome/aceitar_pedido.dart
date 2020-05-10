@@ -4,9 +4,10 @@ import 'dart:ui';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:helppyapp/pages.dart';
+import 'package:helppyapp/includes/general/pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:helppyapp/widgets/suports_widgets.dart';
 
 class AcceptRequest extends StatefulWidget {
     dynamic info;

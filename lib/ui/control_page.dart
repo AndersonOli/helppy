@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:helppyapp/includes/aceitar_pedido.dart';
-import 'package:helppyapp/includes/tab_request_help.dart';
-import 'package:helppyapp/pages.dart';
+import 'package:helppyapp/includes/tabhome/aceitar_pedido.dart';
+import 'package:helppyapp/includes/tabhome/tab_request_help.dart';
+import 'package:helppyapp/includes/general/pages.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../controllerTab.dart';
+import '../controllers/controllerTab.dart';
 import 'welcome.dart';
+import 'package:helppyapp/widgets/suports_widgets.dart';
 
 class ControlPage extends StatefulWidget {
     bool wasLogged;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import '../../globals.dart';
+import '../general/globals.dart';
 import 'lista_videos.dart';
 
 class TelaVideo extends StatelessWidget {

@@ -4,11 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/widgets.dart';
-import 'package:helppyapp/globals.dart';
-import 'package:helppyapp/includes/tab_cadastro.dart';
+import 'package:helppyapp/includes/general/globals.dart';
+import 'package:helppyapp/includes/general/tab_cadastro.dart';
 import 'package:http/http.dart' as http;
 import 'control_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:helppyapp/widgets/suports_widgets.dart';
 
 class WelcomeScreen extends StatefulWidget {
     @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:helppyapp/globals.dart';
+import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/tabhelp/lista_videos.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'tabhelp/lista_dicas.dart';
+import 'lista_dicas.dart';
 
 class HelpTab extends StatelessWidget {
     @override

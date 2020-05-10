@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:helppyapp/includes/view_list.dart';
+import 'package:helppyapp/includes/tabhome/view_list.dart';
 import 'package:helppyapp/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
-import 'package:helppyapp/globals.dart';
+import 'package:helppyapp/includes/general/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../controllerTab.dart';
 import 'aceitar_pedido.dart';
 import 'package:location/location.dart';
+import 'package:helppyapp/widgets/suports_widgets.dart';
 
 class HomeTab extends StatefulWidget {
     @override
@@ -132,6 +131,7 @@ class _HomeTabState extends State<HomeTab> {
                     child: ListView.builder(
                         itemCount: snapshot.data.length,
                         shrinkWrap: true,
+                        reverse: true,
                         itemBuilder: (context, index){
                             return prefs.getString('type_acc') == "0" ? _cardPedidoVoluntario(context, snapshot, index) : _cardPedidoIdoso(context, snapshot, index);
                         },
