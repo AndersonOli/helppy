@@ -30,6 +30,7 @@ class _RequestHelpState extends State<RequestHelp> {
                     backgroundColor: COR_AZUL,
                 ),
                 floatingActionButton: FloatingActionButton(
+                    elevation: 0.0,
                     onPressed: () async {
                         isLoading(context, true);
                         prefs = await SharedPreferences.getInstance();

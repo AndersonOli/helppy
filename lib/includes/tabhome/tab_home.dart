@@ -16,8 +16,6 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
     final controllerHome = ControllerTabHome();
 
-
-
     @override
     void initState() {
         super.initState();

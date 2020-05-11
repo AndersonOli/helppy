@@ -4,8 +4,17 @@ import 'package:helppyapp/includes/tabhelp/lista_videos.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'lista_dicas.dart';
 
-class HelpTab extends StatelessWidget {
+class HelpTab extends StatefulWidget {
     @override
+    _HelpTabState createState() => _HelpTabState();
+}
+
+class _HelpTabState extends State<HelpTab> with AutomaticKeepAliveClientMixin<HelpTab> {
+    @override
+    bool get wantKeepAlive => true;
+
+    @override
+    // ignore: must_call_super
     Widget build(BuildContext context) {
         return Scaffold(
             body: new ListView.builder(
@@ -17,7 +26,7 @@ class HelpTab extends StatelessWidget {
                                 padding:
                                 new EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                                 child: new Card(
-                                    elevation: 12.0,
+                                    elevation: 0.0,
                                     color: COR_AZUL,
                                     shape: new RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(16.0)),
@@ -60,7 +69,7 @@ class HelpTab extends StatelessWidget {
                                 padding:
                                 new EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                                 child: new Card(
-                                    elevation: 4.0,
+                                    elevation: 0.0,
                                     color: COR_AZUL,
                                     shape: new RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(16.0)),

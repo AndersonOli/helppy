@@ -2,17 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/widgets/build_news.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 
 class NewsTab extends StatefulWidget {
     @override
     _NewsTabState createState() => _NewsTabState();
 }
 
-class _NewsTabState extends State<NewsTab> {
+class _NewsTabState extends State<NewsTab> with AutomaticKeepAliveClientMixin<NewsTab> {
     @override
+    bool get wantKeepAlive => true;
+
+    apiData() async {
+        var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
+        var responseCorona = await http.get('https://api.especiaisg1.globo/api/eventos/brasil/?format=json');
+
+        return [
+            convert.jsonDecode(response.body),
+            convert.jsonDecode(responseCorona.body)
+        ];
+    }
+
+    @override
+    // ignore: must_call_super
     Widget build(BuildContext context) {
         return Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
             child: Column(
                 children: <Widget>[
                     Expanded(
@@ -23,7 +39,7 @@ class _NewsTabState extends State<NewsTab> {
                                     return loadingCenter();
                                 } else {
                                     if(snapshot.hasData){
-                                        return buildNews(context, snapshot);
+                                        return BuildNews(snapshot);
                                     } else {
                                         return Center(
                                             child: Text(

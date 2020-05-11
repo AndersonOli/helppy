@@ -66,6 +66,7 @@ class _ControlPageState extends State<ControlPage> {
                             floatingActionButton: snapshot.data[0] == "0" ? Container(width: 0.0,height: 0.0,) : Padding(
                                 padding: EdgeInsets.only(right: 5.0, bottom: 10.0),
                                 child: FloatingActionButton(
+                                    elevation: 0.0,
                                     child: Icon(Icons.add, color: COR_BRANCO,),
                                     backgroundColor: COR_PRETA,
                                     onPressed: () async {
