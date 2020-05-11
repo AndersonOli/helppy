@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/widgets/build_news.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
@@ -21,7 +22,19 @@ class _NewsTabState extends State<NewsTab> {
                                 if(snapshot.connectionState == ConnectionState.waiting){
                                     return loadingCenter();
                                 } else {
-                                    return buildNews(context, snapshot);
+                                    if(snapshot.hasData){
+                                        return buildNews(context, snapshot);
+                                    } else {
+                                        return Center(
+                                            child: Text(
+                                                "Verifique sua conexão com a internet.",
+                                                style: TextStyle(
+                                                    color: COR_AZUL,
+                                                    fontSize: 14.0
+                                                ),
+                                            ),
+                                        );
+                                    }
                                 }
                             }),
                     ),
