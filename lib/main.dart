@@ -7,23 +7,16 @@ import 'controllers/controllerTabHome.dart';
 
 void main(){
     runApp(
-        MultiProvider(
-            providers: [
-                Provider(
-                    create: (_) => ControllerTabHome(),
-                )
-            ],
-            child: MaterialApp(
-                home: ControlPage(false),
-                theme: ThemeData(
-                    fontFamily: 'NunitoSans',
-                    inputDecorationTheme: InputDecorationTheme(
-                        enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide(color: COR_STROKE)),
-                        focusedBorder:
-                        OutlineInputBorder(borderSide: BorderSide(color: COR_AZUL)),
-                        hintStyle: TextStyle(color: Colors.black),
-                    ),
+        MaterialApp(
+            home: ControlPage(false),
+            theme: ThemeData(
+                fontFamily: 'NunitoSans',
+                inputDecorationTheme: InputDecorationTheme(
+                    enabledBorder:
+                    OutlineInputBorder(borderSide: BorderSide(color: COR_STROKE)),
+                    focusedBorder:
+                    OutlineInputBorder(borderSide: BorderSide(color: COR_AZUL)),
+                    hintStyle: TextStyle(color: Colors.black),
                 ),
             ),
         )
