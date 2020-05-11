@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/ui/control_page.dart';
-import 'package:provider/provider.dart';
-
-import 'controllers/controllerTabHome.dart';
 
 void main(){
     runApp(
