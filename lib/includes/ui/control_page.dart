@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/tabhome/aceitar_pedido.dart';
 import 'package:helppyapp/includes/tabhome/tab_request_help.dart';
 import 'package:helppyapp/includes/general/pages.dart';
@@ -22,6 +23,7 @@ class _ControlPageState extends State<ControlPage> {
     int isLogged, onRequest;
     String typeAcc, infoRequest;
     final controller = HomeController();
+    final controllerHome = ControllerTabHome();
 
     @override
     void initState() {
@@ -66,7 +68,7 @@ class _ControlPageState extends State<ControlPage> {
                                 child: FloatingActionButton(
                                     child: Icon(Icons.add, color: COR_BRANCO,),
                                     backgroundColor: COR_PRETA,
-                                    onPressed: (){
+                                    onPressed: () async {
                                         Navigator.push(context, MaterialPageRoute(
                                             builder: (context){
                                                 return RequestHelp();

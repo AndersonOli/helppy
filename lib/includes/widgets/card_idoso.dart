@@ -1,5 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/tabhome/view_list.dart';
 import 'package:helppyapp/includes/ui/control_page.dart';
@@ -62,8 +63,9 @@ String replaceDate(AsyncSnapshot snapshot, int index) {
     return replaceString;
 }
 
-Widget cardPedidoIdoso(BuildContext context, AsyncSnapshot snapshot, int index, dynamic prefs){
-    final _width = MediaQuery.of(context).size.width;        return Container(
+Widget cardPedidoIdoso(BuildContext context, AsyncSnapshot snapshot, int index, dynamic prefs, dynamic controllerHome){
+    final _width = MediaQuery.of(context).size.width;
+    return Container(
         width: _width,
         margin: index == (snapshot.data.length - 1) ? EdgeInsets.only(top: 15.0, bottom: 75.0) : EdgeInsets.only(top: 15.0),
         decoration: BoxDecoration(
@@ -166,11 +168,9 @@ Widget cardPedidoIdoso(BuildContext context, AsyncSnapshot snapshot, int index, 
                                                 );
 
                                                 if(data.statusCode == 200){
-                                                    Navigator.push(context, MaterialPageRoute(
-                                                        builder: (context){
-                                                            return ControlPage(true);
-                                                        }
-                                                    ));
+                                                    controllerHome.getResult();
+                                                    Navigator.pop(context);
+
                                                 } else {
                                                     Navigator.of(context).pop();
                                                     showAlertDialog(context, "Ocorreu um erro :(", "Algo deu errado, não foi possível cancelar seu pedido neste momento, tente novamente mais tarde.");
