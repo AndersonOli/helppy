@@ -51,7 +51,7 @@ class BuildNews extends StatelessWidget {
                 if (index == 0) {
                     return Container(
                         child: Card(
-                            margin: EdgeInsets.only(top: 20.0),
+                            margin: EdgeInsets.only(top: 15.0, bottom: 6.0),
                             color: COR_AZUL,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
