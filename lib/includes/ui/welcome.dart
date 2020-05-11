@@ -9,7 +9,7 @@ import 'package:helppyapp/includes/general/tab_cadastro.dart';
 import 'package:http/http.dart' as http;
 import 'control_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:helppyapp/widgets/suports_widgets.dart';
+import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class WelcomeScreen extends StatefulWidget {
     @override

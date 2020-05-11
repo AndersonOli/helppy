@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
-import 'package:helppyapp/ui/control_page.dart';
+import 'package:helppyapp/includes/ui/control_page.dart';
 
 void main(){
     runApp(

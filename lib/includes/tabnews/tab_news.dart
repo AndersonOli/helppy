@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helppyapp/widgets/build_news.dart';
-import 'package:helppyapp/widgets/suports_widgets.dart';
+import 'package:helppyapp/includes/widgets/build_news.dart';
+import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class NewsTab extends StatefulWidget {
     @override

@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helppyapp/widgets/card_idoso.dart';
-import 'package:helppyapp/widgets/card_voluntario.dart';
+import 'package:helppyapp/includes/widgets/card_idoso.dart';
+import 'package:helppyapp/includes/widgets/card_voluntario.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart';
-import 'package:helppyapp/widgets/suports_widgets.dart';
+import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class HomeTab extends StatefulWidget {
     @override

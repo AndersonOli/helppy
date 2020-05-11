@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/tabhome/view_list.dart';
-import 'package:helppyapp/ui/control_page.dart';
-import 'package:helppyapp/widgets/suports_widgets.dart';
+import 'package:helppyapp/includes/ui/control_page.dart';
+import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'package:http/http.dart' as http;
 
 String statusRequest(AsyncSnapshot snapshot, int index){

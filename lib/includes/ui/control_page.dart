@@ -5,9 +5,9 @@ import 'package:helppyapp/includes/tabhome/tab_request_help.dart';
 import 'package:helppyapp/includes/general/pages.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../controllers/controllerTab.dart';
+import 'package:helppyapp/controllers/controllerTab.dart';
 import 'welcome.dart';
-import 'package:helppyapp/widgets/suports_widgets.dart';
+import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class ControlPage extends StatefulWidget {
     bool wasLogged;
