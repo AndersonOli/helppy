@@ -43,7 +43,34 @@ mixin _$HomeController on _HomeBase, Store {
     }, _$selectedIndexAtom, name: '${_$selectedIndexAtom.name}_set');
   }
 
+  final _$wasPopAtom = Atom(name: '_HomeBase.wasPop');
+
+  @override
+  bool get wasPop {
+    _$wasPopAtom.context.enforceReadPolicy(_$wasPopAtom);
+    _$wasPopAtom.reportObserved();
+    return super.wasPop;
+  }
+
+  @override
+  set wasPop(bool value) {
+    _$wasPopAtom.context.conditionallyRunInAction(() {
+      super.wasPop = value;
+      _$wasPopAtom.reportChanged();
+    }, _$wasPopAtom, name: '${_$wasPopAtom.name}_set');
+  }
+
   final _$_HomeBaseActionController = ActionController(name: '_HomeBase');
+
+  @override
+  void wasPoped() {
+    final _$actionInfo = _$_HomeBaseActionController.startAction();
+    try {
+      return super.wasPoped();
+    } finally {
+      _$_HomeBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void changePage(int index) {
@@ -68,7 +95,7 @@ mixin _$HomeController on _HomeBase, Store {
   @override
   String toString() {
     final string =
-        'didUpdate: ${didUpdate.toString()},selectedIndex: ${selectedIndex.toString()}';
+        'didUpdate: ${didUpdate.toString()},selectedIndex: ${selectedIndex.toString()},wasPop: ${wasPop.toString()}';
     return '{$string}';
   }
 }

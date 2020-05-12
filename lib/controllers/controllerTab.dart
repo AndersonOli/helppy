@@ -14,6 +14,14 @@ abstract class _HomeBase with Store {
     @observable
     int selectedIndex = 0;
 
+    @observable
+    bool wasPop = false;
+
+    @action
+    void wasPoped(){
+        wasPop = true;
+    }
+
     @action
     void changePage(int index) {
         pageController.jumpToPage(index);

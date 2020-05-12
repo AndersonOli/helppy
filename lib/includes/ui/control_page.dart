@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/tabhome/aceitar_pedido.dart';
 import 'package:helppyapp/includes/tabhome/tab_request_help.dart';
 import 'package:helppyapp/includes/general/pages.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:helppyapp/controllers/controllerTab.dart';
 import 'welcome.dart';
@@ -22,8 +22,6 @@ class _ControlPageState extends State<ControlPage> {
     Future _value;
     int isLogged, onRequest;
     String typeAcc, infoRequest;
-    final controller = HomeController();
-    final controllerHome = ControllerTabHome();
 
     @override
     void initState() {
@@ -42,6 +40,7 @@ class _ControlPageState extends State<ControlPage> {
 
     @override
     Widget build(BuildContext context) {
+        final controller = Provider.of<HomeController>(context);
         return FutureBuilder(
             future: _value,
             builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -70,11 +69,15 @@ class _ControlPageState extends State<ControlPage> {
                                     child: Icon(Icons.add, color: COR_BRANCO,),
                                     backgroundColor: COR_PRETA,
                                     onPressed: () async {
-                                        Navigator.push(context, MaterialPageRoute(
+                                        final result = await Navigator.push(context, MaterialPageRoute(
                                             builder: (context){
                                                 return RequestHelp();
                                             },
                                         ));
+
+                                        if(result == true){
+                                            controller.wasPoped();
+                                        }
                                     },
                                 ),
                             ),
@@ -100,7 +103,7 @@ class _ControlPageState extends State<ControlPage> {
                                                 icon: Icon(HellpyIcons.soap)
                                             ),
                                         ]
-                                    );
+                              );
                                 },
                             )
                         );

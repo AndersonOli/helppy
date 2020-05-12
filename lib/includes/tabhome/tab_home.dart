@@ -5,8 +5,8 @@ import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/widgets/card_idoso.dart';
 import 'package:helppyapp/includes/widgets/card_voluntario.dart';
 import 'package:helppyapp/includes/general/globals.dart';
-import 'package:provider/provider.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
+import 'package:provider/provider.dart';
 
 class HomeTab extends StatefulWidget {
     @override
@@ -14,18 +14,12 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-    final controllerHome = ControllerTabHome();
-
-    @override
-    void initState() {
-        super.initState();
-        controllerHome.getResult();
-    }
 
     @override
     Widget build(BuildContext context) {
+        final controllerHome = Provider.of<ControllerTabHome>(context);
         return Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
             child: Column(
                 children: <Widget>[
                     Expanded(

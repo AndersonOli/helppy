@@ -32,7 +32,7 @@ abstract class _ControllerTabHome with Store {
         responseDistance = json.decode(response.body);
     }
 
-    Future<void> getResponseList() async {
+    Future getResponseList() async {
         var response;
         prefs = await SharedPreferences.getInstance();
         token = prefs.getString('token');
@@ -67,5 +67,4 @@ abstract class _ControllerTabHome with Store {
     getResult(){
         futureData = getResponseList();
     }
-
 }

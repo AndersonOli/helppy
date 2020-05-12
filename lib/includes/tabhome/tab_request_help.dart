@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/general/globals.dart';
-import 'package:helppyapp/includes/ui/control_page.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
@@ -23,6 +24,7 @@ class _RequestHelpState extends State<RequestHelp> {
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
+        final controllerHome = Provider.of<ControllerTabHome>(context);
         return WillPopScope(
             onWillPop: _requestPop,
             child: Scaffold(
@@ -41,6 +43,7 @@ class _RequestHelpState extends State<RequestHelp> {
                         isLoading(context, false);
 
                         if(result != null && result == 200){
+                            controllerHome.futureData = controllerHome.getResponseList();
                             alertCard(context, "Pedido realizado com sucesso!", "Seu pedido foi registrado, aguarde até que alguém aceite :)");
                         } else if(result != null && result != 200) {
                             alertCard(context, "Há algo de errado!", "Há um problema a ser resolvido, aguarde e tente novamente mais tarde..");
@@ -264,11 +267,8 @@ class _RequestHelpState extends State<RequestHelp> {
         Widget okButton = FlatButton(
             child: Text("OK"),
             onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                        return ControlPage(true);
-                    },
-                ));
+                Navigator.pop(context);
+                Navigator.pop(context, true);
             },
         );
         AlertDialog alerta = AlertDialog(
