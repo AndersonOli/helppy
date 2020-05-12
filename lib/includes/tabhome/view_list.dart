@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 
 class ViewList extends StatefulWidget {
-    List list;
+    final List list;
     ViewList(this.list);
     @override
     _ViewListState createState() => _ViewListState();

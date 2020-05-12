@@ -4,7 +4,7 @@ import 'package:helppyapp/includes/general/pages.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 
 class BuildNews extends StatelessWidget {
-    AsyncSnapshot snapshot;
+    final AsyncSnapshot snapshot;
     BuildNews(this.snapshot);
 
     List<String> textCard(String dataUpdate, String casesBr, String casesLocal) {

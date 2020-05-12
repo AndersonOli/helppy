@@ -11,7 +11,7 @@ import 'welcome.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class ControlPage extends StatefulWidget {
-    bool wasLogged;
+    final bool wasLogged;
     ControlPage(this.wasLogged);
     @override
     _ControlPageState createState() => _ControlPageState();

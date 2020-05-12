@@ -3,9 +3,9 @@ import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/tabhome/aceitar_pedido.dart';
 
 class CardVoluntario extends StatelessWidget {
-    AsyncSnapshot snapshot;
-    int index;
-    dynamic responseDistance;
+    final AsyncSnapshot snapshot;
+    final int index;
+    final dynamic responseDistance;
 
     CardVoluntario({@required this.snapshot, @required this.index, @required this.responseDistance});
 

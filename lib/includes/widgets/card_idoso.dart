@@ -7,9 +7,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class CardIdoso extends StatelessWidget {
-    AsyncSnapshot snapshot;
-    ControllerTabHome controllerHome;
-    int index;
+    final AsyncSnapshot snapshot;
+    final ControllerTabHome controllerHome;
+    final int index;
     CardIdoso({@required this.controllerHome, @required this.snapshot, @required this.index});
 
     String statusRequest(AsyncSnapshot snapshot, int index){
