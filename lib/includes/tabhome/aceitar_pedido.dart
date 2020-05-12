@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class AcceptRequest extends StatefulWidget {
-    dynamic info;
+    final dynamic info;
     AcceptRequest(this.info);
 
     @override
@@ -18,17 +18,58 @@ class AcceptRequest extends StatefulWidget {
 }
 
 class _AcceptRequestState extends State<AcceptRequest> {
-    var prefs, infoAccept;
+    var prefs, infoAccept, info;
     int onRequest;
 
-    setValue() async {
+    List toList(data){
+        String buildText = '';
+        List list = [];
+        String replaceString = data['shoppings']
+            .toString()
+            .replaceAll("[", "")
+            .replaceAll("\"", "")
+            .replaceAll("]", "")
+            .replaceAll("{", "")
+            .replaceAll("}", "");
+
+        for (var i = 0; i < replaceString.length; i++) {
+            if(replaceString[i] != ',') {
+                buildText += replaceString[i];
+            }
+            if((i == (replaceString.length - 1)) || (replaceString[i] == ',')) {
+                list.add(buildText);
+                buildText = '';
+            }
+        }
+        return list;
+    }
+
+    String replaceDate(data, int index) {
+        String buildText = '';
+        List list = [];
+        var responseString = data.substring(0, 10);
+        for (var i = 0; i < responseString.length; i++) {
+            if(responseString[i] != '-') {
+                buildText += responseString[i];
+            }
+            if((i == (responseString.length - 1)) || (responseString[i] == '-')) {
+                list.add(buildText);
+                buildText = '';
+            }
+        }
+        String replaceString =  list[2].toString() + '/' + list[1].toString() + '/' + list[0].toString();
+        return replaceString;
+    }
+
+    Future<void> setValue() async {
+        info = widget.info;
         prefs = await SharedPreferences.getInstance();
         onRequest = prefs.get('onRequest');
         if(onRequest == 1){
-            widget.info = jsonDecode(prefs.getString('infoRequest'));
-            widget.info["shoppings"] = toList(widget.info);
+            info = jsonDecode(prefs.getString('infoRequest'));
+            info["shoppings"] = toList(widget.info);
         } else {
-            widget.info["shoppings"] = toList(widget.info);
+            info["shoppings"] = toList(widget.info);
         }
     }
 
@@ -36,7 +77,6 @@ class _AcceptRequestState extends State<AcceptRequest> {
     Widget build(BuildContext context) {
         return FutureBuilder(
             future: setValue(),
-            // ignore: missing_return
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                     return loadingCenter();
@@ -54,7 +94,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                 automaticallyImplyLeading: onRequest == 1 ? false : true,
             ),
             body: ListView.builder(
-                itemCount: widget.info["shoppings"].length,
+                itemCount: info["shoppings"].length,
                 padding: EdgeInsets.all(10.0),
                 shrinkWrap: true,
                 itemBuilder: (context, index){
@@ -65,7 +105,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 10.0),
                                     alignment: Alignment.center,
                                     child: Text(
-                                        widget.info["title"],
+                                        info["title"],
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 18.0
@@ -76,7 +116,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Descrição: " + widget.info["description"],
+                                        "Descrição: " + info["description"],
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -87,7 +127,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Pedido feito em: " + replaceDate(widget.info["created_at"], index),
+                                        "Pedido feito em: " + replaceDate(info["created_at"], index),
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -98,7 +138,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        "Pedido feito por: " + widget.info["full_name"],
+                                        "Pedido feito por: " + info["full_name"],
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -109,7 +149,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        onRequest == 1 ? "Endereço: " + widget.info["address"] + " - número: " + widget.info["house_number"] + " - ponto de referência: " + widget.info["reference"] : "Endereço: Aceite o pedido para ver esta informação",
+                                        onRequest == 1 ? "Endereço: " + info["address"] + " - número: " + info["house_number"] + " - ponto de referência: " + info["reference"] : "Endereço: Aceite o pedido para ver esta informação",
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -120,7 +160,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: GestureDetector(
-                                        onTap: () => onRequest == 1 ? launch("tel:" + widget.info["telephone"]) : null,
+                                        onTap: () => onRequest == 1 ? launch("tel:" + info["telephone"]) : null,
                                         child: RichText(
                                             text: TextSpan(
                                                 text: "Contato: ",
@@ -130,7 +170,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                                 ),
                                                 children: <TextSpan>[
                                                     TextSpan(
-                                                        text: onRequest == 1 ? widget.info["telephone"] : "Contato: Aceite o pedido para ver esta informação",
+                                                        text: onRequest == 1 ? info["telephone"] : "Contato: Aceite o pedido para ver esta informação",
                                                         style: TextStyle(
                                                             color: COR_AZUL,
                                                             fontSize: 16.0,
@@ -146,18 +186,18 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
                                 ),
-                                _itemList(widget.info["shoppings"][index]),
-                                widget.info["shoppings"].length == 1 ? Padding(
+                                _itemList(info["shoppings"][index]),
+                                info["shoppings"].length == 1 ? Padding(
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
                                 ) : Container(width: 0, height: 0,),
-                                widget.info["shoppings"].length == 1 ? _buttonAccept(context) : Container(width: 0, height: 0,)
+                                info["shoppings"].length == 1 ? _buttonAccept(context) : Container(width: 0, height: 0,)
                             ],
                         );
-                    } else if(index == (widget.info["shoppings"].length - 1)){
+                    } else if(index == (info["shoppings"].length - 1)){
                         return Column(
                             children: <Widget>[
-                                _itemList(widget.info["shoppings"][index]),
+                                _itemList(info["shoppings"][index]),
                                 Padding(
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
@@ -166,7 +206,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                             ],
                         );
                     } else {
-                        return _itemList(widget.info["shoppings"][index]);
+                        return _itemList(info["shoppings"][index]);
                     }
                 },
             ),
@@ -179,7 +219,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
             onPressed: () async {
                 isLoading(context, true);
                 var response;
-                var url = 'https://helppy-19.herokuapp.com/update/' + widget.info["user_id"].toString() + "/" + widget.info["id"].toString();
+                var url = 'https://helppy-19.herokuapp.com/update/' + info["user_id"].toString() + "/" + info["id"].toString();
                 if(onRequest != 1){
                     response = await http.post(
                         url,
@@ -255,53 +295,5 @@ class _AcceptRequestState extends State<AcceptRequest> {
                 style: TextStyle(fontSize: 20, color: COR_BRANCO),
             ),
         );
-    }
-
-    toList(data){
-        String buildText = '';
-        List list = [];
-
-        String replaceString = data['shoppings']
-            .toString()
-            .replaceAll("[", "")
-            .replaceAll("\"", "")
-            .replaceAll("]", "")
-            .replaceAll("{", "")
-            .replaceAll("}", "");
-
-
-        for (var i = 0; i < replaceString.length; i++) {
-            if(replaceString[i] != ',') {
-                buildText += replaceString[i];
-            }
-
-            if((i == (replaceString.length - 1)) || (replaceString[i] == ',')) {
-                list.add(buildText);
-                buildText = '';
-            }
-        }
-        return list;
-    }
-
-    String replaceDate(data, int index) {
-        String buildText = '';
-        List list = [];
-
-        var responseString = data.substring(0, 10);
-
-        for (var i = 0; i < responseString.length; i++) {
-            if(responseString[i] != '-') {
-                buildText += responseString[i];
-            }
-
-            if((i == (responseString.length - 1)) || (responseString[i] == '-')) {
-                list.add(buildText);
-                buildText = '';
-            }
-        }
-
-        String replaceString =  list[2].toString() + '/' + list[1].toString() + '/' + list[0].toString();
-
-        return replaceString;
     }
 }
