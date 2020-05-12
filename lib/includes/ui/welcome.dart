@@ -37,18 +37,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
         final _width = MediaQuery.of(context).size.width;
         final _height = MediaQuery.of(context).size.height;
         return Scaffold(
-            body: CarouselSlider(
-                options: CarouselOptions(
-                    height: _height,
-                    viewportFraction: 1.0,
-                    enlargeCenterPage: false,
-                    autoPlay: false,
-                    reverse: false,
-                    scrollDirection: Axis.horizontal,
-                    initialPage: 0,
-                    enableInfiniteScroll: false,
-                ),
-                items: <Widget>[
+            body: PageView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
                     SingleChildScrollView(
                         child: Column(
                             children: <Widget>[
@@ -125,7 +116,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                         ),
                     ),
                     SingleChildScrollView(
-//                        width: _width,
                         padding: EdgeInsets.all(10.0),
                         child: Column(
                             children: <Widget>[
@@ -232,7 +222,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                 )
                             ],
                         ),
-                    ),
+                    )
                 ],
             ),
         );
