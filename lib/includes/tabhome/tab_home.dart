@@ -7,6 +7,7 @@ import 'package:helppyapp/includes/widgets/card_voluntario.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeTab extends StatefulWidget {
     @override
@@ -14,6 +15,7 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+
     @override
     Widget build(BuildContext context) {
         final controllerHome = Provider.of<ControllerTabHome>(context);
@@ -25,7 +27,7 @@ class _HomeTabState extends State<HomeTab> {
                         child: Observer(
                             builder: (_){
                                 return FutureBuilder(
-                                    future: controllerHome.futureData,
+                                    future: Future.wait([controllerHome.futureData, controllerHome.setPreferences()]),
                                     builder: (context, snapshot) {
                                         if(snapshot.connectionState == ConnectionState.waiting){
                                             return loadingCenter();
@@ -40,7 +42,7 @@ class _HomeTabState extends State<HomeTab> {
                                                     },
                                                     child: Center(
                                                         child: Text(
-                                                            controllerHome.typeACC == "0" ? "Não há pedidos para ajudar no momento." : "Você ainda não fez nenhum pedido. Se precisa de ajuda, clique no botão com o + abaixo..",
+                                                            controllerHome.prefs.getString("type_acc") == "0" ? "Não há pedidos para ajudar no momento." : "Você ainda não fez nenhum pedido. Se precisa de ajuda, clique no botão com o + abaixo..",
                                                             style: TextStyle(
                                                                 color: COR_AZUL,
                                                                 fontSize: 18.0,
@@ -62,7 +64,7 @@ class _HomeTabState extends State<HomeTab> {
                                                                 itemCount: snapshot.data.length,
                                                                 shrinkWrap: true,
                                                                 itemBuilder: (context, index){
-                                                                    return controllerHome.typeACC == "0" ? CardVoluntario(index: index, snapshot: snapshot, responseDistance: controllerHome.responseDistance,) : CardIdoso(snapshot: snapshot, controllerHome: controllerHome, index: index,);
+                                                                    return controllerHome.prefs.getString("type_acc") == "0" ? CardVoluntario(index: index, snapshot: snapshot, responseDistance: controllerHome.responseDistance,) : CardIdoso(snapshot: snapshot, controllerHome: controllerHome, index: index,);
                                                                 },
                                                             ),
                                                         ),

@@ -10,7 +10,15 @@ class ControllerTabHome = _ControllerTabHome with _$ControllerTabHome;
 
 abstract class _ControllerTabHome with Store {
     var token, idUser, typeACC;
-    var prefs, lat, long, responseDistance;
+    var lat, long, responseDistance;
+
+    @observable
+    var prefs;
+
+    @action
+    Future<void> setPreferences() async {
+        prefs = await SharedPreferences.getInstance();
+    }
 
     Future<void> getCords() async {
         var location = new Location();
@@ -34,7 +42,8 @@ abstract class _ControllerTabHome with Store {
 
     Future getResponseList() async {
         var response;
-        prefs = await SharedPreferences.getInstance();
+        setPreferences();
+        var prefs = await SharedPreferences.getInstance();
         token = prefs.getString('token');
         idUser = prefs.getInt('user_id');
         typeACC = prefs.getString('type_acc');
