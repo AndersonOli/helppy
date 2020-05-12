@@ -14,7 +14,6 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-
     @override
     Widget build(BuildContext context) {
         final controllerHome = Provider.of<ControllerTabHome>(context);
@@ -36,8 +35,6 @@ class _HomeTabState extends State<HomeTab> {
 
                                             if(snapshot.data == null || snapshot.data.length <= 0){
                                                 return RefreshIndicator(
-                                                    color: Colors.red,
-                                                    backgroundColor: Colors.red,
                                                     onRefresh: () async {
                                                         controllerHome.getResult();
                                                     },

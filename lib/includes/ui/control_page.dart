@@ -89,6 +89,7 @@ class _ControlPageState extends State<ControlPage> {
                                         showSelectedLabels: false,
                                         showUnselectedLabels: false,
                                         selectedItemColor: COR_AZUL,
+                                        unselectedItemColor: COR_CINZA,
                                         items: [
                                             BottomNavigationBarItem(
                                                 title: Text("Início"),
