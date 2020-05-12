@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:animator/animator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/general/tab_cadastro.dart';
@@ -35,7 +34,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
-        final _height = MediaQuery.of(context).size.height;
         return Scaffold(
             body: PageView(
                 scrollDirection: Axis.horizontal,
