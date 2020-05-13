@@ -48,7 +48,7 @@ class _CadastroPageState extends State<CadastroPage> {
     final TextEditingController _numeroCadController = TextEditingController();
     final TextEditingController _refCadController = TextEditingController();
 
-    _choose(ControllerCadastro controller) async {
+    Future<void> _choose(ControllerCadastro controller) async {
         file = await ImagePicker.pickImage(source: ImageSource.camera);
         controller.changeProfileImage(file);
     }
@@ -327,6 +327,9 @@ class _CadastroPageState extends State<CadastroPage> {
 
         isLoading(context, true);
         typeAcc = typeOne == true ? 1 : 0;
+
+        String base64Image = base64Encode(file.readAsBytesSync());
+        String fileName = file.path.split("/").last;
 
         http.Response data = await http.post(
             'https://helppy-19.herokuapp.com/register',
