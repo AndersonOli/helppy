@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/controllers/push_notifications.dart';
 import 'package:helppyapp/includes/tabhome/aceitar_pedido.dart';
 import 'package:helppyapp/includes/tabhome/tab_request_help.dart';
 import 'package:helppyapp/includes/general/pages.dart';
@@ -22,11 +24,23 @@ class _ControlPageState extends State<ControlPage> {
     Future _value;
     int isLogged, onRequest;
     String typeAcc, infoRequest;
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     @override
     void initState() {
         super.initState();
         _value = setValue();
+        _firebaseMessaging.configure(
+            onMessage: (Map<String, dynamic> message) async {
+                print('onMessage: $message');
+            },
+            onLaunch: (Map<String, dynamic> message) async {
+                showAlertDialog(context, message["notification"]["title"], message["notification"]["body"]);
+            },
+            onResume: (Map<String, dynamic> message) async {
+                print('onResume: $message');
+            },
+        );
     }
 
     Future<dynamic> setValue() async {

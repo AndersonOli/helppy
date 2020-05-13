@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "938744370182",
+    "firebase_url": "https://helppy-19-893b1.firebaseio.com",
+    "project_id": "helppy-19-893b1",
+    "storage_bucket": "helppy-19-893b1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938744370182:android:c1aa734e1e760876461f87",
+        "android_client_info": {
+          "package_name": "com.example.helppyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938744370182-pauh99qmrikf0spij4jo7rhs9j99kjto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqj_gq8Go9lgjJdMLZg30QuOPJTr59NUo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938744370182-pauh99qmrikf0spij4jo7rhs9j99kjto.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
