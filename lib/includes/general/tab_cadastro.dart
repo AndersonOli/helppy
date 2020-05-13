@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/painting.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +11,8 @@ import 'package:helppyapp/includes/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:helppyapp/controllers/controllerCadastro.dart';
 
 class CadastroPage extends StatefulWidget {
     @override
@@ -14,12 +20,13 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends State<CadastroPage> {
+    int typeAcc;
+    bool onProgress;
     bool typeOne = false;
     bool typeTwo = false;
-    int typeAcc;
-    var prefs;
-    bool onProgress;
+    SharedPreferences prefs;
     var latitude, longitude;
+    File file;
 
     @override
     void initState() {
@@ -41,8 +48,14 @@ class _CadastroPageState extends State<CadastroPage> {
     final TextEditingController _numeroCadController = TextEditingController();
     final TextEditingController _refCadController = TextEditingController();
 
+    _choose(ControllerCadastro controller) async {
+        file = await ImagePicker.pickImage(source: ImageSource.camera);
+        controller.changeProfileImage(file);
+    }
+
     @override
     Widget build(BuildContext context) {
+        final controllerCadastro = Provider.of<ControllerCadastro>(context);
         final _width = MediaQuery.of(context).size.width;
         return Scaffold(
             appBar: AppBar(
@@ -54,6 +67,40 @@ class _CadastroPageState extends State<CadastroPage> {
                     padding: EdgeInsets.all(10.0),
                     child: Column(
                         children: <Widget>[
+                            GestureDetector(
+                                onTap: () async {
+                                    await _choose(controllerCadastro);
+                                },
+                                child: Observer(
+                                    builder: (_){
+                                        return Container(
+                                            width: 140,
+                                            height: 140,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(140.0),
+                                                border: Border.all(
+                                                    color: controllerCadastro.fileProfileImage == null ? Colors.transparent : COR_AZUL,
+                                                    width: controllerCadastro.fileProfileImage == null ? 0.0 : 2.0
+                                                )
+                                            ),
+                                            margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                            child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(140.0),
+                                                child: controllerCadastro.fileProfileImage == null ?
+                                                Image.asset(
+                                                    "assets/images/user-icon.png",
+                                                ) :
+                                                Image.file(
+                                                    controllerCadastro.fileProfileImage,
+                                                    fit: BoxFit.cover,
+                                                    width: 140,
+                                                    height: 140,
+                                                ),
+                                            ),
+                                        );
+                                    },
+                                ),
+                            ),
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(

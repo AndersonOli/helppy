@@ -7,7 +7,6 @@ import 'package:helppyapp/includes/widgets/card_voluntario.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeTab extends StatefulWidget {
     @override
