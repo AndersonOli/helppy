@@ -219,7 +219,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
             onPressed: () async {
                 isLoading(context, true);
                 var response;
-                var url = 'https://helppy-19.herokuapp.com/update/' + info["user_id"].toString() + "/" + info["id"].toString();
+                var url = API_URL + '/update/' + info["user_id"].toString() + "/" + info["id"].toString();
                 if(onRequest != 1){
                     response = await http.post(
                         url,

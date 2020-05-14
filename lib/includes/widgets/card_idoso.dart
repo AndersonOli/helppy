@@ -63,7 +63,6 @@ class CardIdoso extends StatelessWidget {
                 buildText = '';
             }
         }
-
         String replaceString =  list[2].toString() + '/' + list[1].toString() + '/' + list[0].toString();
         return replaceString;
     }
@@ -166,7 +165,7 @@ class CardIdoso extends StatelessWidget {
                                                 child: Text("Sim"),
                                                 onPressed: () async {
                                                     http.Response data = await http.delete(
-                                                        'https://helppy-19.herokuapp.com/list/' + snapshot.data[index]["id"].toString(),
+                                                        API_URL + '/list/' + snapshot.data[index]["id"].toString(),
                                                         headers: {
                                                             "Content-Type": "application/json; charset=utf-8",
                                                             HttpHeaders.authorizationHeader: "Bearer " + controllerHome.prefs.getString('token')

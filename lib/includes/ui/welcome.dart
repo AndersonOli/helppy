@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class WelcomeScreen extends StatefulWidget {
+    final String tokenNotification;
+    WelcomeScreen(this.tokenNotification);
     @override
     _WelcomeScreenState createState() => _WelcomeScreenState();
 }
@@ -137,7 +139,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                         onPressed: (){
                                             Navigator.push(context, MaterialPageRoute(
                                                 builder: (context){
-                                                    return CadastroPage();
+                                                    return CadastroPage(widget.tokenNotification);
                                                 },
                                             ));
                                         },
@@ -230,13 +232,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
         if(_emailLoginController.text != "" && _senhaLoginController.text != ""){
             isLoading(context, true);
             http.Response data = await http.post(
-                'https://helppy-19.herokuapp.com/authenticate',
+                API_URL + '/authenticate',
                 headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode({
                     "email": _emailLoginController.text.trim(),
-                    "password": _senhaLoginController.text
+                    "password": _senhaLoginController.text,
+                    "token_notification": widget.tokenNotification
                 }),
             );
             var dados = json.decode(data.body);

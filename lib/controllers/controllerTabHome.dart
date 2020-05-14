@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:helppyapp/includes/general/globals.dart';
 import 'package:location/location.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
@@ -30,7 +31,7 @@ abstract class _ControllerTabHome with Store {
     Future<void> requestDistance() async {
         final token = prefs.getString('token');
         final response = await http.post(
-            'https://helppy-19.herokuapp.com/distance',
+            API_URL + '/distance',
             headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
             body: <String, String>{
                 "lat": lat.toString(),
@@ -50,14 +51,14 @@ abstract class _ControllerTabHome with Store {
 
         if(typeACC == "1"){
             response = await http.get(
-                'https://helppy-19.herokuapp.com/list/$idUser',
+                API_URL + '/list/$idUser',
                 headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
             );
             return json.decode(response.body);
         } else {
             await getCords();
             response = await http.post(
-                'https://helppy-19.herokuapp.com/accept',
+                API_URL + '/accept',
                 headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
                 body: {
                     "lat": lat.toString(),

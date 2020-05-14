@@ -15,9 +15,11 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
 
+
     @override
     Widget build(BuildContext context) {
         final controllerHome = Provider.of<ControllerTabHome>(context);
+        controllerHome.getResult();
         return Padding(
             padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
             child: Column(
@@ -26,13 +28,14 @@ class _HomeTabState extends State<HomeTab> {
                         child: Observer(
                             builder: (_){
                                 return FutureBuilder(
-                                    future: Future.wait([controllerHome.futureData, controllerHome.setPreferences()]),
+                                    future: controllerHome.futureData,
                                     builder: (context, snapshot) {
                                         if(snapshot.connectionState == ConnectionState.waiting){
                                             return loadingCenter();
                                         } else {
                                             final _width = MediaQuery.of(context).size.width;
                                             final _height = MediaQuery.of(context).size.height;
+                                            print(snapshot.data);
 
                                             if(snapshot.data == null || snapshot.data.length <= 0){
                                                 return RefreshIndicator(

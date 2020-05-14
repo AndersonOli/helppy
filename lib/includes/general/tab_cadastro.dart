@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:helppyapp/controllers/controllerCadastro.dart';
 
 class CadastroPage extends StatefulWidget {
+    final String tokenNotification;
+    CadastroPage(this.tokenNotification);
     @override
     _CadastroPageState createState() => _CadastroPageState();
 }
@@ -51,6 +53,7 @@ class _CadastroPageState extends State<CadastroPage> {
     Future<void> _choose(ControllerCadastro controller) async {
         file = await ImagePicker.pickImage(source: ImageSource.camera);
         controller.changeProfileImage(file);
+        debugPrint(base64Encode(file.readAsBytesSync()));
     }
 
     @override
@@ -328,11 +331,11 @@ class _CadastroPageState extends State<CadastroPage> {
         isLoading(context, true);
         typeAcc = typeOne == true ? 1 : 0;
 
-        String base64Image = base64Encode(file.readAsBytesSync());
-        String fileName = file.path.split("/").last;
+//        String base64Image = base64Encode(file.readAsBytesSync());
+//        String fileName = file.path;
 
         http.Response data = await http.post(
-            'https://helppy-19.herokuapp.com/register',
+            API_URL + '/register',
             headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -347,7 +350,8 @@ class _CadastroPageState extends State<CadastroPage> {
                 "reference": _refCadController.text,
                 "type_account": typeAcc.toString(),
                 "latitude": latitude,
-                "longitude": longitude
+                "longitude": longitude,
+                "token_notification": widget.tokenNotification
             }),
         );
 
@@ -369,13 +373,14 @@ class _CadastroPageState extends State<CadastroPage> {
             );
         } else if(data.body.contains(_emailCadController.text.toLowerCase().trim())){
             http.Response data = await http.post(
-                'https://helppy-19.herokuapp.com/authenticate',
+                API_URL + '/authenticate',
                 headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode({
                     "email": _emailCadController.text.toLowerCase().trim(),
-                    "password": _senhaCadController.text
+                    "password": _senhaCadController.text,
+                    "token_notification": widget.tokenNotification,
                 }),
             );
             var dados = json.decode(data.body);

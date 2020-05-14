@@ -22,24 +22,31 @@ class _ControlPageState extends State<ControlPage> {
     var prefs;
     Future _value;
     int isLogged, onRequest;
-    String typeAcc, infoRequest;
+    String typeAcc, infoRequest, tokenNotification;
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     @override
     void initState() {
         super.initState();
         _value = setValue();
+        getTokenNotification();
         _firebaseMessaging.configure(
             onMessage: (Map<String, dynamic> message) async {
                 print('onMessage: $message');
             },
             onLaunch: (Map<String, dynamic> message) async {
+                print('onMessage: $message');
                 showAlertDialog(context, message["notification"]["title"], message["notification"]["body"]);
             },
             onResume: (Map<String, dynamic> message) async {
                 print('onResume: $message');
             },
         );
+    }
+
+    Future<void> getTokenNotification() async {
+        tokenNotification = await _firebaseMessaging.getToken();
+        print(tokenNotification);
     }
 
     Future<dynamic> setValue() async {
@@ -61,7 +68,7 @@ class _ControlPageState extends State<ControlPage> {
                     return loadingCenter();
                 } else {
                     if(snapshot.data[1] != 1){
-                        return WelcomeScreen();
+                        return WelcomeScreen(tokenNotification);
                     } else if(snapshot.data[2] == 1){
                         return AcceptRequest(infoRequest);
                     } else {

@@ -40,6 +40,8 @@ class _RequestHelpState extends State<RequestHelp> {
                             return response != null ? response.statusCode : null;
                         });
 
+                        print(result);
+
                         isLoading(context, false);
 
                         if(result != null && result == 200){
@@ -241,7 +243,7 @@ class _RequestHelpState extends State<RequestHelp> {
     Future<http.Response> _postRequest() async {
         prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
-        var url = 'https://helppy-19.herokuapp.com/list';
+        var url = API_URL + '/list';
         if(titleListController.text != "" && descriptionController.text != "" && _list.length > 0){
             return http.post(
                 url,
