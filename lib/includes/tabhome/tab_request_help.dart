@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/general/globals.dart';
+import 'package:helppyapp/includes/ui/control_page.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -39,8 +40,6 @@ class _RequestHelpState extends State<RequestHelp> {
                         var result = await _postRequest().then((http.Response response) {
                             return response != null ? response.statusCode : null;
                         });
-
-                        print(result);
 
                         isLoading(context, false);
 
@@ -252,7 +251,7 @@ class _RequestHelpState extends State<RequestHelp> {
                     "title": titleListController.text,
                     'description': descriptionController.text,
                     'shoppings': _list.toString(),
-                    "status": "0"
+                    'status': '0'
                 })
             );
         } else {
@@ -269,8 +268,11 @@ class _RequestHelpState extends State<RequestHelp> {
         Widget okButton = FlatButton(
             child: Text("OK"),
             onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context, true);
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context){
+                        return ControlPage(true);
+                    },
+                ));
             },
         );
         AlertDialog alerta = AlertDialog(

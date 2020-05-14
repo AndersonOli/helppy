@@ -14,8 +14,6 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-
-
     @override
     Widget build(BuildContext context) {
         final controllerHome = Provider.of<ControllerTabHome>(context);
@@ -35,7 +33,6 @@ class _HomeTabState extends State<HomeTab> {
                                         } else {
                                             final _width = MediaQuery.of(context).size.width;
                                             final _height = MediaQuery.of(context).size.height;
-                                            print(snapshot.data);
 
                                             if(snapshot.data == null || snapshot.data.length <= 0){
                                                 return RefreshIndicator(

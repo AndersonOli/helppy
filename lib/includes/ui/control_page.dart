@@ -33,20 +33,54 @@ class _ControlPageState extends State<ControlPage> {
         _firebaseMessaging.configure(
             onMessage: (Map<String, dynamic> message) async {
                 print('onMessage: $message');
+                this.mostrarAlert(message["notification"]["title"], message["notification"]["body"]);
             },
             onLaunch: (Map<String, dynamic> message) async {
                 print('onMessage: $message');
-                showAlertDialog(context, message["notification"]["title"], message["notification"]["body"]);
+                this.mostrarAlert(message["notification"]["title"], message["notification"]["body"]);
             },
             onResume: (Map<String, dynamic> message) async {
                 print('onResume: $message');
+                this.mostrarAlert(message["notification"]["title"], message["notification"]["body"]);
+            },
+        );
+    }
+
+    Future<void> mostrarAlert(title, message) async {
+        return showDialog<void>(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+                return AlertDialog(
+                    title: Text(title),
+                    content: SingleChildScrollView(
+                        child: ListBody(
+                            children: <Widget>[
+                                Text(
+                                    message,
+                                    style: TextStyle(
+                                        color: COR_AZUL,
+                                        fontSize: 16.0
+                                    ),
+                                )
+                            ],
+                        ),
+                    ),
+                    actions: <Widget>[
+                        FlatButton(
+                            child: Text('Ok'),
+                            onPressed: () {
+                                Navigator.of(context).pop();
+                            },
+                        ),
+                    ],
+                );
             },
         );
     }
 
     Future<void> getTokenNotification() async {
         tokenNotification = await _firebaseMessaging.getToken();
-        print(tokenNotification);
     }
 
     Future<dynamic> setValue() async {

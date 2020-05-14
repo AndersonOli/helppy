@@ -166,14 +166,14 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                                 text: "Contato: ",
                                                 style: TextStyle(
                                                     color: COR_AZUL,
-                                                    fontSize: 16.0
+                                                    fontSize: 14.0
                                                 ),
                                                 children: <TextSpan>[
                                                     TextSpan(
-                                                        text: onRequest == 1 ? info["telephone"] : "Contato: Aceite o pedido para ver esta informação",
+                                                        text: onRequest == 1 ? info["telephone"] : "Aceite o pedido para ver esta informação",
                                                         style: TextStyle(
                                                             color: COR_AZUL,
-                                                            fontSize: 16.0,
+                                                            fontSize: 14.0,
                                                             decoration: onRequest == 1 ? TextDecoration.underline : TextDecoration.none
                                                         ),
                                                     )
@@ -254,11 +254,10 @@ class _AcceptRequestState extends State<AcceptRequest> {
                         })
                     );
 
-                    print(response.body);
-
                     isLoading(context, false);
                     prefs.setInt("onRequest", 0);
-                    Navigator.push(context, MaterialPageRoute(
+
+                    Navigator.pushReplacement(context, MaterialPageRoute(
                         builder: (context){
                             return ControlPage(true);
                         },
