@@ -11,11 +11,8 @@ class HelpTab extends StatefulWidget {
 
 class _HelpTabState extends State<HelpTab> with AutomaticKeepAliveClientMixin<HelpTab> {
     @override
-    bool get wantKeepAlive => true;
-
-    @override
-    // ignore: must_call_super
     Widget build(BuildContext context) {
+        super.build(context);
         return Scaffold(
             body: new ListView.builder(
                 itemCount: dicas.length,
@@ -121,4 +118,7 @@ class _HelpTabState extends State<HelpTab> with AutomaticKeepAliveClientMixin<He
                 }),
         );
     }
+
+    @override
+    bool get wantKeepAlive => true;
 }
