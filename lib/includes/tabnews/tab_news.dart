@@ -19,7 +19,7 @@ class _NewsTabState extends State<NewsTab> with AutomaticKeepAliveClientMixin<Ne
         _futureData = apiData();
     }
 
-    apiData() async {
+    Future<List> apiData() async {
         var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
         var responseCorona = await http.get('https://api.especiaisg1.globo/api/eventos/brasil/?format=json');
 
