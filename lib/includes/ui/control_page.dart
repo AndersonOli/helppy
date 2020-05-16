@@ -113,11 +113,15 @@ class _ControlPageState extends State<ControlPage> {
                                     child: Icon(Icons.add, color: COR_BRANCO,),
                                     backgroundColor: COR_PRETA,
                                     onPressed: () async {
-                                        await Navigator.push(context, MaterialPageRoute(
+                                        var result = await Navigator.push(context, MaterialPageRoute(
                                             builder: (context){
                                                 return RequestHelp();
                                             },
                                         ));
+
+                                        if(result){
+                                            controller.changePage(0);
+                                        }
                                     },
                                 ),
                             ),

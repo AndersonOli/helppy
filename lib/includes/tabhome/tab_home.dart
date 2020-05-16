@@ -65,6 +65,7 @@ class _HomeTabState extends State<HomeTab> {
                                                                 itemCount: snapshot.data.length,
                                                                 shrinkWrap: true,
                                                                 itemBuilder: (context, index){
+                                                                    print(index);
                                                                     return controllerHome.preferences['type_acc'] == "0" ? CardVoluntario(index: index, snapshot: snapshot, responseDistance: controllerHome.responseDistance,) : CardIdoso(snapshot: snapshot, controllerHome: controllerHome, index: index,);
                                                                 },
                                                             ),

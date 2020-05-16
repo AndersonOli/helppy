@@ -38,7 +38,7 @@ abstract class _ControllerTabHome with Store {
 
         if(preferences['type_acc'] == "1"){
             response = await http.get(
-                API_URL + '/list/' + preferences['user_id'],
+                API_URL + '/list/' + preferences['user_id'].toString(),
                 headers: {HttpHeaders.authorizationHeader: "Bearer " + preferences['token']},
             );
             return json.decode(response.body);

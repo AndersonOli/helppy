@@ -38,8 +38,8 @@ class _RequestHelpState extends State<RequestHelp> {
                     elevation: 0.0,
                     onPressed: () async {
                         isLoading(context, true);
-                        prefs = await SharedPreferences.getInstance();
-                        var result = await _postRequest().then((http.Response response) {
+
+                        var result = await _postRequest(controllerHome).then((http.Response response) {
                             return response != null ? response.statusCode : null;
                         });
 
@@ -241,14 +241,12 @@ class _RequestHelpState extends State<RequestHelp> {
         return _list;
     }
 
-    Future<http.Response> _postRequest() async {
-        prefs = await SharedPreferences.getInstance();
-        final token = prefs.getString('token');
+    Future<http.Response> _postRequest(ControllerTabHome controllerHome) async {
         var url = API_URL + '/list';
         if(titleListController.text != "" && descriptionController.text != "" && _list.length > 0){
             return http.post(
                 url,
-                headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer $token"},
+                headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + controllerHome.preferences['token']},
                 body: jsonEncode(<String, String>{
                     "title": titleListController.text,
                     'description': descriptionController.text,
@@ -270,11 +268,8 @@ class _RequestHelpState extends State<RequestHelp> {
         Widget okButton = FlatButton(
             child: Text("OK"),
             onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(
-                    builder: (context){
-                        return ControlPage();
-                    },
-                ));
+                Navigator.pop(context);
+                Navigator.pop(context, true);
             },
         );
         AlertDialog alerta = AlertDialog(
