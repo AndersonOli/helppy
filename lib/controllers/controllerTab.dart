@@ -1,26 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'controllerTab.g.dart';
 
 class HomeController = _HomeBase with _$HomeController;
 
 abstract class _HomeBase with Store {
-    var pageController = PageController();
-    var pageControllerHome = PageController();
+    final PageController pageController = PageController();
 
-    @observable
-    bool didUpdate = false;
+    void setPreferences(String preference, dynamic value) {
+        switch(value.runtimeType){
+            case String:
+                prefs.setString(preference, value);
+                break;
+            case int:
+                prefs.setInt(preference, value);
+                break;
+        }
+    }
 
     @observable
     int selectedIndex = 0;
-
-    @observable
-    bool wasPop = false;
-
-    @action
-    void wasPoped(){
-        wasPop = true;
-    }
 
     @action
     void changePage(int index) {
@@ -28,9 +28,20 @@ abstract class _HomeBase with Store {
         selectedIndex = index;
     }
 
+    @observable
+    SharedPreferences prefs;
+
     @action
-    void updatePage(bool update) {
-        pageControllerHome.jumpToPage(0);
-        this.changePage(0);
+    Future getPreferences() async {
+        prefs = await SharedPreferences.getInstance();
+        return {
+            'type_acc': prefs.getString('type_acc'),
+            'logged': prefs.getInt('logged'),
+            'onRequest': prefs.getInt('onRequest'),
+            'infoRequest': prefs.getString('infoRequest'),
+            'token': prefs.getString('token'),
+            'user_id': prefs.getInt('user_id'),
+            'name': prefs.getString('')
+        };
     }
 }

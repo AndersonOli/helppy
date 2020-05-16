@@ -1,25 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:helppyapp/controllers/controllerTab.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:location/location.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 part 'controllerTabHome.g.dart';
 
 class ControllerTabHome = _ControllerTabHome with _$ControllerTabHome;
 
 abstract class _ControllerTabHome with Store {
-    var token, idUser, typeACC;
+    Map preferences;
     var lat, long, responseDistance;
-
-    @observable
-    var prefs;
-
-    @action
-    Future<void> setPreferences() async {
-        prefs = await SharedPreferences.getInstance();
-    }
 
     Future<void> getCords() async {
         var location = new Location();
@@ -28,11 +20,10 @@ abstract class _ControllerTabHome with Store {
         long = userLocation.longitude;
     }
 
-    Future<void> requestDistance() async {
-        final token = prefs.getString('token');
+    Future<void> requestDistance(Map preferences) async {
         final response = await http.post(
             API_URL + '/distance',
-            headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+            headers: {HttpHeaders.authorizationHeader: "Bearer " + preferences['token']},
             body: <String, String>{
                 "lat": lat.toString(),
                 "long": long.toString()
@@ -41,31 +32,27 @@ abstract class _ControllerTabHome with Store {
         responseDistance = json.decode(response.body);
     }
 
-    Future getResponseList() async {
+    Future getResponseList(HomeController controller) async {
         var response;
-        setPreferences();
-        var prefs = await SharedPreferences.getInstance();
-        token = prefs.getString('token');
-        idUser = prefs.getInt('user_id');
-        typeACC = prefs.getString('type_acc');
+        preferences = await controller.getPreferences();
 
-        if(typeACC == "1"){
+        if(preferences['type_acc'] == "1"){
             response = await http.get(
-                API_URL + '/list/$idUser',
-                headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+                API_URL + '/list/' + preferences['user_id'],
+                headers: {HttpHeaders.authorizationHeader: "Bearer " + preferences['token']},
             );
             return json.decode(response.body);
         } else {
             await getCords();
             response = await http.post(
                 API_URL + '/accept',
-                headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+                headers: {HttpHeaders.authorizationHeader: "Bearer " + preferences['token']},
                 body: {
                     "lat": lat.toString(),
                     "long": long.toString()
                 },
             );
-            await requestDistance();
+            await requestDistance(preferences);
             return json.decode(response.body);
         }
     }
@@ -74,7 +61,7 @@ abstract class _ControllerTabHome with Store {
     Future<dynamic> futureData;
 
     @action
-    getResult(){
-        futureData = getResponseList();
+    getResult(HomeController controller){
+        futureData = getResponseList(controller);
     }
 }

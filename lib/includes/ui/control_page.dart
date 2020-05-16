@@ -1,58 +1,61 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:helppyapp/includes/general/pages.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 import 'package:helppyapp/includes/tabhome/aceitar_pedido.dart';
 import 'package:helppyapp/includes/tabhome/tab_request_help.dart';
-import 'package:helppyapp/includes/general/pages.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:helppyapp/controllers/controllerTab.dart';
 import 'welcome.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class ControlPage extends StatefulWidget {
-    final bool wasLogged;
-    ControlPage(this.wasLogged);
     @override
     _ControlPageState createState() => _ControlPageState();
 }
 
 class _ControlPageState extends State<ControlPage> {
-    var prefs;
-    Future _value;
-    int isLogged, onRequest;
-    String typeAcc, infoRequest, tokenNotification;
+    String tokenNotification;
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     @override
     void initState() {
         super.initState();
-        _value = setValue();
         getTokenNotification();
+
         _firebaseMessaging.configure(
             onMessage: (Map<String, dynamic> message) async {
                 print('onMessage: $message');
-                this.mostrarAlert(message["notification"]["title"], message["notification"]["body"]);
+                this.alertNotification(message["notification"]["title"], message["notification"]["body"]);
             },
             onLaunch: (Map<String, dynamic> message) async {
                 print('onMessage: $message');
-                this.mostrarAlert(message["notification"]["title"], message["notification"]["body"]);
+                this.alertNotification(message["notification"]["title"], message["notification"]["body"]);
             },
             onResume: (Map<String, dynamic> message) async {
                 print('onResume: $message');
-                this.mostrarAlert(message["notification"]["title"], message["notification"]["body"]);
+                this.alertNotification(message["notification"]["title"], message["notification"]["body"]);
             },
         );
     }
 
-    Future<void> mostrarAlert(title, message) async {
-        return showDialog<void>(
+    Future<void> getTokenNotification() async {
+        tokenNotification = await _firebaseMessaging.getToken();
+    }
+
+    Future<void> alertNotification(String title, String message) async {
+        return showDialog(
             context: context,
-            barrierDismissible: false, // user must tap button!
+            barrierDismissible: false,
             builder: (BuildContext context) {
                 return AlertDialog(
-                    title: Text(title),
+                    title: Text(
+                        title,
+                        style: TextStyle(
+                            color: COR_AZUL,
+                            fontSize: 18.0
+                        ),
+                    ),
                     content: SingleChildScrollView(
                         child: ListBody(
                             children: <Widget>[
@@ -79,32 +82,19 @@ class _ControlPageState extends State<ControlPage> {
         );
     }
 
-    Future<void> getTokenNotification() async {
-        tokenNotification = await _firebaseMessaging.getToken();
-    }
-
-    Future<dynamic> setValue() async {
-        prefs = await SharedPreferences.getInstance();
-        typeAcc = prefs.getString('type_acc');
-        isLogged = prefs.getInt('logged');
-        onRequest = prefs.getInt('onRequest');
-        infoRequest = prefs.getString('infoRequest');
-        return [typeAcc, isLogged, onRequest];
-    }
-
     @override
     Widget build(BuildContext context) {
         final controller = Provider.of<HomeController>(context);
         return FutureBuilder(
-            future: _value,
+            future: controller.getPreferences(),
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                     return loadingCenter();
                 } else {
-                    if(snapshot.data[1] != 1){
+                    if(snapshot.data['logged'] != 1){
                         return WelcomeScreen(tokenNotification);
-                    } else if(snapshot.data[2] == 1){
-                        return AcceptRequest(infoRequest);
+                    } else if(snapshot.data['onRequest'] == 1){
+                        return AcceptRequest(snapshot.data['infoRequest']);
                     } else {
                         return Scaffold(
                             body: PageView(
@@ -116,22 +106,18 @@ class _ControlPageState extends State<ControlPage> {
                                     HelpTab(),
                                 ],
                             ),
-                            floatingActionButton: snapshot.data[0] == "0" ? Container(width: 0.0,height: 0.0,) : Padding(
+                            floatingActionButton: snapshot.data['type_acc'] == "0" ? Container(width: 0.0,height: 0.0,) : Padding(
                                 padding: EdgeInsets.only(right: 5.0, bottom: 10.0),
                                 child: FloatingActionButton(
                                     elevation: 0.0,
                                     child: Icon(Icons.add, color: COR_BRANCO,),
                                     backgroundColor: COR_PRETA,
                                     onPressed: () async {
-                                        final result = await Navigator.push(context, MaterialPageRoute(
+                                        await Navigator.push(context, MaterialPageRoute(
                                             builder: (context){
                                                 return RequestHelp();
                                             },
                                         ));
-
-                                        if(result == true){
-                                            controller.wasPoped();
-                                        }
                                     },
                                 ),
                             ),
@@ -158,7 +144,7 @@ class _ControlPageState extends State<ControlPage> {
                                                 icon: Icon(HellpyIcons.soap)
                                             ),
                                         ]
-                              );
+                                    );
                                 },
                             )
                         );

@@ -9,23 +9,6 @@ part of 'controllerTabHome.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ControllerTabHome on _ControllerTabHome, Store {
-  final _$prefsAtom = Atom(name: '_ControllerTabHome.prefs');
-
-  @override
-  dynamic get prefs {
-    _$prefsAtom.context.enforceReadPolicy(_$prefsAtom);
-    _$prefsAtom.reportObserved();
-    return super.prefs;
-  }
-
-  @override
-  set prefs(dynamic value) {
-    _$prefsAtom.context.conditionallyRunInAction(() {
-      super.prefs = value;
-      _$prefsAtom.reportChanged();
-    }, _$prefsAtom, name: '${_$prefsAtom.name}_set');
-  }
-
   final _$futureDataAtom = Atom(name: '_ControllerTabHome.futureData');
 
   @override
@@ -43,21 +26,14 @@ mixin _$ControllerTabHome on _ControllerTabHome, Store {
     }, _$futureDataAtom, name: '${_$futureDataAtom.name}_set');
   }
 
-  final _$setPreferencesAsyncAction = AsyncAction('setPreferences');
-
-  @override
-  Future<void> setPreferences() {
-    return _$setPreferencesAsyncAction.run(() => super.setPreferences());
-  }
-
   final _$_ControllerTabHomeActionController =
       ActionController(name: '_ControllerTabHome');
 
   @override
-  dynamic getResult() {
+  dynamic getResult(HomeController controller) {
     final _$actionInfo = _$_ControllerTabHomeActionController.startAction();
     try {
-      return super.getResult();
+      return super.getResult(controller);
     } finally {
       _$_ControllerTabHomeActionController.endAction(_$actionInfo);
     }
@@ -65,8 +41,7 @@ mixin _$ControllerTabHome on _ControllerTabHome, Store {
 
   @override
   String toString() {
-    final string =
-        'prefs: ${prefs.toString()},futureData: ${futureData.toString()}';
+    final string = 'futureData: ${futureData.toString()}';
     return '{$string}';
   }
 }

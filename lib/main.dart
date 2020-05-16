@@ -23,7 +23,7 @@ void main(){
                 ),
             ],
             child: MaterialApp(
-                home: ControlPage(false),
+                home: ControlPage(),
                 localizationsDelegates: [
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,

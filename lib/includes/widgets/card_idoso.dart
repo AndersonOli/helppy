@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:helppyapp/controllers/controllerTab.dart';
 import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/tabhome/view_list.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class CardIdoso extends StatelessWidget {
     final AsyncSnapshot snapshot;
@@ -70,6 +72,7 @@ class CardIdoso extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
+        final controller = Provider.of<HomeController>(context);
         return Container(
             width: _width,
             margin: index == (snapshot.data.length - 1) ? EdgeInsets.only(top: 15.0, bottom: 75.0) : EdgeInsets.only(top: 15.0),
@@ -168,12 +171,12 @@ class CardIdoso extends StatelessWidget {
                                                         API_URL + '/list/' + snapshot.data[index]["id"].toString(),
                                                         headers: {
                                                             "Content-Type": "application/json; charset=utf-8",
-                                                            HttpHeaders.authorizationHeader: "Bearer " + controllerHome.prefs.getString('token')
+                                                            HttpHeaders.authorizationHeader: "Bearer " + controllerHome.preferences['token']
                                                         },
                                                     );
 
                                                     if(data.statusCode == 200){
-                                                        controllerHome.getResult();
+                                                        controllerHome.getResult(controller);
                                                         Navigator.pop(context);
 
                                                     } else {

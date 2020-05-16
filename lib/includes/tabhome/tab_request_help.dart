@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:helppyapp/controllers/controllerTab.dart';
 import 'package:helppyapp/controllers/controllerTabHome.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/ui/control_page.dart';
@@ -26,6 +27,7 @@ class _RequestHelpState extends State<RequestHelp> {
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
         final controllerHome = Provider.of<ControllerTabHome>(context);
+        final controller = Provider.of<HomeController>(context);
         return WillPopScope(
             onWillPop: _requestPop,
             child: Scaffold(
@@ -44,7 +46,7 @@ class _RequestHelpState extends State<RequestHelp> {
                         isLoading(context, false);
 
                         if(result != null && result == 200){
-                            controllerHome.futureData = controllerHome.getResponseList();
+                            controllerHome.futureData = controllerHome.getResponseList(controller);
                             alertCard(context, "Pedido realizado com sucesso!", "Seu pedido foi registrado, aguarde até que alguém aceite :)");
                         } else if(result != null && result != 200) {
                             alertCard(context, "Há algo de errado!", "Há um problema a ser resolvido, aguarde e tente novamente mais tarde..");
@@ -270,7 +272,7 @@ class _RequestHelpState extends State<RequestHelp> {
             onPressed: () {
                 Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (context){
-                        return ControlPage(true);
+                        return ControlPage();
                     },
                 ));
             },

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/painting.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/controllers/controllerTab.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/ui/control_page.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:helppyapp/controllers/controllerCadastro.dart';
@@ -26,19 +26,8 @@ class _CadastroPageState extends State<CadastroPage> {
     bool onProgress;
     bool typeOne = false;
     bool typeTwo = false;
-    SharedPreferences prefs;
     var latitude, longitude;
     File file;
-
-    @override
-    void initState() {
-        super.initState();
-        setValue();
-    }
-
-    void setValue() async {
-        prefs = await SharedPreferences.getInstance();
-    }
 
     final TextEditingController _nomeCadController = TextEditingController();
     final TextEditingController _emailCadController = TextEditingController();
@@ -53,13 +42,13 @@ class _CadastroPageState extends State<CadastroPage> {
     Future<void> _choose(ControllerCadastro controller) async {
         file = await ImagePicker.pickImage(source: ImageSource.camera);
         controller.changeProfileImage(file);
-        debugPrint(base64Encode(file.readAsBytesSync()));
     }
 
     @override
     Widget build(BuildContext context) {
-        final controllerCadastro = Provider.of<ControllerCadastro>(context);
         final _width = MediaQuery.of(context).size.width;
+        final controller = Provider.of<HomeController>(context);
+        final controllerCadastro = Provider.of<ControllerCadastro>(context);
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
@@ -299,7 +288,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                         setState(() {
                                             onProgress = true;
                                         });
-                                        doCadastro(context);
+                                        doCadastro(context, controller);
                                     },
                                     color: COR_AZUL,
                                     child: Text(
@@ -318,7 +307,7 @@ class _CadastroPageState extends State<CadastroPage> {
         );
     }
 
-    doCadastro(context) async {
+    doCadastro(context, HomeController controller) async {
         if(_confirmSenhaCadController.text != _senhaCadController.text){
             showAlertDialog(
                 context,
@@ -330,9 +319,6 @@ class _CadastroPageState extends State<CadastroPage> {
 
         isLoading(context, true);
         typeAcc = typeOne == true ? 1 : 0;
-
-//        String base64Image = base64Encode(file.readAsBytesSync());
-//        String fileName = file.path;
 
         http.Response data = await http.post(
             API_URL + '/register',
@@ -356,8 +342,6 @@ class _CadastroPageState extends State<CadastroPage> {
         );
 
         isLoading(context, false);
-
-        print(data.body);
 
         if(data.body.contains('duplicate key value violates unique constraint')){
             showAlertDialog(
@@ -383,15 +367,17 @@ class _CadastroPageState extends State<CadastroPage> {
                     "token_notification": widget.tokenNotification,
                 }),
             );
+
             var dados = json.decode(data.body);
-            Navigator.push(context, MaterialPageRoute(
+
+            Navigator.pushReplacement(context, MaterialPageRoute(
                 builder: (context) {
-                    prefs.setInt('logged', 1);
-                    prefs.setString('token', dados["token"]);
-                    prefs.setInt('user_id', dados["user_id"]);
-                    prefs.setString('name', dados["full_name"]);
-                    prefs.setString('type_acc', dados["type_account"]);
-                    return ControlPage(true);
+                    controller.setPreferences('logged', 1);
+                    controller.setPreferences('token', dados["token"]);
+                    controller.setPreferences('user_id', dados["user_id"]);
+                    controller.setPreferences('type_acc', dados["type_account"].toString());
+                    controller.setPreferences('name', dados["full_name"]);
+                    return ControlPage();
                 },
             ));
         }
@@ -404,8 +390,6 @@ class _CadastroPageState extends State<CadastroPage> {
                 headers: {'Authorization': 'Token token=471dec71c96f8dbc684056839dc3411b'}
             );
             var data = jsonDecode(endereco.body);
-
-
 
             if(data["latitude"] != null && data["longitude"] != null){
                 latitude = data["latitude"];

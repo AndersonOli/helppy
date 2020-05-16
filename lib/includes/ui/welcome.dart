@@ -3,11 +3,12 @@ import 'package:animator/animator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:helppyapp/controllers/controllerTab.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/general/tab_cadastro.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'control_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -20,22 +21,17 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
     final TextEditingController _emailLoginController = TextEditingController();
     final TextEditingController _senhaLoginController = TextEditingController();
-    var prefs;
 
     @override
     void initState() {
         super.initState();
-        setValue();
         requestPermission();
-    }
-
-    void setValue() async {
-        prefs = await SharedPreferences.getInstance();
     }
 
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
+        final controller = Provider.of<HomeController>(context);
         return Scaffold(
             body: PageView(
                 scrollDirection: Axis.horizontal,
@@ -186,7 +182,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                         obscureText: true,
                                         controller: _senhaLoginController,
                                         onSubmitted: (e){
-                                            _doLogin(context);
+                                            _doLogin(context, controller);
                                         },
                                         decoration: InputDecoration(
                                             labelText: "Senha",
@@ -205,7 +201,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                         Expanded(
                                             child: RaisedButton(
                                                 onPressed: () {
-                                                    _doLogin(context);
+                                                    _doLogin(context, controller);
                                                 },
                                                 color: COR_AZUL,
                                                 child: Text(
@@ -228,7 +224,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
         );
     }
 
-    _doLogin(BuildContext context) async {
+    _doLogin(BuildContext context, HomeController controller) async {
         if(_emailLoginController.text != "" && _senhaLoginController.text != ""){
             isLoading(context, true);
             http.Response data = await http.post(
@@ -253,15 +249,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     );
                 }
             } catch(e) {
-                prefs.setInt('logged', 1);
-                prefs.setString('token', dados["token"]);
-                prefs.setInt('user_id', dados["user_id"]);
-                prefs.setString('type_acc', dados["type_account"]);
-                prefs.setString('name', dados["full_name"]);
+                controller.setPreferences('logged', 1);
+                controller.setPreferences('token', dados["token"]);
+                controller.setPreferences('user_id', dados["user_id"]);
+                controller.setPreferences('type_acc', dados["type_account"].toString());
+                controller.setPreferences('name', dados["full_name"]);
 
-                Navigator.push(context, MaterialPageRoute(
+                Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (context){
-                        return ControlPage(true);
+                        return ControlPage();
                     },
                 ));
             }

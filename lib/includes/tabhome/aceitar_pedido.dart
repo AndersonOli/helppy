@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:helppyapp/controllers/controllerTab.dart';
 import 'package:helppyapp/includes/ui/control_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/pages.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 
@@ -18,8 +19,8 @@ class AcceptRequest extends StatefulWidget {
 }
 
 class _AcceptRequestState extends State<AcceptRequest> {
-    var prefs, infoAccept, info;
-    int onRequest;
+    Map prefs;
+    var infoAccept, info;
 
     List toList(data){
         String buildText = '';
@@ -61,12 +62,12 @@ class _AcceptRequestState extends State<AcceptRequest> {
         return replaceString;
     }
 
-    Future<void> setValue() async {
+    Future<void> setValue(HomeController controller) async {
         info = widget.info;
-        prefs = await SharedPreferences.getInstance();
-        onRequest = prefs.get('onRequest');
-        if(onRequest == 1){
-            info = jsonDecode(prefs.getString('infoRequest'));
+        prefs = await controller.getPreferences();
+
+        if(prefs['onRequest'] == 1){
+            info = jsonDecode(prefs['infoRequest']);
             info["shoppings"] = toList(widget.info);
         } else {
             info["shoppings"] = toList(widget.info);
@@ -75,23 +76,24 @@ class _AcceptRequestState extends State<AcceptRequest> {
 
     @override
     Widget build(BuildContext context) {
+        final controller = Provider.of<HomeController>(context);
         return FutureBuilder(
-            future: setValue(),
+            future: setValue(controller),
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                     return loadingCenter();
                 } else {
-                    return _screenRequest();
+                    return _screenRequest(controller);
                 }
             },
         );
     }
 
-    Widget _screenRequest(){
+    Widget _screenRequest(HomeController controller){
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
-                automaticallyImplyLeading: onRequest == 1 ? false : true,
+                automaticallyImplyLeading: prefs['onRequest'] == 1 ? false : true,
             ),
             body: ListView.builder(
                 itemCount: info["shoppings"].length,
@@ -149,7 +151,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                        onRequest == 1 ? "Endereço: " + info["address"] + " - número: " + info["house_number"] + " - ponto de referência: " + info["reference"] : "Endereço: Aceite o pedido para ver esta informação",
+                                        prefs['onRequest'] == 1 ? "Endereço: " + info["address"] + " - número: " + info["house_number"] + " - ponto de referência: " + info["reference"] : "Endereço: Aceite o pedido para ver esta informação",
                                         style: TextStyle(
                                             color: COR_AZUL,
                                             fontSize: 16.0
@@ -160,7 +162,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     margin: EdgeInsets.only(top: 15.0),
                                     alignment: Alignment.centerLeft,
                                     child: GestureDetector(
-                                        onTap: () => onRequest == 1 ? launch("tel:" + info["telephone"]) : null,
+                                        onTap: () => prefs['onRequest'] == 1 ? launch("tel:" + info["telephone"]) : null,
                                         child: RichText(
                                             text: TextSpan(
                                                 text: "Contato: ",
@@ -170,11 +172,11 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                                 ),
                                                 children: <TextSpan>[
                                                     TextSpan(
-                                                        text: onRequest == 1 ? info["telephone"] : "Aceite o pedido para ver esta informação",
+                                                        text: prefs['onRequest'] == 1 ? info["telephone"] : "Aceite o pedido para ver esta informação",
                                                         style: TextStyle(
                                                             color: COR_AZUL,
                                                             fontSize: 14.0,
-                                                            decoration: onRequest == 1 ? TextDecoration.underline : TextDecoration.none
+                                                            decoration: prefs['onRequest'] == 1 ? TextDecoration.underline : TextDecoration.none
                                                         ),
                                                     )
                                                 ],
@@ -191,7 +193,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
                                 ) : Container(width: 0, height: 0,),
-                                info["shoppings"].length == 1 ? _buttonAccept(context) : Container(width: 0, height: 0,)
+                                info["shoppings"].length == 1 ? _buttonAccept(context, controller) : Container(width: 0, height: 0,)
                             ],
                         );
                     } else if(index == (info["shoppings"].length - 1)){
@@ -202,7 +204,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
                                     padding: EdgeInsets.all(15.0),
                                     child: Divider(),
                                 ),
-                                _buttonAccept(context)
+                                _buttonAccept(context, controller)
                             ],
                         );
                     } else {
@@ -213,60 +215,56 @@ class _AcceptRequestState extends State<AcceptRequest> {
         );
     }
 
-    Widget _buttonAccept(context){
+    Widget _buttonAccept(BuildContext context, HomeController controller){
         return FlatButton(
             padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
             onPressed: () async {
                 isLoading(context, true);
                 var response;
                 var url = API_URL + '/update/' + info["user_id"].toString() + "/" + info["id"].toString();
-                if(onRequest != 1){
+                if(prefs['onRequest'] != 1){
                     response = await http.post(
                         url,
-                        headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
+                        headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs['token']},
                         body: jsonEncode(<String, String>{
                             "status": "1",
-                            "acceptName": prefs.getString("name"),
-                            "acceptId": prefs.getInt("user_id").toString(),
+                            "acceptName": prefs['name'],
+                            "acceptId": prefs['user_id'].toString(),
                         })
                     );
 
-                    print(response.body);
+                    //TODO: analisar responde e fazer algo com ele
 
                     isLoading(context, false);
 
-                    prefs.setInt("onRequest", 1);
-                    infoAccept = prefs.setString("infoRequest", jsonEncode(widget.info).toString());
+                    controller.setPreferences('onRequest', 1);
+                    controller.setPreferences('infoRequest', jsonEncode(widget.info).toString());
 
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context){
-                            return AcceptRequest(infoAccept);
-                        },
-                    ));
+                    Navigator.pop(context, true);
                 } else {
                     response = await http.post(
                         url,
-                        headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
+                        headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs['token']},
                         body: jsonEncode(<String, String>{
                             "status": "2",
-                            "acceptName": prefs.getString("name"),
-                            "acceptId": prefs.getInt("user_id").toString(),
+                            "acceptName": prefs['name'],
+                            "acceptId": prefs['user_id'].toString(),
                         })
                     );
 
                     isLoading(context, false);
-                    prefs.setInt("onRequest", 0);
+                    controller.setPreferences("onRequest", 0);
 
                     Navigator.pushReplacement(context, MaterialPageRoute(
                         builder: (context){
-                            return ControlPage(true);
+                            return ControlPage();
                         },
                     ));
                 }
             },
             color: COR_PRETA,
             child: Text(
-                onRequest == 1 ? "Finalizar pedido".toUpperCase() : "Aceitar pedido".toUpperCase(),
+                prefs['onRequest'] == 1 ? "Finalizar pedido".toUpperCase() : "Aceitar pedido".toUpperCase(),
                 style: TextStyle(
                     color: COR_BRANCO,
                     fontSize: 14.0,
