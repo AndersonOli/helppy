@@ -11,8 +11,13 @@ class NewsTab extends StatefulWidget {
 }
 
 class _NewsTabState extends State<NewsTab> with AutomaticKeepAliveClientMixin<NewsTab> {
+    Future _futureData;
+
     @override
-    bool get wantKeepAlive => true;
+    void initState() {
+        super.initState();
+        _futureData = apiData();
+    }
 
     apiData() async {
         var response = await http.get('http://newsapi.org/v2/everything?language=pt&q=coronavirus brazil&?country=br&apiKey=3aaaaf0e6ab44bdea5e9806c43ee6447');
@@ -25,15 +30,15 @@ class _NewsTabState extends State<NewsTab> with AutomaticKeepAliveClientMixin<Ne
     }
 
     @override
-    // ignore: must_call_super
     Widget build(BuildContext context) {
+        super.build(context);
         return Padding(
             padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
             child: Column(
                 children: <Widget>[
                     Expanded(
                         child: FutureBuilder(
-                            future: apiData(),
+                            future: _futureData,
                             builder: (context, snapshot) {
                                 if(snapshot.connectionState == ConnectionState.waiting){
                                     return loadingCenter();
@@ -58,4 +63,7 @@ class _NewsTabState extends State<NewsTab> with AutomaticKeepAliveClientMixin<Ne
             ),
         );
     }
+
+    @override
+    bool get wantKeepAlive => true;
 }
