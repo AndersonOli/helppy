@@ -7,15 +7,7 @@ class BuildNews extends StatelessWidget {
     final AsyncSnapshot snapshot;
     BuildNews(this.snapshot);
 
-    List<String> textCard(String dataUpdate, String casesBr, String casesLocal) {
-        return [
-            'Última atualização: $dataUpdate\n',
-            '\t\t\t\tCasos confirmados: $casesLocal\n',
-            '\t\t\t\tCasos confirmados: $casesBr'
-        ];
-    }
-
-    countCasesTeresina(List api) {
+    String countCasesTeresina(List api) {
         int cases = 0;
         for (var item in api) {
             if (item['city_cod'] == 2211001) {
@@ -27,7 +19,7 @@ class BuildNews extends StatelessWidget {
         return cases.toString();
     }
 
-    countCasesBrasil(List api) {
+    String countCasesBrasil(List api) {
         int cases = 0;
         for (var item in api) {
             if(item["cases"] is int){
