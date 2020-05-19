@@ -11,4 +11,26 @@ abstract class _ControllerCadastro with Store {
     changeProfileImage(dynamic value) {
         fileProfileImage = value;
     }
+
+    @observable
+    String name = "";
+    @action
+    changeName(String value) => name = value;
+
+    @observable
+    String email = "";
+    @action
+    changeEmail(String value) => email = value;
+
+    @observable
+    String password = "";
+    @action
+    changePassword(String value) => password = value;
+
+    String validateName() {
+        if (name == null || name.isEmpty) {
+            return "Este campo é obrigatório";
+        }
+        return null;
+    }
 }

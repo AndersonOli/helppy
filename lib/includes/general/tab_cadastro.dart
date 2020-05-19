@@ -93,18 +93,24 @@ class _CadastroPageState extends State<CadastroPage> {
                                     },
                                 ),
                             ),
-                            Container(
-                                margin: EdgeInsets.only(top: 10.0),
-                                child: TextField(
-                                    controller: _nomeCadController,
-                                    decoration: InputDecoration(
-                                        labelText: "Nome completo",
-                                        hintText: "Insira seu nome completo",
-                                        border: OutlineInputBorder(),
-                                        contentPadding:
-                                        const EdgeInsets.symmetric(horizontal: 10),
-                                    ),
-                                ),
+                            Observer(
+                                builder: (_){
+                                    return Container(
+                                        margin: EdgeInsets.only(top: 10.0),
+                                        child: TextField(
+                                        controller: _nomeCadController,
+                                        onChanged: controllerCadastro.changeName,
+                                        decoration: InputDecoration(
+                                            labelText: "Nome completo",
+                                            errorText: controllerCadastro.validateName(),
+                                            hintText: "Insira seu nome completo",
+                                            border: OutlineInputBorder(),
+                                            contentPadding:
+                                            const EdgeInsets.symmetric(horizontal: 10),
+                                      ),
+                                  ),
+                              );
+                            }
                             ),
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
