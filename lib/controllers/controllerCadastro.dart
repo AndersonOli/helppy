@@ -8,22 +8,23 @@ abstract class _ControllerCadastro with Store {
     var fileProfileImage;
 
     @action
-    changeProfileImage(dynamic value) {
-        fileProfileImage = value;
-    }
+    void changeProfileImage(dynamic value) => fileProfileImage = value;
 
     @observable
     String name = "";
+
     @action
-    changeName(String value) => name = value;
+    void changeName(String value) => name = value;
 
     @observable
     String email = "";
+
     @action
-    changeEmail(String value) => email = value;
+    void changeEmail(String value) => email = value;
 
     @observable
     String password = "";
+
     @action
     changePassword(String value) => password = value;
 
