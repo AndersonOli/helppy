@@ -40,16 +40,58 @@ class ChangePassword extends StatelessWidget {
                             builder: (context){
                                 return Container(
                                     margin: EdgeInsets.only(top: 40.0),
-                                    child: TextField(
-                                        decoration: InputDecoration(
-                                            labelText: "Código",
-                                            errorText: "Insira um código válido",
-                                            errorStyle: TextStyle(color: Colors.red),
-                                            hintText: "Insira o código inserido no seu email",
-                                            border: OutlineInputBorder(),
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: controllerForgot.isValidCode == true ?
+                                        Column(
+                                            children: <Widget>[
+                                                Observer(
+                                                  builder: (_){
+                                                      return Container(
+                                                          margin: EdgeInsets.only(bottom: 10.0),
+                                                          child: TextField(
+                                                              onChanged: controllerForgot.setPassword,
+                                                              decoration: InputDecoration(
+                                                                  labelText: "Senha",
+                                                                  errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
+                                                                  errorStyle: TextStyle(color: Colors.red),
+                                                                  hintText: "Insira uma nova senha",
+                                                                  border: OutlineInputBorder(),
+                                                                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                                              )
+                                                          ),
+                                                      );
+                                                  },
+                                                ),
+                                                Observer(
+                                                    builder: (_){
+                                                        return Container(
+                                                            margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                                            child: TextField(
+                                                                onChanged: controllerForgot.setConfirmPassword,
+                                                                decoration: InputDecoration(
+                                                                    labelText: "Confirme",
+                                                                    errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
+                                                                    errorStyle: TextStyle(color: Colors.red),
+                                                                    hintText: "Confirme sua senha novamente",
+                                                                    border: OutlineInputBorder(),
+                                                                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                                                )
+                                                            ),
+                                                        );
+                                                    },
+                                                ),
+                                            ],
+                                        ) : TextField(
+                                            onChanged: controllerForgot.setCode,
+                                            maxLength: 6,
+                                            decoration: InputDecoration(
+                                                labelText: "Código",
+                                                errorText: controllerForgot.verifyCode.length > 0 && controllerForgot.verifyCode.length < 6 ? "Insira um código válido" : null,
+                                                errorStyle: TextStyle(color: Colors.red),
+                                                hintText: "Insira o código inserido no seu email",
+                                                border: OutlineInputBorder(),
+                                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                            ),
                                         ),
-                                    ),
                                 );
                             },
                         ),
@@ -60,12 +102,18 @@ class ChangePassword extends StatelessWidget {
                                 builder: (_) {
                                     return RaisedButton(
                                         color: COR_AZUL,
-                                        onPressed: (){},
+                                        onPressed: controllerForgot.verifyCode.length == 6 && controllerForgot.errorText.length <= 0 ? (){
+                                            if(controllerForgot.errorText.length <= 0  && controllerForgot.isValidCode == true){
+                                                controllerForgot.changePassword(context);
+                                            } else {
+                                                controllerForgot.validCode(context);
+                                            }
+                                        } : null,
                                         child: Container(
                                             width: 180.0,
                                             height: 40.0,
                                             alignment: Alignment.center,
-                                            child: false == true ? SizedBox(
+                                            child: controllerForgot.onLoading ? SizedBox(
                                                 width: 25.0,
                                                 height: 25.0,
                                                 child: CircularProgressIndicator(

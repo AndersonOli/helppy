@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/controllers/controllerForgot.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatelessWidget {
@@ -11,8 +10,6 @@ class ForgotPassword extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         final controllerForgot = Provider.of<ControllerForgot>(context);
-        final _width = MediaQuery.of(context).size.width;
-        final _height = MediaQuery.of(context).size.height;
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
@@ -65,7 +62,7 @@ class ForgotPassword extends StatelessWidget {
                                     return RaisedButton(
                                         color: COR_AZUL,
                                         onPressed: controllerForgot.isValidEmail && !controllerForgot.onLoading ? (){
-                                             controllerForgot.newPass(context);
+                                             controllerForgot.newCode(context);
                                         } : null,
                                         child: Container(
                                             width: 180.0,
