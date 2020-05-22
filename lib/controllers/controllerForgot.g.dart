@@ -43,6 +43,23 @@ mixin _$ControllerForgot on _ControllerForgot, Store {
     }, _$isValidEmailAtom, name: '${_$isValidEmailAtom.name}_set');
   }
 
+  final _$onLoadingAtom = Atom(name: '_ControllerForgot.onLoading');
+
+  @override
+  bool get onLoading {
+    _$onLoadingAtom.context.enforceReadPolicy(_$onLoadingAtom);
+    _$onLoadingAtom.reportObserved();
+    return super.onLoading;
+  }
+
+  @override
+  set onLoading(bool value) {
+    _$onLoadingAtom.context.conditionallyRunInAction(() {
+      super.onLoading = value;
+      _$onLoadingAtom.reportChanged();
+    }, _$onLoadingAtom, name: '${_$onLoadingAtom.name}_set');
+  }
+
   final _$_ControllerForgotActionController =
       ActionController(name: '_ControllerForgot');
 
@@ -59,7 +76,7 @@ mixin _$ControllerForgot on _ControllerForgot, Store {
   @override
   String toString() {
     final string =
-        'email: ${email.toString()},isValidEmail: ${isValidEmail.toString()}';
+        'email: ${email.toString()},isValidEmail: ${isValidEmail.toString()},onLoading: ${onLoading.toString()}';
     return '{$string}';
   }
 }
