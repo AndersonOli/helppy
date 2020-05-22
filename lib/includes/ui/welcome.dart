@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:helppyapp/controllers/controllerTab.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/general/tab_cadastro.dart';
+import 'package:helppyapp/includes/ui/forgot_password.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'control_page.dart';
@@ -196,7 +197,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                 Row(
                                     children: <Widget>[
                                         Expanded(
-                                            child: Container(),
+                                            child: GestureDetector(
+                                                onTap: (){
+                                                    Navigator.of(context).push(MaterialPageRoute(
+                                                        builder: (_){
+                                                            return ForgotPassword();
+                                                        }
+                                                    ));
+                                                },
+                                                child: Text(
+                                                    "Esqueci minha senha",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                        color: COR_AZUL,
+                                                        fontSize: 18.0,
+                                                        decoration: TextDecoration.underline,
+                                                    ),
+                                                ),
+                                            ),
                                         ),
                                         Expanded(
                                             child: RaisedButton(

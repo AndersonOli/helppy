@@ -8,15 +8,13 @@ abstract class _ControllerCadastro with Store {
     var fileProfileImage;
 
     @action
-    changeProfileImage(dynamic value) {
-        fileProfileImage = value;
-    }
+    void changeProfileImage(dynamic value) => fileProfileImage = value;
 
     @observable
     String name = "";
 
     @action
-    newName(String value) => name = value;
+    void newName(String value) => name = value;
 
     String validateFullName() {
         String pattern = r'^[a-z A-Z,.\-]+$';
@@ -33,14 +31,13 @@ abstract class _ControllerCadastro with Store {
     String email = "";
 
     @action
-    newEmail(String value) => email = value;
-
+    void newEmail(String value) => email = value;
 
     @observable
     String password = "";
 
     @action
-    newPassword(String value) => password = value;
+    void newPassword(String value) => password = value;
 
     String validatePassword() {
         String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])$';
@@ -55,7 +52,7 @@ abstract class _ControllerCadastro with Store {
     String telephone = "";
 
     @action
-    newTelephone (String value) => telephone = value;
+    void newTelephone (String value) => telephone = value;
 
     String validateTelephone (){
         String pattern = r'^([1-9]{2}) (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}$';

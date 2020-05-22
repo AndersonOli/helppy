@@ -4,6 +4,7 @@ import 'package:helppyapp/includes/general/globals.dart';
 import 'package:helppyapp/includes/ui/control_page.dart';
 import 'package:provider/provider.dart';
 import 'controllers/controllerCadastro.dart';
+import 'controllers/controllerForgot.dart';
 import 'controllers/controllerTab.dart';
 import 'controllers/controllerTabHome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,6 +21,9 @@ void main(){
                 ),
                 Provider<ControllerCadastro>(
                     create: (_) => ControllerCadastro(),
+                ),
+                Provider<ControllerForgot>(
+                    create: (_) => ControllerForgot(),
                 ),
             ],
             child: MaterialApp(

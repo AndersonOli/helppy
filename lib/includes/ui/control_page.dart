@@ -119,7 +119,7 @@ class _ControlPageState extends State<ControlPage> {
                                             },
                                         ));
 
-                                        if(result){
+                                        if(result == true){
                                             controller.changePage(0);
                                         }
                                     },

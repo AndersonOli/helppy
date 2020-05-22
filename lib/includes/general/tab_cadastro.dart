@@ -105,8 +105,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                             errorText: controllerCadastro.validateFullName(),
                                             hintText: "Insira seu nome completo",
                                             border: OutlineInputBorder(),
-                                            contentPadding:
-                                            const EdgeInsets.symmetric(horizontal: 10),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                       ),
                                   ),
                               );
