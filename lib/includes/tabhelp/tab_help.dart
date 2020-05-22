@@ -16,7 +16,7 @@ class _HelpTabState extends State<HelpTab> with AutomaticKeepAliveClientMixin<He
         super.build(context);
         return Scaffold(
             body: FutureBuilder(
-                future: Future.delayed(Duration(milliseconds: 500)),
+                future: Future.delayed(Duration(milliseconds: 1200)),
                 builder: (context, snapshot) {
                     if(snapshot.connectionState == ConnectionState.waiting){
                         return loadingCenter();
