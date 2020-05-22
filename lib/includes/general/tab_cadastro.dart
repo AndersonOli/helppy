@@ -99,10 +99,10 @@ class _CadastroPageState extends State<CadastroPage> {
                                         margin: EdgeInsets.only(top: 10.0),
                                         child: TextField(
                                         controller: _nomeCadController,
-                                        onChanged: controllerCadastro.changeName,
+                                        onChanged: controllerCadastro.newName,
                                         decoration: InputDecoration(
                                             labelText: "Nome completo",
-                                            errorText: controllerCadastro.validateName(),
+                                            errorText: controllerCadastro.validateFullName(),
                                             hintText: "Insira seu nome completo",
                                             border: OutlineInputBorder(),
                                             contentPadding:
@@ -129,9 +129,11 @@ class _CadastroPageState extends State<CadastroPage> {
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
                                     controller: _senhaCadController,
+                                    onChanged: controllerCadastro.newPassword,
                                     obscureText: true,
                                     decoration: InputDecoration(
                                         labelText: "Senha",
+                                        errorText: controllerCadastro.validatePassword(),
                                         hintText: "Insira uma senha",
                                         border: OutlineInputBorder(),
                                         contentPadding:
@@ -158,9 +160,11 @@ class _CadastroPageState extends State<CadastroPage> {
                                 child: TextField(
                                     maxLength: 11,
                                     controller: _telCadController,
+                                    onChanged: controllerCadastro.newTelephone,
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         labelText: "Telefone",
+                                        errorText: controllerCadastro.validateTelephone(),
                                         hintText: "Insira o número do seu telefone",
                                         border: OutlineInputBorder(),
                                         contentPadding:
@@ -286,26 +290,30 @@ class _CadastroPageState extends State<CadastroPage> {
                                     )
                                 ],
                             ),
-                            Container(
-                                width: _width,
-                                margin: EdgeInsets.only(top: 20.0),
-                                child: FlatButton(
-                                    onPressed: (){
-                                        setState(() {
-                                            onProgress = true;
-                                        });
-                                        doCadastro(context, controller);
-                                    },
-                                    color: COR_AZUL,
-                                    child: Text(
-                                        "Cadastrar",
-                                        style: TextStyle(
-                                            color: COR_BRANCO,
-                                            fontSize: 18.0,
-                                        ),
-                                    ),
-                                ),
-                            )
+                           Observer (
+                               builder: (_) {
+                                   return Container(
+                                       width: _width,
+                                       margin: EdgeInsets.only(top: 20.0),
+                                       child: FlatButton(
+                                           onPressed: controllerCadastro.isValid ? (){
+                                               setState(() {
+                                                   onProgress = true;
+                                               });
+                                               doCadastro(context, controller);
+                                           } : null,
+                                           color: COR_AZUL,
+                                           child: Text(
+                                               "Cadastrar",
+                                               style: TextStyle(
+                                                   color: COR_BRANCO,
+                                                   fontSize: 18.0,
+                                               ),
+                                           ),
+                                       ),
+                                   );
+                               },
+                           )
                         ],
                     ),
                 ),

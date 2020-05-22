@@ -14,23 +14,61 @@ abstract class _ControllerCadastro with Store {
 
     @observable
     String name = "";
-    @action
-    changeName(String value) => name = value;
 
-    @observable
-    String email = "";
     @action
-    changeEmail(String value) => email = value;
+    newName(String value) => name = value;
 
-    @observable
-    String password = "";
-    @action
-    changePassword(String value) => password = value;
-
-    String validateName() {
-        if (name == null || name.isEmpty) {
-            return "Este campo é obrigatório";
+    String validateFullName() {
+        String pattern = r'^[a-z A-Z,.\-]+$';
+        RegExp regExp = new RegExp(pattern);
+        if (name.length == 0) {
+            return 'Por Favor digite seu nome completo.';
+        } else if (!regExp.hasMatch(name)) {
+            return 'Por favor digite um nome completo válido.';
         }
         return null;
     }
+// copiar do que o Anderson já fez
+    @observable
+    String email = "";
+
+    @action
+    newEmail(String value) => email = value;
+
+
+    @observable
+    String password = "";
+
+    @action
+    newPassword(String value) => password = value;
+
+    String validatePassword() {
+        String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])$';
+        RegExp regExp = new RegExp(pattern);
+        if (regExp.hasMatch(password) == false) {
+            return 'A senha precisa conter pelo menos um carácter maiúsculo, minúsculo e numeral.';
+        }
+        return null;
+    }
+
+    @observable
+    String telephone = "";
+
+    @action
+    newTelephone (String value) => telephone = value;
+
+    String validateTelephone (){
+        String pattern = r'^([1-9]{2}) (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}$';
+        RegExp regExp = new RegExp(pattern);
+        if (regExp.hasMatch(telephone) == false) {
+            return 'O seu telefone deve está nesse parâmetro ddd xxxxxxxxx, o ddd sem o 0 a esquerda';
+        }
+        return null;
+    }
+
+    @computed
+    bool get isValid {
+        return validateFullName() == null && validateTelephone() == null && validatePassword() == null;
+    }
+
 }
