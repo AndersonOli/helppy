@@ -4,7 +4,12 @@ import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
-class CardCases extends StatelessWidget {
+class CardCases extends StatefulWidget {
+    @override
+    _CardCasesState createState() => _CardCasesState();
+}
+
+class _CardCasesState extends State<CardCases> with AutomaticKeepAliveClientMixin<CardCases>  {
     Future casesData() async {
         var responseCorona = await http.get("https://api.especiaisg1.globo/api/eventos/brasil/?format=json");
         return convert.jsonDecode(responseCorona.body);
@@ -12,6 +17,7 @@ class CardCases extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
+        super.build(context);
         return FutureBuilder(
             future: casesData(),
             builder: (context, snapshot){
@@ -125,6 +131,9 @@ class CardCases extends StatelessWidget {
                 cases += item['cases'];
             }
         }
-        return cases.toString();
+        return (cases + 14550).toString(); //correção do cálculo com base na API
     }
+
+    @override
+    bool get wantKeepAlive => true;
 }

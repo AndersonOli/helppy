@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/widgets/card_cases.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:helppyapp/includes/general/pages.dart';
-import 'package:helppyapp/includes/general/globals.dart';
 
 class BuildNews extends StatelessWidget {
     final AsyncSnapshot snapshot;
