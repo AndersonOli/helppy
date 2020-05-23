@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 
-Widget loadingCenter() {
+Widget loadingCenter({Color color}) {
     return Center(
         child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
+            valueColor: AlwaysStoppedAnimation<Color>(color ?? COR_AZUL),
             strokeWidth: 5.0,
         ),
     );
