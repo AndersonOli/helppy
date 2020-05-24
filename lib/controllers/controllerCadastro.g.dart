@@ -9,6 +9,12 @@ part of 'controllerCadastro.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ControllerCadastro on _ControllerCadastro, Store {
+  Computed<bool> _$isValidComputed;
+
+  @override
+  bool get isValid =>
+      (_$isValidComputed ??= Computed<bool>(() => super.isValid)).value;
+
   final _$fileProfileImageAtom =
       Atom(name: '_ControllerCadastro.fileProfileImage');
 
@@ -78,6 +84,23 @@ mixin _$ControllerCadastro on _ControllerCadastro, Store {
     }, _$passwordAtom, name: '${_$passwordAtom.name}_set');
   }
 
+  final _$telephoneAtom = Atom(name: '_ControllerCadastro.telephone');
+
+  @override
+  String get telephone {
+    _$telephoneAtom.context.enforceReadPolicy(_$telephoneAtom);
+    _$telephoneAtom.reportObserved();
+    return super.telephone;
+  }
+
+  @override
+  set telephone(String value) {
+    _$telephoneAtom.context.conditionallyRunInAction(() {
+      super.telephone = value;
+      _$telephoneAtom.reportChanged();
+    }, _$telephoneAtom, name: '${_$telephoneAtom.name}_set');
+  }
+
   final _$_ControllerCadastroActionController =
       ActionController(name: '_ControllerCadastro');
 
@@ -112,7 +135,7 @@ mixin _$ControllerCadastro on _ControllerCadastro, Store {
   }
 
   @override
-  dynamic newPassword(String value) {
+  void newPassword(String value) {
     final _$actionInfo = _$_ControllerCadastroActionController.startAction();
     try {
       return super.newPassword(value);
@@ -122,9 +145,19 @@ mixin _$ControllerCadastro on _ControllerCadastro, Store {
   }
 
   @override
+  void newTelephone(String value) {
+    final _$actionInfo = _$_ControllerCadastroActionController.startAction();
+    try {
+      return super.newTelephone(value);
+    } finally {
+      _$_ControllerCadastroActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     final string =
-        'fileProfileImage: ${fileProfileImage.toString()},name: ${name.toString()},email: ${email.toString()},password: ${password.toString()}';
+        'fileProfileImage: ${fileProfileImage.toString()},name: ${name.toString()},email: ${email.toString()},password: ${password.toString()},telephone: ${telephone.toString()},isValid: ${isValid.toString()}';
     return '{$string}';
   }
 }

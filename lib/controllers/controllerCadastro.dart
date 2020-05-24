@@ -19,9 +19,11 @@ abstract class _ControllerCadastro with Store {
     String validateFullName() {
         String pattern = r'^[a-z A-Z,.\-]+$';
         RegExp regExp = new RegExp(pattern);
-        if (name.length == 0) {
+        if (name.length < 1) {
+            return null;
+        } else if(name.length > 1) {
             return 'Por Favor digite seu nome completo.';
-        } else if (!regExp.hasMatch(name)) {
+        }else if (!regExp.hasMatch(name)) {
             return 'Por favor digite um nome completo válido.';
         }
         return null;
@@ -43,6 +45,7 @@ abstract class _ControllerCadastro with Store {
         String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])$';
         RegExp regExp = new RegExp(pattern);
         if (regExp.hasMatch(password) == false) {
+            //alterar para popup, não dá pra ler, muita informação
             return 'A senha precisa conter pelo menos um carácter maiúsculo, minúsculo e numeral.';
         }
         return null;
@@ -54,10 +57,16 @@ abstract class _ControllerCadastro with Store {
     @action
     void newTelephone (String value) => telephone = value;
 
-    String validateTelephone (){
+    String validateTelephone () {
         String pattern = r'^([1-9]{2}) (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}$';
         RegExp regExp = new RegExp(pattern);
-        if (regExp.hasMatch(telephone) == false) {
+
+        if(telephone.length < 1){
+            return null;
+        } else if(telephone.length >= 1 && telephone.length < 11) {
+            return 'Preencha o campo corretamente';
+        } else if (regExp.hasMatch(telephone) == false) {
+            //alterar para popup, não dá pra ler, muita informação
             return 'O seu telefone deve está nesse parâmetro ddd xxxxxxxxx, o ddd sem o 0 a esquerda';
         }
         return null;
@@ -68,4 +77,5 @@ abstract class _ControllerCadastro with Store {
         return validateFullName() == null && validateTelephone() == null && validatePassword() == null;
     }
 
+    //fazer requests do cadastro aqui dentro: doCadastro, complete CEP etc
 }

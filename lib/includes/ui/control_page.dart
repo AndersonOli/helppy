@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/pages.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:helppyapp/includes/tab_settings/tab_settings.dart';
+import 'package:helppyapp/includes/tabsettings/tab_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:helppyapp/includes/tabhome/aceitar_pedido.dart';
 import 'package:helppyapp/includes/tabhome/tab_request_help.dart';
