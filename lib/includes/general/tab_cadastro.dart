@@ -295,7 +295,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                        width: _width,
                                        margin: EdgeInsets.only(top: 20.0),
                                        child: FlatButton(
-                                           onPressed: controllerCadastro.isValid ? (){
+                                           onPressed: controllerCadastro.isValid == false ? (){
                                                setState(() {
                                                    onProgress = true;
                                                });
@@ -350,7 +350,8 @@ class _CadastroPageState extends State<CadastroPage> {
                 "type_account": typeAcc.toString(),
                 "latitude": latitude,
                 "longitude": longitude,
-                "token_notification": widget.tokenNotification
+                "token_notification": widget.tokenNotification,
+                "profile_picture": base64Encode(file.readAsBytesSync())
             }),
         );
 
@@ -383,16 +384,16 @@ class _CadastroPageState extends State<CadastroPage> {
 
             var dados = json.decode(data.body);
 
-            Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) {
-                    controller.setPreferences('logged', 1);
-                    controller.setPreferences('token', dados["token"]);
-                    controller.setPreferences('user_id', dados["user_id"]);
-                    controller.setPreferences('type_acc', dados["type_account"].toString());
-                    controller.setPreferences('name', dados["full_name"]);
-                    return ControlPage();
-                },
-            ));
+//            Navigator.pushReplacement(context, MaterialPageRoute(
+//                builder: (context) {
+//                    controller.setPreferences('logged', 1);
+//                    controller.setPreferences('token', dados["token"]);
+//                    controller.setPreferences('user_id', dados["user_id"]);
+//                    controller.setPreferences('type_acc', dados["type_account"].toString());
+//                    controller.setPreferences('name', dados["full_name"]);
+//                    return ControlPage();
+//                },
+//            ));
         }
     }
 

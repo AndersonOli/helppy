@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 part 'controllerCadastro.g.dart';
 
 class ControllerCadastro = _ControllerCadastro with _$ControllerCadastro;
@@ -19,13 +24,11 @@ abstract class _ControllerCadastro with Store {
     String validateFullName() {
         String pattern = r'^[a-z A-Z,.\-]+$';
         RegExp regExp = new RegExp(pattern);
-        if (name.length < 1) {
-            return null;
-        } else if(name.length > 1) {
-            return 'Por Favor digite seu nome completo.';
-        }else if (!regExp.hasMatch(name)) {
+
+        if (!regExp.hasMatch(name.trim())) {
             return 'Por favor digite um nome completo válido.';
         }
+
         return null;
     }
 // copiar do que o Anderson já fez
@@ -44,9 +47,13 @@ abstract class _ControllerCadastro with Store {
     String validatePassword() {
         String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])$';
         RegExp regExp = new RegExp(pattern);
+
         if (regExp.hasMatch(password) == false) {
             //alterar para popup, não dá pra ler, muita informação
-            return 'A senha precisa conter pelo menos um carácter maiúsculo, minúsculo e numeral.';
+            //valildar se os dois campos de senhas sao iguais
+            //validar se é maior que 6 caracters
+            // verificar se essa exp regex esta correta: senha Aa123456 dá erro
+            return 'A senha precisa conter pelo menos um carácter maiúsculo, minúsculo e numeral.'; //creio que só precisa ter 6 caracters, como o foco é idoso
         }
         return null;
     }
@@ -61,14 +68,11 @@ abstract class _ControllerCadastro with Store {
         String pattern = r'^([1-9]{2}) (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}$';
         RegExp regExp = new RegExp(pattern);
 
-        if(telephone.length < 1){
-            return null;
-        } else if(telephone.length >= 1 && telephone.length < 11) {
-            return 'Preencha o campo corretamente';
-        } else if (regExp.hasMatch(telephone) == false) {
+        if (regExp.hasMatch(telephone) == false) {
             //alterar para popup, não dá pra ler, muita informação
             return 'O seu telefone deve está nesse parâmetro ddd xxxxxxxxx, o ddd sem o 0 a esquerda';
         }
+
         return null;
     }
 
