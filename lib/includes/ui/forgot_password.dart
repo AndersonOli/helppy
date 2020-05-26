@@ -2,10 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:helppyapp/controllers/controllerForgot.dart';
 import 'package:helppyapp/includes/general/globals.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/includes/widgets/suports_widgets.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
-class ForgotPassword extends StatelessWidget {
+import 'change_password.dart';
+import 'control_page.dart';
+
+class ForgotPassword extends StatefulWidget {
+    @override
+    _ForgotPasswordState createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPassword> {
+    List _disposers;
     final TextEditingController _emailController = TextEditingController();
+
+    @override
+    void didChangeDependencies() {
+        super.didChangeDependencies();
+
+        final controller = Provider.of<ControllerForgot>(context);
+
+
+        autorun((_){
+            reaction(
+                    (_) => controller.mailExits,
+                    (bool value){
+                    print(value);
+                    if(value){
+                        showAlertDialog(context, "Email enviado!", "Verifique seu email e siga as instruções.");
+                    } else {
+                        showAlertDialog(context, "Email não encontrado!", "Verifique se o email foi digitado corretamente, ou cadastre-se.");
+                    }
+                }
+            );
+        });
+
+//        autorun((_){
+//            print("hi");
+//            final controller = Provider.of<ControllerForgot>(context);
+//
+
+//
+//            if(controller.isValidCode == false){
+//                showAlertDialog(context, "Código inválido", "Verifique seu email novamente e garanta que digitou o código corretamente.");
+//            }
+//
+//            if(controller.passwordChanged == true){
+//                showAlertDialog(context, "Senha alterada!", "Seua senha foi alterada com sucesso.");
+//
+//                Navigator.of(context).pushReplacement(MaterialPageRoute(
+//                    builder: (context){
+//                        return ControlPage();
+//                    }
+//                ));
+//            } else if(controller.passwordChanged == false){
+//                showAlertDialog(context, "Não foi possível alterar a senha", "Não foi possível alterar a senha, tente novamente mais tarde.");
+//                Navigator.of(context).push(MaterialPageRoute(
+//                    builder: (context){
+//                        return ChangePassword();
+//                    }
+//                ));
+//            }
+//        });
+    }
 
     @override
     Widget build(BuildContext context) {
@@ -61,8 +122,8 @@ class ForgotPassword extends StatelessWidget {
                                 builder: (_) {
                                     return RaisedButton(
                                         color: COR_AZUL,
-                                        onPressed: controllerForgot.isValidEmail && !controllerForgot.onLoading ? (){
-                                             controllerForgot.newCode(context);
+                                        onPressed: controllerForgot.isValidEmail && !controllerForgot.onLoading ? () async {
+                                            await controllerForgot.newCode(context);
                                         } : null,
                                         child: Container(
                                             width: 180.0,

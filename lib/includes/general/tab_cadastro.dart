@@ -384,6 +384,8 @@ class _CadastroPageState extends State<CadastroPage> {
 
             var dados = json.decode(data.body);
 
+            print(dados);
+
 //            Navigator.pushReplacement(context, MaterialPageRoute(
 //                builder: (context) {
 //                    controller.setPreferences('logged', 1);

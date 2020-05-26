@@ -2,9 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:helppyapp/controllers/controllerForgot.dart';
 import 'package:helppyapp/includes/general/globals.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
-class ChangePassword extends StatelessWidget {
+class ChangePassword extends StatefulWidget {
+    @override
+    _ChangePasswordState createState() => _ChangePasswordState();
+}
+
+class _ChangePasswordState extends State<ChangePassword> {
+    @override
+    void didChangeDependencies() {
+        autorun((context){
+
+        });
+        super.didChangeDependencies();
+    }
+
     @override
     Widget build(BuildContext context) {
         final controllerForgot = Provider.of<ControllerForgot>(context);
@@ -41,57 +55,57 @@ class ChangePassword extends StatelessWidget {
                                 return Container(
                                     margin: EdgeInsets.only(top: 40.0),
                                     child: controllerForgot.isValidCode == true ?
-                                        Column(
-                                            children: <Widget>[
-                                                Observer(
-                                                  builder: (_){
-                                                      return Container(
-                                                          margin: EdgeInsets.only(bottom: 10.0),
-                                                          child: TextField(
-                                                              onChanged: controllerForgot.setPassword,
-                                                              decoration: InputDecoration(
-                                                                  labelText: "Senha",
-                                                                  errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
-                                                                  errorStyle: TextStyle(color: Colors.red),
-                                                                  hintText: "Insira uma nova senha",
-                                                                  border: OutlineInputBorder(),
-                                                                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                                              )
-                                                          ),
-                                                      );
-                                                  },
-                                                ),
-                                                Observer(
-                                                    builder: (_){
-                                                        return Container(
-                                                            margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                                            child: TextField(
-                                                                onChanged: controllerForgot.setConfirmPassword,
-                                                                decoration: InputDecoration(
-                                                                    labelText: "Confirme",
-                                                                    errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
-                                                                    errorStyle: TextStyle(color: Colors.red),
-                                                                    hintText: "Confirme sua senha novamente",
-                                                                    border: OutlineInputBorder(),
-                                                                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                                                )
-                                                            ),
-                                                        );
-                                                    },
-                                                ),
-                                            ],
-                                        ) : TextField(
-                                            onChanged: controllerForgot.setCode,
-                                            maxLength: 6,
-                                            decoration: InputDecoration(
-                                                labelText: "Código",
-                                                errorText: controllerForgot.verifyCode.length > 0 && controllerForgot.verifyCode.length < 6 ? "Insira um código válido" : null,
-                                                errorStyle: TextStyle(color: Colors.red),
-                                                hintText: "Insira o código inserido no seu email",
-                                                border: OutlineInputBorder(),
-                                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                    Column(
+                                        children: <Widget>[
+                                            Observer(
+                                                builder: (_){
+                                                    return Container(
+                                                        margin: EdgeInsets.only(bottom: 10.0),
+                                                        child: TextField(
+                                                            onChanged: controllerForgot.setPassword,
+                                                            decoration: InputDecoration(
+                                                                labelText: "Senha",
+                                                                errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
+                                                                errorStyle: TextStyle(color: Colors.red),
+                                                                hintText: "Insira uma nova senha",
+                                                                border: OutlineInputBorder(),
+                                                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                                            )
+                                                        ),
+                                                    );
+                                                },
                                             ),
+                                            Observer(
+                                                builder: (_){
+                                                    return Container(
+                                                        margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                                        child: TextField(
+                                                            onChanged: controllerForgot.setConfirmPassword,
+                                                            decoration: InputDecoration(
+                                                                labelText: "Confirme",
+                                                                errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
+                                                                errorStyle: TextStyle(color: Colors.red),
+                                                                hintText: "Confirme sua senha novamente",
+                                                                border: OutlineInputBorder(),
+                                                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                                            )
+                                                        ),
+                                                    );
+                                                },
+                                            ),
+                                        ],
+                                    ) : TextField(
+                                        onChanged: controllerForgot.setCode,
+                                        maxLength: 6,
+                                        decoration: InputDecoration(
+                                            labelText: "Código",
+                                            errorText: controllerForgot.verifyCode.length > 0 && controllerForgot.verifyCode.length < 6 ? "Insira um código válido" : null,
+                                            errorStyle: TextStyle(color: Colors.red),
+                                            hintText: "Insira o código inserido no seu email",
+                                            border: OutlineInputBorder(),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                         ),
+                                    ),
                                 );
                             },
                         ),

@@ -34,7 +34,13 @@ abstract class _ControllerForgot with Store {
     @observable
     bool emailExists;
 
-    void newCode(context) async {
+    @computed
+    bool get mailExits {
+        return emailExists;
+    }
+
+    @action
+    Future<void> newCode(context) async {
         var response;
         onLoading = true;
 
@@ -51,15 +57,15 @@ abstract class _ControllerForgot with Store {
 
         onLoading = false;
 
+        print(response.statusCode);
+
         switch(response.statusCode){
             case 204:
                 emailExists = true;
-                showAlertDialog(context, "Email enviado!", "Verifique seu email e siga as instruções.", false);
                 break;
             case 404:
                 emailExists = false;
                 isValidEmail = false;
-                showAlertDialog(context, "Email não encontrado!", "Verifique se o email foi digitado corretamente, ou cadastre-se.", true);
                 break;
         }
     }
@@ -93,7 +99,7 @@ abstract class _ControllerForgot with Store {
         if(response.body == "true"){
             isValidCode = true;
         } else {
-            showAlertDialog(context, "Código inválido", "Verifique seu email novamente e garanta que digitou o código corretamente.", true);
+            isValidCode = false;
         }
     }
 
@@ -122,7 +128,7 @@ abstract class _ControllerForgot with Store {
         if(password != confirmPassword){
             errorText = "As senhas não são iguais";
         } else {
-            errorText = "";
+            errorText = null;
         }
     }
 
@@ -149,50 +155,8 @@ abstract class _ControllerForgot with Store {
 
         if(response.statusCode == 204){
             passwordChanged = true;
-            showAlertDialog(context, "Senha alterada!", "Seua senha foi alterada com sucesso.", false);
         } else {
-            showAlertDialog(context, "Não foi possível alterar a senha", "Não foi possível alterar a senha, tente novamente mais tarde.", true);
+            passwordChanged = false;
         }
-    }
-
-    void showAlertDialog(BuildContext context, String title, String text, bool pop) {
-        Widget okButton = FlatButton(
-            child: Text("OK"),
-            onPressed: () {
-                if(pop){
-                    Navigator.of(context).pop();
-                } else {
-                    Navigator.of(context).pop();
-
-                    if(passwordChanged == true){
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context){
-                                return ControlPage();
-                            }
-                        ));
-                    } else {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context){
-                                return ChangePassword();
-                            }
-                        ));
-                    }
-                }
-            },
-        );
-        AlertDialog alerta = AlertDialog(
-            title: Text(title),
-            content: Text(text),
-            actions: [
-                okButton,
-            ],
-        );
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-                return alerta;
-            },
-        );
     }
 }

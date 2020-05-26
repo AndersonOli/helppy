@@ -1,9 +1,5 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
 part 'controllerCadastro.g.dart';
 
 class ControllerCadastro = _ControllerCadastro with _$ControllerCadastro;
