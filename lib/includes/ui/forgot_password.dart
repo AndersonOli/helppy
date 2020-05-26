@@ -6,37 +6,26 @@ import 'package:helppyapp/includes/widgets/suports_widgets.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
-import 'change_password.dart';
-import 'control_page.dart';
-
 class ForgotPassword extends StatefulWidget {
     @override
     _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-    List _disposers;
     final TextEditingController _emailController = TextEditingController();
 
     @override
-    void didChangeDependencies() {
-        super.didChangeDependencies();
-
-        final controller = Provider.of<ControllerForgot>(context);
-
+    void initState() {
+        super.initState();
+        final controller = ControllerForgot();
 
         autorun((_){
-            reaction(
-                    (_) => controller.mailExits,
-                    (bool value){
-                    print(value);
-                    if(value){
-                        showAlertDialog(context, "Email enviado!", "Verifique seu email e siga as instruções.");
-                    } else {
-                        showAlertDialog(context, "Email não encontrado!", "Verifique se o email foi digitado corretamente, ou cadastre-se.");
-                    }
-                }
-            );
+            print("hi");
+            if(controller.emailExists == true){
+                showAlertDialog(context, "Email enviado!", "Verifique seu email e siga as instruções.");
+            } else {
+                showAlertDialog(context, "Email não encontrado!", "Verifique se o email foi digitado corretamente, ou cadastre-se.");
+            }
         });
 
 //        autorun((_){

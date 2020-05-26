@@ -9,12 +9,6 @@ part of 'controllerForgot.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ControllerForgot on _ControllerForgot, Store {
-  Computed<bool> _$mailExitsComputed;
-
-  @override
-  bool get mailExits =>
-      (_$mailExitsComputed ??= Computed<bool>(() => super.mailExits)).value;
-
   final _$emailAtom = Atom(name: '_ControllerForgot.email');
 
   @override
@@ -238,7 +232,7 @@ mixin _$ControllerForgot on _ControllerForgot, Store {
   @override
   String toString() {
     final string =
-        'email: ${email.toString()},isValidEmail: ${isValidEmail.toString()},onLoading: ${onLoading.toString()},emailExists: ${emailExists.toString()},verifyCode: ${verifyCode.toString()},isValidCode: ${isValidCode.toString()},password: ${password.toString()},confirmPassword: ${confirmPassword.toString()},errorText: ${errorText.toString()},passwordChanged: ${passwordChanged.toString()},mailExits: ${mailExits.toString()}';
+        'email: ${email.toString()},isValidEmail: ${isValidEmail.toString()},onLoading: ${onLoading.toString()},emailExists: ${emailExists.toString()},verifyCode: ${verifyCode.toString()},isValidCode: ${isValidCode.toString()},password: ${password.toString()},confirmPassword: ${confirmPassword.toString()},errorText: ${errorText.toString()},passwordChanged: ${passwordChanged.toString()}';
     return '{$string}';
   }
 }

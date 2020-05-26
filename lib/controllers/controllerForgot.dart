@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:helppyapp/includes/general/globals.dart';
-import 'package:helppyapp/includes/ui/change_password.dart';
-import 'package:helppyapp/includes/ui/control_page.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
 part 'controllerForgot.g.dart';
@@ -33,11 +29,6 @@ abstract class _ControllerForgot with Store {
 
     @observable
     bool emailExists;
-
-    @computed
-    bool get mailExits {
-        return emailExists;
-    }
 
     @action
     Future<void> newCode(context) async {
