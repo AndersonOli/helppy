@@ -27,60 +27,21 @@ class _ControlPageState extends State<ControlPage> {
         _firebaseMessaging.configure(
             onMessage: (Map<String, dynamic> message) async {
                 print('onMessage: $message');
-                this.alertNotification(message["notification"]["title"], message["notification"]["body"]);
+                showAlertDialog(context, message["notification"]["title"], message["notification"]["body"]);
             },
             onLaunch: (Map<String, dynamic> message) async {
                 print('onMessage: $message');
-                this.alertNotification(message["notification"]["title"], message["notification"]["body"]);
+                showAlertDialog(context, message["notification"]["title"], message["notification"]["body"]);
             },
             onResume: (Map<String, dynamic> message) async {
                 print('onResume: $message');
-                this.alertNotification(message["notification"]["title"], message["notification"]["body"]);
+                showAlertDialog(context, message["notification"]["title"], message["notification"]["body"]);
             },
         );
     }
 
     Future<void> getTokenNotification() async {
         tokenNotification = await _firebaseMessaging.getToken();
-    }
-
-    Future<void> alertNotification(String title, String message) async {
-        return showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-                return AlertDialog(
-                    title: Text(
-                        title,
-                        style: TextStyle(
-                            color: COR_AZUL,
-                            fontSize: 18.0
-                        ),
-                    ),
-                    content: SingleChildScrollView(
-                        child: ListBody(
-                            children: <Widget>[
-                                Text(
-                                    message,
-                                    style: TextStyle(
-                                        color: COR_AZUL,
-                                        fontSize: 16.0
-                                    ),
-                                )
-                            ],
-                        ),
-                    ),
-                    actions: <Widget>[
-                        FlatButton(
-                            child: Text('Ok'),
-                            onPressed: () {
-                                Navigator.of(context).pop();
-                            },
-                        ),
-                    ],
-                );
-            },
-        );
     }
 
     @override
@@ -130,6 +91,7 @@ class _ControlPageState extends State<ControlPage> {
                             bottomNavigationBar: Observer(
                                 builder: (BuildContext context) {
                                     return BottomNavigationBar(
+                                        type: BottomNavigationBarType.fixed,
                                         onTap: (index) => controller.changePage(index),
                                         currentIndex: controller.selectedIndex,
                                         showSelectedLabels: false,

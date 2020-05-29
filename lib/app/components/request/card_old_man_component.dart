@@ -17,10 +17,10 @@ class CardIdoso extends StatelessWidget {
     String statusRequest(AsyncSnapshot snapshot, int index){
         switch(snapshot.data[index]["status"]){
             case "1":
-                return "Aceito por: " + snapshot.data[index]["accept_by"];
+                return "Aceito por: " + snapshot.data[index]["accept_by"].toString();
                 break;
             case "2":
-                return "Seu pedido foi aceito e finalizado por: " + snapshot.data[index]["accept_by"];
+                return "Seu pedido foi aceito e finalizado por: " + snapshot.data[index]["accept_by"].toString();
                 break;
             default:
                 return "Seu pedido ainda não foi aceito..";

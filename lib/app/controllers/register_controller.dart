@@ -163,13 +163,14 @@ abstract class _RegisterController with Store {
     @observable
     File file;
 
-    doCadastro(context, MainTabController controller, var tokenNotification) async {
+    @observable
+    int statusRegister;
+
+    @action
+    Future<void> register(context, MainTabController controller, var tokenNotification) async {
         if(fileProfileImage == null){
-            showAlertDialog(
-                context,
-                "Insira uma imagem de perfil!",
-                "Por favor, clique no ícone de perfil e insira uma imagem."
-            );
+            // no profile picture
+            statusRegister = 0;
             return null;
         }
 
@@ -202,17 +203,11 @@ abstract class _RegisterController with Store {
         isLoading(context, false);
 
         if(data.body.contains('duplicate key value violates unique constraint')){
-            showAlertDialog(
-                context,
-                "Este email já está em uso!",
-                "Por favor, escolha um outro email, esse já está sendo usado."
-            );
+            // email already in use
+            statusRegister = 1;
         } else if(data.body.contains('null value in column')){
-            showAlertDialog(
-                context,
-                "Preencha todos os campos!",
-                "Por favor, preencha todos os campos, verifique se você não esqueceu de algum."
-            );
+            // some imcomplete field
+            statusRegister = 2;
         } else if(data.body.contains(emailCadController.text.toLowerCase().trim())){
             http.Response data = await http.post(
                 API_URL + '/authenticate',
@@ -228,18 +223,13 @@ abstract class _RegisterController with Store {
 
             var dados = json.decode(data.body);
 
-            print(dados);
+            controller.setPreferences('logged', 1);
+            controller.setPreferences('token', dados["token"]);
+            controller.setPreferences('user_id', dados["user_id"]);
+            controller.setPreferences('type_acc', dados["type_account"].toString());
+            controller.setPreferences('name', dados["full_name"]);
 
-//            Navigator.pushReplacement(context, MaterialPageRoute(
-//                builder: (context) {
-//                    controller.setPreferences('logged', 1);
-//                    controller.setPreferences('token', dados["token"]);
-//                    controller.setPreferences('user_id', dados["user_id"]);
-//                    controller.setPreferences('type_acc', dados["type_account"].toString());
-//                    controller.setPreferences('name', dados["full_name"]);
-//                    return ControlPage();
-//                },
-//            ));
+            statusRegister = 3;
         }
     }
 }

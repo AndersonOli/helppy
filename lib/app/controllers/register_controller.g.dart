@@ -239,11 +239,37 @@ mixin _$RegisterController on _RegisterController, Store {
     }, _$fileAtom, name: '${_$fileAtom.name}_set');
   }
 
+  final _$statusRegisterAtom = Atom(name: '_RegisterController.statusRegister');
+
+  @override
+  int get statusRegister {
+    _$statusRegisterAtom.context.enforceReadPolicy(_$statusRegisterAtom);
+    _$statusRegisterAtom.reportObserved();
+    return super.statusRegister;
+  }
+
+  @override
+  set statusRegister(int value) {
+    _$statusRegisterAtom.context.conditionallyRunInAction(() {
+      super.statusRegister = value;
+      _$statusRegisterAtom.reportChanged();
+    }, _$statusRegisterAtom, name: '${_$statusRegisterAtom.name}_set');
+  }
+
   final _$newCepAsyncAction = AsyncAction('newCep');
 
   @override
   Future<dynamic> newCep(String value) {
     return _$newCepAsyncAction.run(() => super.newCep(value));
+  }
+
+  final _$registerAsyncAction = AsyncAction('register');
+
+  @override
+  Future<void> register(dynamic context, MainTabController controller,
+      dynamic tokenNotification) {
+    return _$registerAsyncAction
+        .run(() => super.register(context, controller, tokenNotification));
   }
 
   final _$_RegisterControllerActionController =
@@ -312,7 +338,7 @@ mixin _$RegisterController on _RegisterController, Store {
   @override
   String toString() {
     final string =
-        'fileProfileImage: ${fileProfileImage.toString()},name: ${name.toString()},email: ${email.toString()},password: ${password.toString()},confirmPassword: ${confirmPassword.toString()},telephone: ${telephone.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},typeAcc: ${typeAcc.toString()},onProgress: ${onProgress.toString()},typeOne: ${typeOne.toString()},typeTwo: ${typeTwo.toString()},file: ${file.toString()},validateEmail: ${validateEmail.toString()}';
+        'fileProfileImage: ${fileProfileImage.toString()},name: ${name.toString()},email: ${email.toString()},password: ${password.toString()},confirmPassword: ${confirmPassword.toString()},telephone: ${telephone.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},typeAcc: ${typeAcc.toString()},onProgress: ${onProgress.toString()},typeOne: ${typeOne.toString()},typeTwo: ${typeTwo.toString()},file: ${file.toString()},statusRegister: ${statusRegister.toString()},validateEmail: ${validateEmail.toString()}';
     return '{$string}';
   }
 }

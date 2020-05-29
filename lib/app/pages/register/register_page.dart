@@ -1,10 +1,13 @@
 import 'package:flutter/painting.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/app/components/control/control_page_component.dart';
 import 'package:helppyapp/app/controllers/main_tab_controller.dart';
+import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:helppyapp/app/controllers/register_controller.dart';
 
@@ -16,6 +19,45 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends State<CadastroPage> {
+    RegisterController controllerRegister = RegisterController();
+    
+    @override
+    void initState(){
+        super.initState();
+        
+        autorun((_){
+            switch(controllerRegister.statusRegister){
+                case 0:
+                    showAlertDialog(
+                        context,
+                        "Insira uma imagem de perfil!",
+                        "Por favor, clique no ícone de perfil e insira uma imagem."
+                    );
+                    break;
+                case 1:
+                    showAlertDialog(
+                        context,
+                        "Este email já está em uso!",
+                        "Por favor, escolha um outro email, esse já está sendo usado."
+                    );
+                    break;
+                case 2:
+                    showAlertDialog(
+                        context,
+                        "Preencha todos os campos!",
+                        "Por favor, verifique se não esqueceu de preencher corretamente todos os campos."
+                    );
+                    break;
+                case 3:
+                    Navigator.pushReplacement(context, MaterialPageRoute(
+                        builder: (context) {
+                            return ControlPage();
+                        },
+                    ));
+                    break;
+            }
+        });
+    }
 
     Future<void> _choose(RegisterController controller) async {
         controller.file = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -26,7 +68,6 @@ class _CadastroPageState extends State<CadastroPage> {
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
         final controller = Provider.of<MainTabController>(context);
-        final controllerCadastro = Provider.of<RegisterController>(context);
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
@@ -39,7 +80,7 @@ class _CadastroPageState extends State<CadastroPage> {
                         children: <Widget>[
                             GestureDetector(
                                 onTap: () async {
-                                    await _choose(controllerCadastro);
+                                    await _choose(controllerRegister);
                                 },
                                 child: Observer(
                                     builder: (_){
@@ -49,19 +90,19 @@ class _CadastroPageState extends State<CadastroPage> {
                                             decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(140.0),
                                                 border: Border.all(
-                                                    color: controllerCadastro.fileProfileImage == null ? Colors.transparent : COR_AZUL,
-                                                    width: controllerCadastro.fileProfileImage == null ? 0.0 : 2.0
+                                                    color: controllerRegister.fileProfileImage == null ? Colors.transparent : COR_AZUL,
+                                                    width: controllerRegister.fileProfileImage == null ? 0.0 : 2.0
                                                 )
                                             ),
                                             margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
                                             child: ClipRRect(
                                                 borderRadius: BorderRadius.circular(140.0),
-                                                child: controllerCadastro.fileProfileImage == null ?
+                                                child: controllerRegister.fileProfileImage == null ?
                                                 Image.asset(
                                                     "assets/images/user-icon.png",
                                                 ) :
                                                 Image.file(
-                                                    controllerCadastro.fileProfileImage,
+                                                    controllerRegister.fileProfileImage,
                                                     fit: BoxFit.cover,
                                                     width: 140,
                                                     height: 140,
@@ -76,11 +117,11 @@ class _CadastroPageState extends State<CadastroPage> {
                                     return Container(
                                         margin: EdgeInsets.only(top: 10.0),
                                         child: TextField(
-                                            controller: controllerCadastro.nomeCadController,
-                                            onChanged: controllerCadastro.newName,
+                                            controller: controllerRegister.nomeCadController,
+                                            onChanged: controllerRegister.newName,
                                             decoration: InputDecoration(
                                                 labelText: "Nome completo",
-                                                errorText: controllerCadastro.validateFullName(),
+                                                errorText: controllerRegister.validateFullName(),
                                                 hintText: "Insira seu nome completo",
                                                 border: OutlineInputBorder(),
                                                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -94,10 +135,10 @@ class _CadastroPageState extends State<CadastroPage> {
                                     return Container(
                                         margin: EdgeInsets.only(top: 10.0),
                                         child: TextField(
-                                            controller: controllerCadastro.emailCadController,
-                                            onChanged: controllerCadastro.newEmail,
+                                            controller: controllerRegister.emailCadController,
+                                            onChanged: controllerRegister.newEmail,
                                             decoration: InputDecoration(
-                                                errorText: controllerCadastro.validateEmail,
+                                                errorText: controllerRegister.validateEmail,
                                                 labelText: "Email",
                                                 hintText: "Insira seu email",
                                                 border: OutlineInputBorder(),
@@ -111,12 +152,12 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
-                                    controller: controllerCadastro.senhaCadController,
-                                    onChanged: controllerCadastro.newPassword,
+                                    controller: controllerRegister.senhaCadController,
+                                    onChanged: controllerRegister.newPassword,
                                     obscureText: true,
                                     decoration: InputDecoration(
                                         labelText: "Senha",
-                                        errorText: controllerCadastro.validatePassword(),
+                                        errorText: controllerRegister.validatePassword(),
                                         hintText: "Insira uma senha",
                                         border: OutlineInputBorder(),
                                         contentPadding:
@@ -127,12 +168,12 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
-                                    controller: controllerCadastro.confirmSenhaCadController,
+                                    controller: controllerRegister.confirmSenhaCadController,
                                     obscureText: true,
-                                    onChanged: controllerCadastro.newConfirmPassword,
+                                    onChanged: controllerRegister.newConfirmPassword,
                                     decoration: InputDecoration(
                                         labelText: "Confirme sua senha",
-                                        errorText: controllerCadastro.validateConfirmPasswod(),
+                                        errorText: controllerRegister.validateConfirmPasswod(),
                                         hintText: "Insira a mesma senha digitada anteriormente",
                                         border: OutlineInputBorder(),
                                         contentPadding:
@@ -144,12 +185,12 @@ class _CadastroPageState extends State<CadastroPage> {
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextFormField(
                                     maxLength: 11,
-                                    controller: controllerCadastro.telCadController,
-                                    onChanged: controllerCadastro.newTelephone,
+                                    controller: controllerRegister.telCadController,
+                                    onChanged: controllerRegister.newTelephone,
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         labelText: "Telefone",
-                                        errorText: controllerCadastro.validateTelephone(),
+                                        errorText: controllerRegister.validateTelephone(),
                                         hintText: "Insira o número do seu telefone",
                                         border: OutlineInputBorder(),
                                         contentPadding:
@@ -163,11 +204,11 @@ class _CadastroPageState extends State<CadastroPage> {
                                         margin: EdgeInsets.only(top: 10.0),
                                         child: TextFormField(
                                             maxLength: 8,
-                                            controller: controllerCadastro.cepCadController,
-                                            onChanged: controllerCadastro.newCep,
+                                            controller: controllerRegister.cepCadController,
+                                            onChanged: controllerRegister.newCep,
                                             keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
-                                                errorText: controllerCadastro.errortextCep.length > 1 ? controllerCadastro.errortextCep : null,
+                                                errorText: controllerRegister.errortextCep.length > 1 ? controllerRegister.errortextCep : null,
                                                 labelText: "CEP",
                                                 hintText: "Insira seu CEP",
                                                 border: OutlineInputBorder(),
@@ -181,7 +222,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
-                                    controller: controllerCadastro.endCadController,
+                                    controller: controllerRegister.endCadController,
                                     decoration: InputDecoration(
                                         labelText: "Endereço",
                                         hintText: "Insira seu endereço",
@@ -194,7 +235,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextField(
-                                    controller: controllerCadastro.numeroCadController,
+                                    controller: controllerRegister.numeroCadController,
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         labelText: "Número da casa",
@@ -208,7 +249,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             Container(
                                 margin: EdgeInsets.only(top: 10.0),
                                 child: TextFormField(
-                                    controller: controllerCadastro.refCadController,
+                                    controller: controllerRegister.refCadController,
                                     decoration: InputDecoration(
                                         labelText: "Ponto de referência",
                                         hintText: "Insira um ponto de referência",
@@ -236,11 +277,11 @@ class _CadastroPageState extends State<CadastroPage> {
                                                 Checkbox(
                                                     onChanged: (bool value){
                                                         setState(() {
-                                                            controllerCadastro.typeOne = value;
-                                                            controllerCadastro.typeTwo = value == true ? false : value;
+                                                            controllerRegister.typeOne = value;
+                                                            controllerRegister.typeTwo = value == true ? false : value;
                                                         });
                                                     },
-                                                    value: controllerCadastro.typeOne,
+                                                    value: controllerRegister.typeOne,
                                                 ),
                                                 Text(
                                                     "Pedir ajuda",
@@ -258,11 +299,11 @@ class _CadastroPageState extends State<CadastroPage> {
                                                 Checkbox(
                                                     onChanged: (bool value){
                                                         setState(() {
-                                                            controllerCadastro.typeTwo = value;
-                                                            controllerCadastro.typeOne = value == true ? false : value;
+                                                            controllerRegister.typeTwo = value;
+                                                            controllerRegister.typeOne = value == true ? false : value;
                                                         });
                                                     },
-                                                    value: controllerCadastro.typeTwo,
+                                                    value: controllerRegister.typeTwo,
                                                 ),
                                                 Text(
                                                     "Ajudar",
@@ -281,7 +322,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                 margin: EdgeInsets.only(top: 20.0),
                                 child: FlatButton(
                                     onPressed: (){
-                                        controllerCadastro.doCadastro(context, controller, widget.tokenNotification);
+                                        controllerRegister.register(context, controller, widget.tokenNotification);
                                     },
                                     color: COR_AZUL,
                                     child: Text(
