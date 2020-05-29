@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helppyapp/includes/general/globals.dart';
-import 'package:helppyapp/includes/ui/control_page.dart';
+import 'package:helppyapp/app/components/general/globals_component.dart';
+import 'package:helppyapp/app/components/control/control_page_component.dart';
 import 'package:provider/provider.dart';
-
-import 'controllers/controllerTab.dart';
-import 'controllers/controllerTabHome.dart';
+import 'package:helppyapp/app/controllers/register_controller.dart';
+import 'package:helppyapp/app/controllers/forgot_password_controller.dart';
+import 'package:helppyapp/app/controllers/main_tab_controller.dart';
+import 'package:helppyapp/app/controllers/home_controller.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main(){
     runApp(
@@ -13,12 +16,26 @@ void main(){
                 Provider<HomeController>(
                     create: (_) => HomeController(),
                 ),
-                Provider<ControllerTabHome>(
-                    create: (_) => ControllerTabHome(),
+                Provider<MainTabController>(
+                    create: (_) => MainTabController(),
+                ),
+                Provider<RegisterController>(
+                    create: (_) => RegisterController(),
+                ),
+                Provider<ForgotPasswordController>(
+                    create: (_) => ForgotPasswordController(),
                 ),
             ],
             child: MaterialApp(
-                home: ControlPage(false),
+                home: ControlPage(),
+                localizationsDelegates: [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    DefaultCupertinoLocalizations.delegate
+                ],
+                supportedLocales: [
+                    const Locale('pt', 'BR')
+                ],
                 theme: ThemeData(
                     fontFamily: 'NunitoSans',
                     inputDecorationTheme: InputDecorationTheme(
