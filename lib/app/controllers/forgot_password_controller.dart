@@ -119,14 +119,14 @@ abstract class _ForgotPasswordController with Store {
         if(password != confirmPassword){
             errorText = "As senhas não são iguais";
         } else {
-            errorText = null;
+            errorText = "";
         }
     }
 
     @observable
     bool passwordChanged;
 
-    Future<void> changePassword(context) async {
+    Future<void> changePassword() async {
         var response;
         onLoading = true;
 

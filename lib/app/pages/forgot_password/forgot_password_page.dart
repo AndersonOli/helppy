@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:helppyapp/app/components/control/control_page_component.dart';
 import 'package:helppyapp/app/controllers/forgot_password_controller.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/app/pages/forgot_password/change_password_page.dart';
 import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
@@ -12,54 +14,72 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+    ForgotPasswordController controllerForgot = ForgotPasswordController();
     final TextEditingController _emailController = TextEditingController();
 
     @override
     void initState() {
         super.initState();
-        final controller = ForgotPasswordController();
 
-        autorun((_){
-            print("hi");
-            if(controller.emailExists == true){
-                showAlertDialog(context, "Email enviado!", "Verifique seu email e siga as instruções.");
+        autorun((_) async {
+            if(controllerForgot.emailExists == true){
+                dialog(
+                    context,
+                    title: "Email enviado!",
+                    body: "Verifique seu email e siga as instruções.",
+                    route: MaterialPageRoute(
+                        builder: (context){
+                            return ChangePassword();
+                        }
+                    )
+                );
             } else {
-                showAlertDialog(context, "Email não encontrado!", "Verifique se o email foi digitado corretamente, ou cadastre-se.");
+                dialog(
+                    context,
+                    title: "Email não encontrado!",
+                    body: "Verifique se o email foi digitado corretamente, ou cadastre-se.",
+                    route: null
+                );
+            }
+
+            if(controllerForgot.isValidCode == false){
+                dialog(
+                    context,
+                    title: "Código inválido",
+                    body: "Verifique seu email novamente e garanta que digitou o código corretamente.",
+                    route: null
+                );
+            }
+
+            if(controllerForgot.passwordChanged == true){
+                dialog(
+                    context,
+                    title: "Senha alterada!",
+                    body: "Seua senha foi alterada com sucesso.",
+                    method: "pushReplacement",
+                    route: MaterialPageRoute(
+                        builder: (context){
+                            return ControlPage();
+                        }
+                    )
+                );
+            } else if(controllerForgot.passwordChanged == false){
+                dialog(
+                    context,
+                    title: "Não foi possível alterar a senha",
+                    body: "Não foi possível alterar a senha, tente novamente mais tarde.",
+                    route: MaterialPageRoute(
+                        builder: (context){
+                            return ChangePassword();
+                        }
+                    )
+                );
             }
         });
-
-//        autorun((_){
-//            print("hi");
-//            final controller = Provider.of<ControllerForgot>(context);
-//
-
-//
-//            if(controller.isValidCode == false){
-//                showAlertDialog(context, "Código inválido", "Verifique seu email novamente e garanta que digitou o código corretamente.");
-//            }
-//
-//            if(controller.passwordChanged == true){
-//                showAlertDialog(context, "Senha alterada!", "Seua senha foi alterada com sucesso.");
-//
-//                Navigator.of(context).pushReplacement(MaterialPageRoute(
-//                    builder: (context){
-//                        return ControlPage();
-//                    }
-//                ));
-//            } else if(controller.passwordChanged == false){
-//                showAlertDialog(context, "Não foi possível alterar a senha", "Não foi possível alterar a senha, tente novamente mais tarde.");
-//                Navigator.of(context).push(MaterialPageRoute(
-//                    builder: (context){
-//                        return ChangePassword();
-//                    }
-//                ));
-//            }
-//        });
     }
 
     @override
     Widget build(BuildContext context) {
-        final controllerForgot = Provider.of<ForgotPasswordController>(context);
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
