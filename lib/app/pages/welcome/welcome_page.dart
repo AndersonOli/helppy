@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:animator/animator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +6,8 @@ import 'package:helppyapp/app/controllers/main_tab_controller.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:helppyapp/App/Pages/Register/register_page.dart';
 import 'package:helppyapp/app/pages/forgot_password/forgot_password_page.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:helppyapp/app/components/control/control_page_component.dart';
-import 'package:helppyapp/app/widgets/suports_widgets.dart';
+
 
 class WelcomeScreen extends StatefulWidget {
     final String tokenNotification;
@@ -20,8 +17,6 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
-    final TextEditingController _emailLoginController = TextEditingController();
-    final TextEditingController _senhaLoginController = TextEditingController();
 
     @override
     void initState() {
@@ -33,6 +28,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
         final controller = Provider.of<MainTabController>(context);
+        final controllerSignIn = provider.of<SignInController>(context);
         return Scaffold(
             body: PageView(
                 scrollDirection: Axis.horizontal,
@@ -159,16 +155,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                 ),
                                 Container(
                                     margin: EdgeInsets.only(top: 10.0),
-                                    child: TextFormField(
-                                        validator: (value){
-                                            if(value.isEmpty){
-                                                return "Insira um email";
-                                            } else {
-                                                return null;
-                                            }
-                                        },
-                                        controller: _emailLoginController,
+                                    child: TextField(
+                                       onChanged: controllerSignIn.newEmail,
+                                        controller: controllerSignIn.emailLoginController,
                                         decoration: InputDecoration(
+                                            errorText: controllerSignIn.validateEmail,
                                             labelText: "Email",
                                             hintText: "Insira seu email",
                                             border: OutlineInputBorder(),
@@ -180,12 +171,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                 Container(
                                     margin: EdgeInsets.only(top: 15.0, bottom: 10.0),
                                     child: TextField(
+                                        onChanged: controllerSignIn.newPassword,
                                         obscureText: true,
-                                        controller: _senhaLoginController,
+                                        controller: controllerSignIn.senhaLoginController,
                                         onSubmitted: (e){
-                                            _doLogin(context, controller);
+                                            controllerSignIn.signIn(context, controller, widget.tokenNotification);
                                         },
                                         decoration: InputDecoration(
+                                            errorText: controllerSignIn.validatePassword(),
                                             labelText: "Senha",
                                             hintText: "Insira sua senha",
                                             border: OutlineInputBorder(),
@@ -219,7 +212,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                         Expanded(
                                             child: RaisedButton(
                                                 onPressed: () {
-                                                    _doLogin(context, controller);
+                                                    controllerSignIn.signIn(context, controller, widget.tokenNotification);
                                                 },
                                                 color: COR_AZUL,
                                                 child: Text(
@@ -240,45 +233,5 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                 ],
             ),
         );
-    }
-
-    _doLogin(BuildContext context, MainTabController controller) async {
-        if(_emailLoginController.text != "" && _senhaLoginController.text != ""){
-            isLoading(context, true);
-            http.Response data = await http.post(
-                API_URL + '/authenticate',
-                headers: <String, String>{
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: jsonEncode({
-                    "email": _emailLoginController.text.trim(),
-                    "password": _senhaLoginController.text,
-                    "token_notification": widget.tokenNotification
-                }),
-            );
-            var dados = json.decode(data.body);
-            isLoading(context, false);
-            try{
-                if(dados[0]["field"] != null){
-                    showAlertDialog(
-                        context,
-                        "Email ou senha inválidos",
-                        "Por favor, verifique se seu email e senha estão corretos."
-                    );
-                }
-            } catch(e) {
-                controller.setPreferences('logged', 1);
-                controller.setPreferences('token', dados["token"]);
-                controller.setPreferences('user_id', dados["user_id"]);
-                controller.setPreferences('type_acc', dados["type_account"].toString());
-                controller.setPreferences('name', dados["full_name"]);
-
-                Navigator.pushReplacement(context, MaterialPageRoute(
-                    builder: (context){
-                        return ControlPage();
-                    },
-                ));
-            }
-        }
     }
 }

@@ -25,6 +25,9 @@ void main(){
                 Provider<ForgotPasswordController>(
                     create: (_) => ForgotPasswordController(),
                 ),
+                Provider<SignInController>(
+                  create: (_) => SignInController(),
+                ),
             ],
             child: MaterialApp(
                 home: ControlPage(),
