@@ -41,7 +41,7 @@ abstract class _MainTabController with Store {
             'infoRequest': prefs.getString('infoRequest'),
             'token': prefs.getString('token'),
             'user_id': prefs.getInt('user_id'),
-            'name': prefs.getString('')
+            'name': prefs.getString('name')
         };
     }
 }
