@@ -5,7 +5,6 @@ import 'package:helppyapp/app/controllers/forgot_password_controller.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
 
 class ChangePassword extends StatefulWidget {
     @override

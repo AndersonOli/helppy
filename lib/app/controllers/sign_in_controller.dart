@@ -7,7 +7,7 @@ import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
 import 'main_tab_controller.dart';
-part 'sign_in_controlller.g.dart';
+part 'sign_in_controller.g.dart';
 
 class SignInController = _SignInController with _$SignInController;
 
@@ -38,18 +38,10 @@ abstract class _SignInController with Store {
   @action
   void newPassword(String value) => password = value;
 
-  String validatePassword() {
-    String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$';
-    RegExp regExp = new RegExp(pattern);
-    if (regExp.hasMatch(password) == false && password.length > 0) {
-      //alterar para popup, não dá pra ler, muita informação
-      return 'Senha inválida, exemplo de senha válida: Aa1234';
-    }
+  @observable
+  bool statusSignIn;
 
-    return null;
-  }
-
-  signIn(BuildContext context, MainTabController controller, var tokenNotification) async {
+  Future<void> signIn(BuildContext context, MainTabController controller, var tokenNotification) async {
     if(emailLoginController.text != "" && senhaLoginController.text != ""){
       isLoading(context, true);
       http.Response data = await http.post(
@@ -67,26 +59,18 @@ abstract class _SignInController with Store {
       isLoading(context, false);
       try{
         if(dados[0]["field"] != null){
-          showAlertDialog(
-              context,
-              "Email ou senha inválidos",
-              "Por favor, verifique se seu email e senha estão corretos."
-          );
+          // email or password wrong
+          statusSignIn = false;
         }
       } catch(e) {
+        // login success
+        statusSignIn = true;
         controller.setPreferences('logged', 1);
         controller.setPreferences('token', dados["token"]);
         controller.setPreferences('user_id', dados["user_id"]);
         controller.setPreferences('type_acc', dados["type_account"].toString());
         controller.setPreferences('name', dados["full_name"]);
-
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context){
-            return ControlPage();
-          },
-        ));
       }
     }
   }
-
 }

@@ -2,10 +2,15 @@ import 'package:animator/animator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/app/components/control/control_page_component.dart';
 import 'package:helppyapp/app/controllers/main_tab_controller.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:helppyapp/App/Pages/Register/register_page.dart';
+import 'package:helppyapp/app/controllers/sign_in_controller.dart';
 import 'package:helppyapp/app/pages/forgot_password/forgot_password_page.dart';
+import 'package:helppyapp/app/widgets/suports_widgets.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 
@@ -17,18 +22,34 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
+    SignInController controllerSignIn = SignInController();
 
     @override
     void initState() {
         super.initState();
         requestPermission();
+
+        autorun((_){
+           if(controllerSignIn.statusSignIn == false){
+               showAlertDialog(
+                   context,
+                   "Email ou senha inválidos",
+                   "Por favor, verifique se seu email e senha estão corretos."
+               );
+           } else if(controllerSignIn.statusSignIn == true) {
+               Navigator.pushReplacement(context, MaterialPageRoute(
+                   builder: (context){
+                       return ControlPage();
+                   },
+               ));
+           }
+        });
     }
 
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
         final controller = Provider.of<MainTabController>(context);
-        final controllerSignIn = provider.of<SignInController>(context);
         return Scaffold(
             body: PageView(
                 scrollDirection: Axis.horizontal,
@@ -153,20 +174,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                         color: COR_STROKE,
                                     ),
                                 ),
-                                Container(
-                                    margin: EdgeInsets.only(top: 10.0),
-                                    child: TextField(
-                                       onChanged: controllerSignIn.newEmail,
-                                        controller: controllerSignIn.emailLoginController,
-                                        decoration: InputDecoration(
-                                            errorText: controllerSignIn.validateEmail,
-                                            labelText: "Email",
-                                            hintText: "Insira seu email",
-                                            border: OutlineInputBorder(),
-                                            contentPadding:
-                                            const EdgeInsets.symmetric(horizontal: 10),
-                                        ),
-                                    ),
+                                Observer(
+                                    builder: (_){
+                                        return Container(
+                                            margin: EdgeInsets.only(top: 10.0),
+                                            child: TextField(
+                                                onChanged: controllerSignIn.newEmail,
+                                                controller: controllerSignIn.emailLoginController,
+                                                decoration: InputDecoration(
+                                                    errorText: controllerSignIn.validateEmail,
+                                                    labelText: "Email",
+                                                    hintText: "Insira seu email",
+                                                    border: OutlineInputBorder(),
+                                                    contentPadding:
+                                                    const EdgeInsets.symmetric(horizontal: 10),
+                                                ),
+                                            ),
+                                        );
+                                    },
                                 ),
                                 Container(
                                     margin: EdgeInsets.only(top: 15.0, bottom: 10.0),
@@ -178,7 +203,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                                             controllerSignIn.signIn(context, controller, widget.tokenNotification);
                                         },
                                         decoration: InputDecoration(
-                                            errorText: controllerSignIn.validatePassword(),
                                             labelText: "Senha",
                                             hintText: "Insira sua senha",
                                             border: OutlineInputBorder(),

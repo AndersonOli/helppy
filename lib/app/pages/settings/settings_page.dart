@@ -4,7 +4,6 @@ import 'package:helppyapp/app/components/general/globals_component.dart';
 class SettingsTab extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
-        double width = MediaQuery.of(context).size.width;
         return Scaffold(
             body: SafeArea(
                 child: Padding(

@@ -6,7 +6,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:helppyapp/app/pages/forgot_password/change_password_page.dart';
 import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatefulWidget {
     @override
