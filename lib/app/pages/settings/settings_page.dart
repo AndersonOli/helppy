@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
+import 'package:helppyapp/app/pages/settings/settings_update_user.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class SettingsTab extends StatelessWidget {
@@ -66,7 +67,7 @@ class SettingsTab extends StatelessWidget {
                                                                 onPressed: (){
                                                                     Navigator.of(context).push(MaterialPageRoute(
                                                                         builder: (context){
-                                                                            return null;
+                                                                            return UpdateUser();
                                                                         }
                                                                     ));
                                                                 },

@@ -43,6 +43,7 @@ void main(){
                 theme: ThemeData(
                     fontFamily: 'NunitoSans',
                     inputDecorationTheme: InputDecorationTheme(
+                        labelStyle: TextStyle(color: COR_AZUL),
                         enabledBorder:
                         OutlineInputBorder(borderSide: BorderSide(color: COR_STROKE)),
                         focusedBorder:
