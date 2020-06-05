@@ -1,20 +1,25 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
-import 'package:helppyapp/app/controllers/register_controller.dart';
+import 'package:helppyapp/app/controllers/settings_controller.dart';
 import 'package:image_picker/image_picker.dart';
 
-class UpdateUser extends StatelessWidget {
-  //TODO: controller update to user
-//  RegisterController controllerRegister = RegisterController();
-  Future<void> _choose(RegisterController controller) async {
-//    controller.file = await ImagePicker.pickImage(source: ImageSource.camera);
-//    controller.changeProfileImage(controller.file);
+class UpdateUser extends StatefulWidget {
+  @override
+  _UpdateUserState createState() => _UpdateUserState();
+}
+
+class _UpdateUserState extends State<UpdateUser> {
+  SettingsController controllerSettings = SettingsController();
+
+  Future<void> _choose(SettingsController controller) async {
+    File file = await ImagePicker.pickImage(source: ImageSource.camera);
+    controller.changeProfileImage(file);
   }
 
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: COR_AZUL,
@@ -25,8 +30,7 @@ class UpdateUser extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTap: () async {
-                //TODO: controller update to user
-//                await _choose(controllerRegister);
+                await _choose(controllerSettings);
               },
               child: Observer(
                 builder: (_){
@@ -36,22 +40,19 @@ class UpdateUser extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(140.0),
                         border: Border.all(
-                          //TODO: controller update to user
-//                            color: controllerRegister.fileProfileImage == null ? Colors.transparent : COR_AZUL,
-//                            width: controllerRegister.fileProfileImage == null ? 0.0 : 2.0
+                            color: controllerSettings.fileProfileImage == null ? Colors.transparent : COR_AZUL,
+                            width: controllerSettings.fileProfileImage == null ? 0.0 : 2.0
                         )
                     ),
                     margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(140.0),
-                      //TODO: controller update to user
-                      child: controllerRegister.fileProfileImage == null ?
+                      child: controllerSettings.fileProfileImage == null ?
                       Image.asset(
                         "assets/images/user-icon.png",
                       ) :
                       Image.file(
-                        //TODO: controller update to user
-                        controllerRegister.fileProfileImage,
+                        controllerSettings.fileProfileImage,
                         fit: BoxFit.cover,
                         width: 140,
                         height: 140,
@@ -124,3 +125,4 @@ class UpdateUser extends StatelessWidget {
     );
   }
 }
+

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helppyapp/app/components/control/control_page_component.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:http/http.dart' as http;

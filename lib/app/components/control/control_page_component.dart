@@ -47,22 +47,12 @@ class _ControlPageState extends State<ControlPage> {
     @override
     Widget build(BuildContext context) {
         final controller = Provider.of<MainTabController>(context);
-        final _width = MediaQuery.of(context).size.width;
-        final _height = MediaQuery.of(context).size.height;
         return FutureBuilder(
             future: controller.getPreferences(),
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                     return Container(
-                        width: _width,
-                        height: _height,
                         color: Colors.white,
-                        alignment: Alignment.center,
-                        child: Image.asset(
-                            "assets/images/logo.png",
-                            fit: BoxFit.contain,
-                            width: 200.0,
-                        ),
                     );
                 } else {
                     if(snapshot.data['logged'] != 1){
