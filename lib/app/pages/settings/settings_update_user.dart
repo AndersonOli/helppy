@@ -62,20 +62,60 @@ class _UpdateUserState extends State<UpdateUser> {
                 },
               ),
             ),
+            Observer(
+              builder: (_){
+                return Container(
+                  margin: EdgeInsets.only(top: 10.0),
+                  child: TextField(
+                    maxLength: 11,
+                    onChanged: controllerSettings.newEmail,
+                    controller: controllerSettings.telUpdateController,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      hintText: "Insira seu email",
+                      errorText: controllerSettings.validateEmail,
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    ),
+                  ),
+                );
+              },
+            ),
             Container(
               margin: EdgeInsets.only(top: 10.0),
               child: TextField(
+                controller: controllerSettings.emailUpdateController,
                 decoration: InputDecoration(
-                  labelText: "CEP",
-                  hintText: "Insira seu CEP",
+                  labelText: "Telefone",
+                  hintText: "Insira seu telefone",
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(horizontal: 10),
                 ),
               ),
             ),
+            Observer(
+              builder: (_){
+                return Container(
+                  margin: EdgeInsets.only(top: 10.0),
+                  child: TextField(
+                    maxLength: 8,
+                    controller: controllerSettings.cepUpdateController,
+                    onChanged: controllerSettings.newCep,
+                    decoration: InputDecoration(
+                      labelText: "CEP",
+                      hintText: "Insira seu CEP",
+                      errorText: controllerSettings.errortextCep == "" ? null : controllerSettings.errortextCep,
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    ),
+                  ),
+                );
+              },
+            ),
             Container(
               margin: EdgeInsets.only(top: 10.0),
               child: TextField(
+                controller: controllerSettings.endUpdateController,
                 decoration: InputDecoration(
                   labelText: "Endereço",
                   hintText: "Insira seu endereço",
@@ -87,6 +127,7 @@ class _UpdateUserState extends State<UpdateUser> {
             Container(
               margin: EdgeInsets.only(top: 10.0),
               child: TextField(
+                controller: controllerSettings.numeroUpdateController,
                 decoration: InputDecoration(
                   labelText: "Número da casa",
                   hintText: "Insira o número da sua casa",
@@ -98,6 +139,7 @@ class _UpdateUserState extends State<UpdateUser> {
             Container(
               margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
               child: TextField(
+                controller: controllerSettings.refUpdateController,
                 decoration: InputDecoration(
                   labelText: "Ponto de referência",
                   hintText: "Insira um ponto de referência",
