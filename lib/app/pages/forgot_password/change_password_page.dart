@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:helppyapp/app/components/control/control_page_component.dart';
 import 'package:helppyapp/app/controllers/forgot_password_controller.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
+import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
 
 class ChangePassword extends StatefulWidget {
     @override
@@ -11,17 +12,31 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
-    @override
-    void didChangeDependencies() {
-        autorun((context){
+    ForgotPasswordController controllerForgot = ForgotPasswordController();
 
+    @override
+    void initState() {
+        super.initState();
+
+        autorun((_){
+            if(controllerForgot.passwordChanged == true){
+                dialog(
+                    context,
+                    title: "Senha alterada!",
+                    body: "Sua senha foi alterada com sucesso :)",
+                    method: "pushReplacement",
+                    route: MaterialPageRoute(
+                        builder: (context){
+                            return ControlPage();
+                        }
+                    )
+                );
+            }
         });
-        super.didChangeDependencies();
     }
 
     @override
     Widget build(BuildContext context) {
-        final controllerForgot = Provider.of<ForgotPasswordController>(context);
         return Scaffold(
             appBar: AppBar(
                 backgroundColor: COR_AZUL,
@@ -65,7 +80,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                             onChanged: controllerForgot.setPassword,
                                                             decoration: InputDecoration(
                                                                 labelText: "Senha",
-                                                                errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
+                                                                errorText: controllerForgot.errorText == "" ? null : controllerForgot.errorText,
                                                                 errorStyle: TextStyle(color: Colors.red),
                                                                 hintText: "Insira uma nova senha",
                                                                 border: OutlineInputBorder(),
@@ -83,7 +98,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                             onChanged: controllerForgot.setConfirmPassword,
                                                             decoration: InputDecoration(
                                                                 labelText: "Confirme",
-                                                                errorText: controllerForgot.errorText.length > 0 ? controllerForgot.errorText : null,
+                                                                errorText: controllerForgot.errorText == "" ? null: controllerForgot.errorText,
                                                                 errorStyle: TextStyle(color: Colors.red),
                                                                 hintText: "Confirme sua senha novamente",
                                                                 border: OutlineInputBorder(),
@@ -116,9 +131,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 builder: (_) {
                                     return RaisedButton(
                                         color: COR_AZUL,
-                                        onPressed: controllerForgot.verifyCode.length == 6 && controllerForgot.errorText.length <= 0 ? (){
-                                            if(controllerForgot.errorText.length <= 0  && controllerForgot.isValidCode == true){
-                                                controllerForgot.changePassword(context);
+                                        onPressed: controllerForgot.verifyCode.length == 6 && controllerForgot.errorText == "" ? (){
+                                            if(controllerForgot.errorText == "" && controllerForgot.isValidCode == true){
+                                                controllerForgot.changePassword();
                                             } else {
                                                 controllerForgot.validCode(context);
                                             }

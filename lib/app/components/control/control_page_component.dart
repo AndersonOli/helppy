@@ -51,7 +51,9 @@ class _ControlPageState extends State<ControlPage> {
             future: controller.getPreferences(),
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
-                    return loadingCenter();
+                    return Container(
+                        color: Colors.white,
+                    );
                 } else {
                     if(snapshot.data['logged'] != 1){
                         return WelcomeScreen(tokenNotification);

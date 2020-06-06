@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +43,7 @@ abstract class _MainTabController with Store {
             'infoRequest': prefs.getString('infoRequest'),
             'token': prefs.getString('token'),
             'user_id': prefs.getInt('user_id'),
-            'name': prefs.getString('')
+            'name': prefs.getString('name')
         };
     }
 }

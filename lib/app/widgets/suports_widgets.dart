@@ -51,3 +51,32 @@ void isLoading(BuildContext context, bool isloading){
         Navigator.of(context).pop();
     }
 }
+
+void dialog(context, {String title, String body, MaterialPageRoute route, String method}){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text(title),
+                content: Text(body),
+                actions: [
+                    FlatButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                            if(route != null && method == null){
+                                Navigator.pop(context);
+                                Navigator.push(context, route);
+                            } else if(route != null && method == "pushReplacement"){
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(context, route);
+                            } else {
+                                Navigator.pop(context);
+                            }
+                        },
+                    ),
+                ],
+            );
+        },
+    );
+}
