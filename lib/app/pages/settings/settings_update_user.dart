@@ -2,8 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
+import 'package:helppyapp/app/controllers/main_tab_controller.dart';
 import 'package:helppyapp/app/controllers/settings_controller.dart';
+import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 
 class UpdateUser extends StatefulWidget {
   @override
@@ -11,8 +15,6 @@ class UpdateUser extends StatefulWidget {
 }
 
 class _UpdateUserState extends State<UpdateUser> {
-  SettingsController controllerSettings = SettingsController();
-
   Future<void> _choose(SettingsController controller) async {
     File file = await ImagePicker.pickImage(source: ImageSource.camera);
     controller.changeProfileImage(file);
@@ -20,6 +22,8 @@ class _UpdateUserState extends State<UpdateUser> {
 
   @override
   Widget build(BuildContext context) {
+    final MainTabController controllerMain = Provider.of<MainTabController>(context);
+    final SettingsController controllerSettings = Provider.of<SettingsController>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: COR_AZUL,
@@ -51,7 +55,13 @@ class _UpdateUserState extends State<UpdateUser> {
                       Image.asset(
                         "assets/images/user-icon.png",
                       ) :
-                      Image.file(
+                      controllerSettings.fileProfileImage.toString().contains("http") ?
+                      Image.network(
+                        controllerSettings.fileProfileImage,
+                        fit: BoxFit.cover,
+                        width: 140,
+                        height: 140,
+                      ) : Image.file(
                         controllerSettings.fileProfileImage,
                         fit: BoxFit.cover,
                         width: 140,
@@ -67,9 +77,8 @@ class _UpdateUserState extends State<UpdateUser> {
                 return Container(
                   margin: EdgeInsets.only(top: 10.0),
                   child: TextField(
-                    maxLength: 11,
                     onChanged: controllerSettings.newEmail,
-                    controller: controllerSettings.telUpdateController,
+                    controller: controllerSettings.emailUpdateController,
                     decoration: InputDecoration(
                       labelText: "Email",
                       hintText: "Insira seu email",
@@ -84,7 +93,8 @@ class _UpdateUserState extends State<UpdateUser> {
             Container(
               margin: EdgeInsets.only(top: 10.0),
               child: TextField(
-                controller: controllerSettings.emailUpdateController,
+                maxLength: 11,
+                controller: controllerSettings.telUpdateController,
                 decoration: InputDecoration(
                   labelText: "Telefone",
                   hintText: "Insira seu telefone",
@@ -151,7 +161,9 @@ class _UpdateUserState extends State<UpdateUser> {
             SizedBox(
               width: double.infinity,
               child: FlatButton(
-                onPressed: (){},
+                onPressed: (){
+                  controllerSettings.update(controllerMain.prefs, context);
+                },
                 color: COR_PRETA,
                 child: Text(
                   "Atualizar",
@@ -167,4 +179,3 @@ class _UpdateUserState extends State<UpdateUser> {
     );
   }
 }
-

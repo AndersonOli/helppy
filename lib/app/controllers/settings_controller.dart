@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:helppyapp/app/components/control/control_page_component.dart';
+import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:location/location.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../components/general/globals_component.dart';
 part 'settings_controller.g.dart';
 
@@ -14,6 +18,26 @@ abstract class _SettingsController with Store {
 
   @action
   void changeProfileImage(dynamic value) => fileProfileImage = value;
+
+  @observable
+  var data;
+
+  Future recoveryValues(SharedPreferences prefs) async {
+    data = jsonDecode((await http.get(
+      API_URL + '/account',
+      headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
+    )).body);
+
+    fileProfileImage = data[0]["profile_picture"];
+    emailUpdateController.text = data[0]["email"];
+    telUpdateController.text = data[0]["telephone"];
+    cepUpdateController.text = data[0]["cep"];
+    endUpdateController.text = data[0]["address"];
+    numeroUpdateController.text = data[0]["house_number"];
+    refUpdateController.text = data[0]["reference"];
+
+    return data[0];
+  }
 
   @observable
   String email = "";
@@ -40,13 +64,23 @@ abstract class _SettingsController with Store {
   final TextEditingController numeroUpdateController = TextEditingController();
   final TextEditingController refUpdateController = TextEditingController();
 
+  @observable
+  int statusUpdate;
+
   @action
-  Future<void> update() async {
+  Future<void> update(SharedPreferences prefs, BuildContext context) async {
+    if(fileProfileImage == null){
+      dialog(
+        context,
+        title: "Insira uma imagem de perfil!",
+        body: "Por favor, clique no ícone de perfil e insira uma imagem.",
+      );
+      return;
+    }
+
     http.Response data = await http.post(
       API_URL + '/updateProfile',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
       body: jsonEncode({
         "cep": cepUpdateController.text.trim(),
         "address": endUpdateController.text,
@@ -54,11 +88,29 @@ abstract class _SettingsController with Store {
         "reference": refUpdateController.text,
         "latitude": latitude.toString(),
         "longitude": longitude.toString(),
-        "profile_picture": base64Encode(fileProfileImage.readAsBytesSync())
+        "profile_picture": fileProfileImage.runtimeType.toString() == "_File" ? base64Encode(fileProfileImage.readAsBytesSync()) : fileProfileImage
       }),
     );
 
-    print(data.body);
+    print(data.statusCode);
+
+    switch(data.statusCode){
+      case 204:
+        dialog(
+          context,
+          title: "Atualizado com sucesso!",
+          body: "Suas informações foram atualizadas."
+        );
+        break;
+      case 403:
+      case 500:
+        dialog(
+          context,
+          title: "Ocorreu um erro!",
+          body: "Ocorreu um erro ao tentar atualizar seus dados :(",
+        );
+        break;
+    }
   }
 
   @observable
@@ -80,7 +132,6 @@ abstract class _SettingsController with Store {
           headers: {'Authorization': 'Token token=471dec71c96f8dbc684056839dc3411b'}
       );
       var data = jsonDecode(endereco.body);
-      print(data);
       if(data["latitude"] != null && data["longitude"] != null){
         latitude = data["latitude"];
         longitude = data["longitude"];

@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
+import 'package:helppyapp/app/controllers/main_tab_controller.dart';
+import 'package:helppyapp/app/controllers/settings_controller.dart';
 import 'package:helppyapp/app/pages/settings/settings_update_user.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class SettingsTab extends StatelessWidget {
+class SettingsTab extends StatefulWidget {
+    @override
+    _SettingsTabState createState() => _SettingsTabState();
+}
+
+class _SettingsTabState extends State<SettingsTab> {
     @override
     Widget build(BuildContext context) {
         final _width = MediaQuery.of(context).size.width;
+        final MainTabController controllerMain = Provider.of<MainTabController>(context);
+        final SettingsController controllerSettings = Provider.of<SettingsController>(context);
         return Scaffold(
             body: SingleChildScrollView(
                 child: SafeArea(
@@ -26,19 +37,27 @@ class SettingsTab extends StatelessWidget {
                                                     borderRadius: BorderRadius.circular(100.0),
                                                     child: Stack(
                                                         children: <Widget>[
-                                                            Container(
-                                                                width: 100.0,
-                                                                height: 100.0,
-                                                                alignment: Alignment.center,
-                                                                child: CircularProgressIndicator(
-                                                                    valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
-                                                                ),
-                                                            ),
-                                                            FadeInImage.memoryNetwork(
-                                                                placeholder: kTransparentImage,
-                                                                width: 100.0,
-                                                                height: 100.0,
-                                                                image: 'https://picsum.photos/250?image=9',
+                                                            FutureBuilder(
+                                                                future: controllerSettings.recoveryValues(controllerMain.prefs),
+                                                                builder: (context, snapshot){
+                                                                    if(snapshot.connectionState == ConnectionState.waiting){
+                                                                        return Container(
+                                                                            width: 100.0,
+                                                                            height: 100.0,
+                                                                            alignment: Alignment.center,
+                                                                            child: CircularProgressIndicator(
+                                                                                valueColor: AlwaysStoppedAnimation<Color>(COR_AZUL),
+                                                                            ),
+                                                                        );
+                                                                    } else {
+                                                                        return FadeInImage.memoryNetwork(
+                                                                            placeholder: kTransparentImage,
+                                                                            width: 100.0,
+                                                                            height: 100.0,
+                                                                            image: controllerSettings.fileProfileImage,
+                                                                        );
+                                                                    }
+                                                                },
                                                             )
                                                         ],
                                                     )
@@ -49,7 +68,7 @@ class SettingsTab extends StatelessWidget {
                                                     children: <Widget>[
                                                         Container(
                                                             child: Text(
-                                                                "Anderson Oliveira",
+                                                                controllerMain.prefs.getString("name"),
                                                                 style: TextStyle(
                                                                     color: COR_AZUL,
                                                                     fontSize: 18.0
@@ -142,12 +161,48 @@ class SettingsTab extends StatelessWidget {
                                     width: _width,
                                     margin: EdgeInsets.only(top: 10.0),
                                     child: Text(
-                                        "A equipe do Helppy-19 ficaria muito feliz em receber sua opinião sobre o projeto, e caso algum problema ocorreu entre em contato e trabalharemos para resolver. Se aconteceu alguma coisa com o seu pedido nos contate e iremos solucionar.\n\nEmail: helpy19@hotmail.com\nWhatsApp: (86) 9958-0740",
+                                        "A equipe do Helppy-19 ficaria muito feliz em receber sua opinião sobre o projeto, e caso algum problema ocorreu entre em contato e trabalharemos para resolver. Se aconteceu alguma coisa com o seu pedido nos contate e iremos solucionar.",
                                         style: TextStyle(
                                             color: COR_PRETA,
                                             fontSize: 16.0
                                         ),
                                         textAlign: TextAlign.left,
+                                    ),
+                                ),
+                                Container(
+                                    width: _width,
+                                    margin: EdgeInsets.only(top: 10.0),
+                                    child: GestureDetector(
+                                        onTap: () async {
+                                            await launch("mailto:helpy19@hotmail.com?subject=SUPORTE HELPPY-19");
+                                        },
+                                        child: Text(
+                                            "helpy19@hotmail.com",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                color: COR_AZUL,
+                                                fontSize: 16.0,
+                                                decoration: TextDecoration.underline,
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                Container(
+                                    width: _width,
+                                    margin: EdgeInsets.only(top: 10.0),
+                                    child: GestureDetector(
+                                        onTap: () async {
+                                            await launch("https://api.whatsapp.com/send?phone=5586999580740&text=Ol%C3%A1%2C%20poderia%20me%20ajudar%3F%20%C3%89%20sobre%20o%20Helppy");
+                                        },
+                                        child: Text(
+                                            "(86) 9958-0740",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                color: COR_AZUL,
+                                                fontSize: 16.0,
+                                                decoration: TextDecoration.underline,
+                                            ),
+                                        ),
                                     ),
                                 ),
                                 Container(

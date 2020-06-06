@@ -34,6 +34,23 @@ mixin _$SettingsController on _SettingsController, Store {
     }, _$fileProfileImageAtom, name: '${_$fileProfileImageAtom.name}_set');
   }
 
+  final _$dataAtom = Atom(name: '_SettingsController.data');
+
+  @override
+  dynamic get data {
+    _$dataAtom.context.enforceReadPolicy(_$dataAtom);
+    _$dataAtom.reportObserved();
+    return super.data;
+  }
+
+  @override
+  set data(dynamic value) {
+    _$dataAtom.context.conditionallyRunInAction(() {
+      super.data = value;
+      _$dataAtom.reportChanged();
+    }, _$dataAtom, name: '${_$dataAtom.name}_set');
+  }
+
   final _$emailAtom = Atom(name: '_SettingsController.email');
 
   @override
@@ -49,6 +66,23 @@ mixin _$SettingsController on _SettingsController, Store {
       super.email = value;
       _$emailAtom.reportChanged();
     }, _$emailAtom, name: '${_$emailAtom.name}_set');
+  }
+
+  final _$statusUpdateAtom = Atom(name: '_SettingsController.statusUpdate');
+
+  @override
+  int get statusUpdate {
+    _$statusUpdateAtom.context.enforceReadPolicy(_$statusUpdateAtom);
+    _$statusUpdateAtom.reportObserved();
+    return super.statusUpdate;
+  }
+
+  @override
+  set statusUpdate(int value) {
+    _$statusUpdateAtom.context.conditionallyRunInAction(() {
+      super.statusUpdate = value;
+      _$statusUpdateAtom.reportChanged();
+    }, _$statusUpdateAtom, name: '${_$statusUpdateAtom.name}_set');
   }
 
   final _$cepAtom = Atom(name: '_SettingsController.cep');
@@ -88,8 +122,8 @@ mixin _$SettingsController on _SettingsController, Store {
   final _$updateAsyncAction = AsyncAction('update');
 
   @override
-  Future<void> update() {
-    return _$updateAsyncAction.run(() => super.update());
+  Future<void> update(SharedPreferences prefs, BuildContext context) {
+    return _$updateAsyncAction.run(() => super.update(prefs, context));
   }
 
   final _$newCepAsyncAction = AsyncAction('newCep');
@@ -125,7 +159,7 @@ mixin _$SettingsController on _SettingsController, Store {
   @override
   String toString() {
     final string =
-        'fileProfileImage: ${fileProfileImage.toString()},email: ${email.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},validateEmail: ${validateEmail.toString()}';
+        'fileProfileImage: ${fileProfileImage.toString()},data: ${data.toString()},email: ${email.toString()},statusUpdate: ${statusUpdate.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},validateEmail: ${validateEmail.toString()}';
     return '{$string}';
   }
 }

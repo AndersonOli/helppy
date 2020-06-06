@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:helppyapp/app/components/control/control_page_component.dart';
+import 'package:helppyapp/app/controllers/settings_controller.dart';
 import 'package:helppyapp/app/controllers/sign_in_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:helppyapp/app/controllers/register_controller.dart';
@@ -29,6 +30,9 @@ void main(){
                 Provider<SignInController>(
                   create: (_) => SignInController(),
                 ),
+                Provider<SettingsController>(
+                    create: (_) => SettingsController(),
+                )
             ],
             child: MaterialApp(
                 home: ControlPage(),
