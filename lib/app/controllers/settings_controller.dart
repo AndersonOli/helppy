@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:helppyapp/app/components/control/control_page_component.dart';
 import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:location/location.dart';
 import 'package:mobx/mobx.dart';
@@ -69,6 +68,7 @@ abstract class _SettingsController with Store {
 
   @action
   Future<void> update(SharedPreferences prefs, BuildContext context) async {
+    isLoading(context, true);
     if(fileProfileImage == null){
       dialog(
         context,
@@ -78,7 +78,7 @@ abstract class _SettingsController with Store {
       return;
     }
 
-    http.Response data = await http.post(
+    var data = await http.post(
       API_URL + '/updateProfile',
       headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
       body: jsonEncode({
@@ -89,10 +89,10 @@ abstract class _SettingsController with Store {
         "latitude": latitude.toString(),
         "longitude": longitude.toString(),
         "profile_picture": fileProfileImage.runtimeType.toString() == "_File" ? base64Encode(fileProfileImage.readAsBytesSync()) : fileProfileImage
-      }),
+      }), 
     );
 
-    print(data.statusCode);
+    isLoading(context, false);
 
     switch(data.statusCode){
       case 204:

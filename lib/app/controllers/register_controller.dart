@@ -102,10 +102,6 @@ abstract class _RegisterController with Store {
         String pattern = r'^([1-9]{2})(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}$';
         RegExp regExp = new RegExp(pattern);
         if (regExp.hasMatch(telephone) == true || telephone.length < 1) {
-//            showAlertDialog(context,
-//                'Número de telefone incorreto',
-//                'O seu telefone deve está nesse parâmetro dddxxxxxxxxx, o ddd sem o 0 a esquerda'
-//            );
             return null;
         }
         return "Seu número de telefone está inválido";
@@ -127,11 +123,18 @@ abstract class _RegisterController with Store {
         if (cep.length > 1 && cep.length < 8) {
             errortextCep = "CEP tem que ter 8 caracteres";
         } else {
-            errortextCep = "";
-            var endereco = await http.get(
+            errortextCep = ""; 
+            var endereco;
+
+            try { 
+              endereco = await http.get(
                 "http://www.cepaberto.com/api/v3/cep?cep=" + cep.trim(),
                 headers: {'Authorization': 'Token token=471dec71c96f8dbc684056839dc3411b'}
-            );
+              );
+            } catch(e){
+              print(e);
+            }
+
             var data = jsonDecode(endereco.body);
 
             if(data["latitude"] != null && data["longitude"] != null){
@@ -201,6 +204,8 @@ abstract class _RegisterController with Store {
         );
 
         isLoading(context, false);
+
+        print(data.body);
 
         if(data.body.contains('duplicate key value violates unique constraint')){
             // email already in use
