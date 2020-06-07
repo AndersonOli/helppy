@@ -21,7 +21,11 @@ abstract class _SettingsController with Store {
   @observable
   var data;
 
+  @observable
+  bool loading;
+
   Future recoveryValues(SharedPreferences prefs) async {
+    loading = true;
     data = jsonDecode((await http.get(
       API_URL + '/account',
       headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
@@ -35,6 +39,7 @@ abstract class _SettingsController with Store {
     numeroUpdateController.text = data[0]["house_number"];
     refUpdateController.text = data[0]["reference"];
 
+    loading = false;
     return data[0];
   }
 

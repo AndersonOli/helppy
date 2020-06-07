@@ -51,6 +51,23 @@ mixin _$SettingsController on _SettingsController, Store {
     }, _$dataAtom, name: '${_$dataAtom.name}_set');
   }
 
+  final _$loadingAtom = Atom(name: '_SettingsController.loading');
+
+  @override
+  bool get loading {
+    _$loadingAtom.context.enforceReadPolicy(_$loadingAtom);
+    _$loadingAtom.reportObserved();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.context.conditionallyRunInAction(() {
+      super.loading = value;
+      _$loadingAtom.reportChanged();
+    }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
+  }
+
   final _$emailAtom = Atom(name: '_SettingsController.email');
 
   @override
@@ -159,7 +176,7 @@ mixin _$SettingsController on _SettingsController, Store {
   @override
   String toString() {
     final string =
-        'fileProfileImage: ${fileProfileImage.toString()},data: ${data.toString()},email: ${email.toString()},statusUpdate: ${statusUpdate.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},validateEmail: ${validateEmail.toString()}';
+        'fileProfileImage: ${fileProfileImage.toString()},data: ${data.toString()},loading: ${loading.toString()},email: ${email.toString()},statusUpdate: ${statusUpdate.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},validateEmail: ${validateEmail.toString()}';
     return '{$string}';
   }
 }

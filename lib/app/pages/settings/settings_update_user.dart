@@ -4,9 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:helppyapp/app/controllers/main_tab_controller.dart';
 import 'package:helppyapp/app/controllers/settings_controller.dart';
-import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 class UpdateUser extends StatefulWidget {
