@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../components/general/export_pages_component.dart';
-
 class SettingsTab extends StatefulWidget {
   @override
   _SettingsTabState createState() => _SettingsTabState();
