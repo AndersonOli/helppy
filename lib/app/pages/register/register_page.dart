@@ -60,7 +60,7 @@ class _CadastroPageState extends State<CadastroPage> {
     }
 
     Future<void> _choose(RegisterController controller) async {
-        controller.file = await ImagePicker.pickImage(source: ImageSource.camera);
+        controller.file = await ImagePicker.pickImage(source: ImageSource.gallery);
         controller.changeProfileImage(controller.file);
     }
 

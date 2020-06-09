@@ -28,8 +28,12 @@ abstract class _SettingsController with Store {
     loading = true;
     data = jsonDecode((await http.get(
       API_URL + '/account',
-      headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
-    )).body);
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")
+      },
+    ))
+        .body);
 
     fileProfileImage = data[0]["profile_picture"];
     emailUpdateController.text = data[0]["email"];
@@ -51,9 +55,10 @@ abstract class _SettingsController with Store {
 
   @computed
   dynamic get validateEmail {
-    RegExp exp = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    RegExp exp = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
-    if(exp.hasMatch(email) == true || email.length < 1){
+    if (exp.hasMatch(email) == true || email.length < 1) {
       return null;
     }
 
@@ -74,7 +79,7 @@ abstract class _SettingsController with Store {
   @action
   Future<void> update(SharedPreferences prefs, BuildContext context) async {
     isLoading(context, true);
-    if(fileProfileImage == null){
+    if (fileProfileImage == null) {
       dialog(
         context,
         title: "Insira uma imagem de perfil!",
@@ -83,38 +88,55 @@ abstract class _SettingsController with Store {
       return;
     }
 
-    var data = await http.post(
-      API_URL + '/updateProfile',
-      headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")},
-      body: jsonEncode({
-        "cep": cepUpdateController.text.trim(),
-        "address": endUpdateController.text,
-        "house_number": numeroUpdateController.text.trim(),
-        "reference": refUpdateController.text,
-        "latitude": latitude.toString(),
-        "longitude": longitude.toString(),
-        "profile_picture": fileProfileImage.runtimeType.toString() == "_File" ? base64Encode(fileProfileImage.readAsBytesSync()) : fileProfileImage
-      }), 
-    );
+    String img;
 
-    isLoading(context, false);
+    if (fileProfileImage.runtimeType.toString() == "_File") {
+      var imageBytes = fileProfileImage.readAsBytesSync();
+      img = base64Encode(imageBytes);
+    } else {
+      img = fileProfileImage;
+    }
 
-    switch(data.statusCode){
-      case 204:
-        dialog(
-          context,
-          title: "Atualizado com sucesso!",
-          body: "Suas informações foram atualizadas."
-        );
-        break;
-      case 403:
-      case 500:
-        dialog(
-          context,
-          title: "Ocorreu um erro!",
-          body: "Ocorreu um erro ao tentar atualizar seus dados :(",
-        );
-        break;
+    print(prefs.getString("token"));
+
+    try {
+      var data = await http.post(
+        API_URL + '/updateProfile',
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          HttpHeaders.authorizationHeader: "Bearer " + prefs.getString("token")
+        },
+        body: jsonEncode({
+          "cep": cepUpdateController.text.trim(),
+          "address": endUpdateController.text,
+          "house_number": numeroUpdateController.text.trim(),
+          "reference": refUpdateController.text,
+          "latitude": latitude.toString(),
+          "longitude": longitude.toString(),
+          "profile_picture": img
+        }),
+      );
+
+      isLoading(context, false);
+
+      print(data.statusCode);
+
+      switch (data.statusCode) {
+        case 200:
+        case 204:
+          dialog(context,
+              title: "Atualizado com sucesso!",
+              body: "Suas informações foram atualizadas.");
+          break;
+        default:
+          dialog(
+            context,
+            title: "Ocorreu um erro! - " + data.statusCode.toString(),
+            body: "Ocorreu um erro ao tentar atualizar seus dados.",
+          );
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -134,10 +156,11 @@ abstract class _SettingsController with Store {
       errortextCep = "";
       var endereco = await http.get(
           "http://www.cepaberto.com/api/v3/cep?cep=" + cep.trim(),
-          headers: {'Authorization': 'Token token=471dec71c96f8dbc684056839dc3411b'}
-      );
+          headers: {
+            'Authorization': 'Token token=471dec71c96f8dbc684056839dc3411b'
+          });
       var data = jsonDecode(endereco.body);
-      if(data["latitude"] != null && data["longitude"] != null){
+      if (data["latitude"] != null && data["longitude"] != null) {
         latitude = data["latitude"];
         longitude = data["longitude"];
       } else {
@@ -146,7 +169,13 @@ abstract class _SettingsController with Store {
         latitude = userLocation.latitude;
         longitude = userLocation.longitude;
       }
-      endUpdateController.text = data["logradouro"] + " - " + data["bairro"] + " - " + data["cidade"]["nome"] + "-" + data["estado"]["sigla"];
+      endUpdateController.text = data["logradouro"] +
+          " - " +
+          data["bairro"] +
+          " - " +
+          data["cidade"]["nome"] +
+          "-" +
+          data["estado"]["sigla"];
       refUpdateController.text = data["complemento"];
     }
   }

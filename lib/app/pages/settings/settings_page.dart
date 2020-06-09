@@ -171,10 +171,10 @@ class _SettingsTabState extends State<SettingsTab> {
                   child: GestureDetector(
                     onTap: () async {
                       await launch(
-                          "mailto:helpy19@hotmail.com?subject=SUPORTE HELPPY-19");
+                          "mailto:helppy19@hotmail.com?subject=SUPORTE HELPPY-19");
                     },
                     child: Text(
-                      "helpy19@hotmail.com",
+                      "helppy19@hotmail.com",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: COR_AZUL,
