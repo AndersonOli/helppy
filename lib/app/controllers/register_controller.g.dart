@@ -34,6 +34,23 @@ mixin _$RegisterController on _RegisterController, Store {
     }, _$fileProfileImageAtom, name: '${_$fileProfileImageAtom.name}_set');
   }
 
+  final _$linkImgAtom = Atom(name: '_RegisterController.linkImg');
+
+  @override
+  dynamic get linkImg {
+    _$linkImgAtom.context.enforceReadPolicy(_$linkImgAtom);
+    _$linkImgAtom.reportObserved();
+    return super.linkImg;
+  }
+
+  @override
+  set linkImg(dynamic value) {
+    _$linkImgAtom.context.conditionallyRunInAction(() {
+      super.linkImg = value;
+      _$linkImgAtom.reportChanged();
+    }, _$linkImgAtom, name: '${_$linkImgAtom.name}_set');
+  }
+
   final _$nameAtom = Atom(name: '_RegisterController.name');
 
   @override
@@ -338,7 +355,7 @@ mixin _$RegisterController on _RegisterController, Store {
   @override
   String toString() {
     final string =
-        'fileProfileImage: ${fileProfileImage.toString()},name: ${name.toString()},email: ${email.toString()},password: ${password.toString()},confirmPassword: ${confirmPassword.toString()},telephone: ${telephone.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},typeAcc: ${typeAcc.toString()},onProgress: ${onProgress.toString()},typeOne: ${typeOne.toString()},typeTwo: ${typeTwo.toString()},file: ${file.toString()},statusRegister: ${statusRegister.toString()},validateEmail: ${validateEmail.toString()}';
+        'fileProfileImage: ${fileProfileImage.toString()},linkImg: ${linkImg.toString()},name: ${name.toString()},email: ${email.toString()},password: ${password.toString()},confirmPassword: ${confirmPassword.toString()},telephone: ${telephone.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},typeAcc: ${typeAcc.toString()},onProgress: ${onProgress.toString()},typeOne: ${typeOne.toString()},typeTwo: ${typeTwo.toString()},file: ${file.toString()},statusRegister: ${statusRegister.toString()},validateEmail: ${validateEmail.toString()}';
     return '{$string}';
   }
 }

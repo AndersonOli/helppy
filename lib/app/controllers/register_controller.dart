@@ -1,8 +1,9 @@
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:convert';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:helppyapp/app/controllers/main_tab_controller.dart';
 import 'package:helppyapp/app/components/general/globals_component.dart';
 import 'package:helppyapp/app/widgets/suports_widgets.dart';
@@ -26,8 +27,32 @@ abstract class _RegisterController with Store {
   @observable
   var fileProfileImage;
 
+  @observable
+  var linkImg;
+
   @action
-  void changeProfileImage(dynamic value) => fileProfileImage = value;
+  void changeProfileImage(dynamic value){
+    fileProfileImage = value;
+    uploadImage();
+  }
+
+  Future<void> uploadImage() async {
+    print('hi');
+    if (fileProfileImage != null) {
+      final FirebaseStorage _storage =
+          FirebaseStorage(storageBucket: 'gs://helppy-19-893b1.appspot.com');
+
+      StorageUploadTask _task;
+
+      var _ref = _storage.ref().child('images/${DateTime.now()}.png');
+
+      _task = _ref.putFile(file);
+
+      var _downloadLink = await(await _task.onComplete).ref.getDownloadURL();
+
+      linkImg = _downloadLink.toString();
+    }
+  }
 
   @observable
   String name = "";
@@ -125,7 +150,7 @@ abstract class _RegisterController with Store {
     if (cep.length > 1 && cep.length < 8) {
       errortextCep = "CEP tem que ter 8 caracteres";
     } else {
-      if(cep.length != 8) return null;
+      if (cep.length != 8) return null;
       errortextCep = "";
       var endereco;
 
@@ -192,10 +217,6 @@ abstract class _RegisterController with Store {
 
     typeAcc = typeOne == true ? 1 : 0;
 
-    var imageBytes = file.readAsBytesSync();
-
-    String img = base64Encode(imageBytes);
-
     try {
       http.Response data = await http.post(
         API_URL + '/register',
@@ -215,13 +236,17 @@ abstract class _RegisterController with Store {
           "latitude": latitude.toString(),
           "longitude": longitude.toString(),
           "token_notification": tokenNotification,
-          "profile_picture": img
+          "profile_picture": linkImg
         }),
       );
 
       isLoading(context, false);
 
       print(data.statusCode);
+      print(data.body);
+      print(data.headers);
+
+      return;
 
       if (data.body
           .contains('duplicate key value violates unique constraint')) {
@@ -232,6 +257,7 @@ abstract class _RegisterController with Store {
         statusRegister = 2;
       } else if (data.body
           .contains(emailCadController.text.toLowerCase().trim())) {
+        print('hi');
         http.Response data = await http.post(
           API_URL + '/authenticate',
           headers: <String, String>{

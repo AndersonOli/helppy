@@ -89,15 +89,16 @@ abstract class _SettingsController with Store {
     }
 
     String img;
+    bool newProfileImage;
 
     if (fileProfileImage.runtimeType.toString() == "_File") {
       var imageBytes = fileProfileImage.readAsBytesSync();
       img = base64Encode(imageBytes);
+      newProfileImage = true;
     } else {
       img = fileProfileImage;
+      newProfileImage = false;
     }
-
-    print(prefs.getString("token"));
 
     try {
       var data = await http.post(
@@ -113,13 +114,14 @@ abstract class _SettingsController with Store {
           "reference": refUpdateController.text,
           "latitude": latitude.toString(),
           "longitude": longitude.toString(),
-          "profile_picture": img
+          "profile_picture": img,
+          "newImage": newProfileImage
         }),
       );
 
       isLoading(context, false);
 
-      print(data.statusCode);
+      print(data.body);
 
       switch (data.statusCode) {
         case 200:
