@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/app/widgets/suports_widgets.dart';
 import 'package:location/location.dart';
@@ -15,8 +16,35 @@ abstract class _SettingsController with Store {
   @observable
   var fileProfileImage;
 
+  @observable
+  var linkImg;
+
+  @observable
+  File file;
+
   @action
-  void changeProfileImage(dynamic value) => fileProfileImage = value;
+  void changeProfileImage(dynamic value){
+    fileProfileImage = value;
+    uploadImage();
+  }
+
+  Future<void> uploadImage() async {
+    print('hi');
+    if (fileProfileImage != null) {
+      final FirebaseStorage _storage =
+          FirebaseStorage(storageBucket: 'gs://helppy-19-893b1.appspot.com');
+
+      StorageUploadTask _task;
+
+      var _ref = _storage.ref().child('images/${DateTime.now()}.png');
+
+      _task = _ref.putFile(file);
+
+      var _downloadLink = await(await _task.onComplete).ref.getDownloadURL();
+
+      linkImg = _downloadLink.toString();
+    }
+  }
 
   @observable
   var data;
@@ -88,18 +116,6 @@ abstract class _SettingsController with Store {
       return;
     }
 
-    String img;
-    bool newProfileImage;
-
-    if (fileProfileImage.runtimeType.toString() == "_File") {
-      var imageBytes = fileProfileImage.readAsBytesSync();
-      img = base64Encode(imageBytes);
-      newProfileImage = true;
-    } else {
-      img = fileProfileImage;
-      newProfileImage = false;
-    }
-
     try {
       var data = await http.post(
         API_URL + '/updateProfile',
@@ -114,8 +130,7 @@ abstract class _SettingsController with Store {
           "reference": refUpdateController.text,
           "latitude": latitude.toString(),
           "longitude": longitude.toString(),
-          "profile_picture": img,
-          "newImage": newProfileImage
+          "profile_picture": linkImg != null ? linkImg : null
         }),
       );
 

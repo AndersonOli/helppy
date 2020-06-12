@@ -14,8 +14,8 @@ class UpdateUser extends StatefulWidget {
 
 class _UpdateUserState extends State<UpdateUser> {
   Future<void> _choose(SettingsController controller) async {
-    File file = await ImagePicker.pickImage(source: ImageSource.gallery);
-    controller.changeProfileImage(file);
+    controller.file = await ImagePicker.pickImage(source: ImageSource.gallery);
+    controller.changeProfileImage(controller.file);
   }
 
   @override

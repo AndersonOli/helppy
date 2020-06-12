@@ -34,6 +34,40 @@ mixin _$SettingsController on _SettingsController, Store {
     }, _$fileProfileImageAtom, name: '${_$fileProfileImageAtom.name}_set');
   }
 
+  final _$linkImgAtom = Atom(name: '_SettingsController.linkImg');
+
+  @override
+  dynamic get linkImg {
+    _$linkImgAtom.context.enforceReadPolicy(_$linkImgAtom);
+    _$linkImgAtom.reportObserved();
+    return super.linkImg;
+  }
+
+  @override
+  set linkImg(dynamic value) {
+    _$linkImgAtom.context.conditionallyRunInAction(() {
+      super.linkImg = value;
+      _$linkImgAtom.reportChanged();
+    }, _$linkImgAtom, name: '${_$linkImgAtom.name}_set');
+  }
+
+  final _$fileAtom = Atom(name: '_SettingsController.file');
+
+  @override
+  File get file {
+    _$fileAtom.context.enforceReadPolicy(_$fileAtom);
+    _$fileAtom.reportObserved();
+    return super.file;
+  }
+
+  @override
+  set file(File value) {
+    _$fileAtom.context.conditionallyRunInAction(() {
+      super.file = value;
+      _$fileAtom.reportChanged();
+    }, _$fileAtom, name: '${_$fileAtom.name}_set');
+  }
+
   final _$dataAtom = Atom(name: '_SettingsController.data');
 
   @override
@@ -176,7 +210,7 @@ mixin _$SettingsController on _SettingsController, Store {
   @override
   String toString() {
     final string =
-        'fileProfileImage: ${fileProfileImage.toString()},data: ${data.toString()},loading: ${loading.toString()},email: ${email.toString()},statusUpdate: ${statusUpdate.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},validateEmail: ${validateEmail.toString()}';
+        'fileProfileImage: ${fileProfileImage.toString()},linkImg: ${linkImg.toString()},file: ${file.toString()},data: ${data.toString()},loading: ${loading.toString()},email: ${email.toString()},statusUpdate: ${statusUpdate.toString()},cep: ${cep.toString()},errortextCep: ${errortextCep.toString()},validateEmail: ${validateEmail.toString()}';
     return '{$string}';
   }
 }
