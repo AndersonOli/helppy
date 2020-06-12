@@ -246,8 +246,6 @@ abstract class _RegisterController with Store {
       print(data.body);
       print(data.headers);
 
-      return;
-
       if (data.body
           .contains('duplicate key value violates unique constraint')) {
         // email already in use
