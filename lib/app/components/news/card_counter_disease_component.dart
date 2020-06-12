@@ -23,7 +23,7 @@ class _CardCasesState extends State<CardCases> with AutomaticKeepAliveClientMixi
             builder: (context, snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                     return Container(
-                        height: 200.0,
+                        height: 220.0,
                         child: Card(
                             color: COR_AZUL,
                             margin: EdgeInsets.only(top: 15.0, bottom: 6.0),
@@ -32,7 +32,8 @@ class _CardCasesState extends State<CardCases> with AutomaticKeepAliveClientMixi
                     );
                 } else {
                     return Container(
-                        height: 200.0,
+                        height: 220.0,
+                        alignment: Alignment.center,
                         child: Card(
                             margin: EdgeInsets.only(top: 15.0, bottom: 6.0),
                             color: COR_AZUL,
