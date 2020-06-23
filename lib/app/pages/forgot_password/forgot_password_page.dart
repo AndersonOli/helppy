@@ -96,7 +96,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         Container(
                             margin: EdgeInsets.only(top: 20.0),
                             child: Text(
-                                "\t\t\t\tLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                                "\t\t\t\tEsta é uma área que caso você tenha esquecido a sua senha, irá ajudar a obter uma nova. Em caso de dúvidas, entre em contato com a nossa equipe pelo email: helppy19@hotmail.com",
                                 style: TextStyle(
                                     color: COR_AZUL,
                                     fontSize: 16.0

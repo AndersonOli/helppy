@@ -57,7 +57,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         Container(
                             margin: EdgeInsets.only(top: 20.0),
                             child: Text(
-                                "\t\t\t\tstandard dummy text ever since the of type and scrambled it to make a type specimen book.",
+                                "\t\t\t\tInsira o código que foi enviado para seu email e caso não encontre, verifique sua caixa de spam.",
                                 style: TextStyle(
                                     color: COR_AZUL,
                                     fontSize: 16.0
