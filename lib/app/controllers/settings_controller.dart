@@ -29,7 +29,6 @@ abstract class _SettingsController with Store {
   }
 
   Future<void> uploadImage() async {
-    print('hi');
     if (fileProfileImage != null) {
       final FirebaseStorage _storage =
           FirebaseStorage(storageBucket: 'gs://helppy-19-893b1.appspot.com');

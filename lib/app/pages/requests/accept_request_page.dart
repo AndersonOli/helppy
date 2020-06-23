@@ -220,10 +220,9 @@ class _AcceptRequestState extends State<AcceptRequest> {
             padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
             onPressed: () async {
                 isLoading(context, true);
-                var response;
                 var url = API_URL + '/update/' + info["user_id"].toString() + "/" + info["id"].toString();
                 if(prefs['onRequest'] != 1){
-                    response = await http.post(
+                    await http.post(
                         url,
                         headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs['token']},
                         body: jsonEncode(<String, String>{
@@ -233,8 +232,6 @@ class _AcceptRequestState extends State<AcceptRequest> {
                         })
                     );
 
-                    //TODO: analisar responde e fazer algo com ele
-
                     isLoading(context, false);
 
                     controller.setPreferences('onRequest', 1);
@@ -242,7 +239,7 @@ class _AcceptRequestState extends State<AcceptRequest> {
 
                     Navigator.pop(context, true);
                 } else {
-                    response = await http.post(
+                    await http.post(
                         url,
                         headers: {"Content-Type": "application/json; charset=utf-8", HttpHeaders.authorizationHeader: "Bearer " + prefs['token']},
                         body: jsonEncode(<String, String>{

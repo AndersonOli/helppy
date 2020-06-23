@@ -37,7 +37,6 @@ abstract class _RegisterController with Store {
   }
 
   Future<void> uploadImage() async {
-    print('hi');
     if (fileProfileImage != null) {
       final FirebaseStorage _storage =
           FirebaseStorage(storageBucket: 'gs://helppy-19-893b1.appspot.com');
@@ -251,7 +250,6 @@ abstract class _RegisterController with Store {
         statusRegister = 2;
       } else if (data.body
           .contains(emailCadController.text.toLowerCase().trim())) {
-        print('hi');
         http.Response data = await http.post(
           API_URL + '/authenticate',
           headers: <String, String>{
